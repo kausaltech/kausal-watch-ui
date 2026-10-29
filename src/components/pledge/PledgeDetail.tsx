@@ -266,7 +266,11 @@ function PledgeBodyBlock({ block }: { block: BodyBlock }) {
           {/* The CMS rendition is already resized and optimized for this block. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={image.renditionUncropped.src} alt={image.altText} />
-          {image.imageCredit && <StyledImageCredit>{image.imageCredit}</StyledImageCredit>}
+          {image.imageCredit && (
+            <StyledImageCredit aria-hidden={image.altText ? undefined : true}>
+              {image.imageCredit}
+            </StyledImageCredit>
+          )}
         </StyledLargeImage>
       );
     }

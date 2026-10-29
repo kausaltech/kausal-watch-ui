@@ -423,7 +423,7 @@ function ActionHero(props: ActionHeroProps) {
               </Col>
             </Row>
           </Container>
-          {credit && <ImageCredit>{credit}</ImageCredit>}
+          {credit && <ImageCredit aria-hidden={altText ? undefined : true}>{credit}</ImageCredit>}
         </OverlayContainer>
       </ActionBgImage>
     </Hero>

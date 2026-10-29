@@ -1,9 +1,14 @@
-import { useEffect, useState } from 'react';
-
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
-import { getContrast, meetsContrastGuidelines, readableColor } from 'polished';
+import {
+  CONTRAST_REQUIREMENTS,
+  type ContrastCheck,
+  type ThemeColorRef,
+  contrastChecks,
+} from '@kausal/themes/contrast-checks';
+import type { Theme } from '@kausal/themes/types';
+import { getContrast, parseToRgb, readableColor } from 'polished';
 
 const TextContrastOutput = styled.div<{
   $foreground: string;
@@ -34,90 +39,96 @@ const Result = styled.div`
   text-align: right;
 `;
 
-const getThemeColor = (theme: object, path: string): string => {
-  const value = path.split('.').reduce<unknown>((current, key) => {
+const LEVEL_LABELS = { text: '', largeText: '(Large)', nonText: '(Non-text)' };
+
+type CheckResult =
+  | { status: 'pass' | 'fail'; foreground: string; background: string; ratio: number }
+  | { status: 'error'; message: string };
+
+// Mirrors the check in the kausal-themes build (contrast.ts)
+const resolveThemeColor = (
+  theme: Theme,
+  ref: Exclude<ThemeColorRef, 'readable'>
+): { color: string } | { error: string } => {
+  const value = ref.split('.').reduce<unknown>((current, key) => {
     if (typeof current !== 'object' || current === null) return undefined;
     return (current as Record<string, unknown>)[key];
   }, theme);
-  return typeof value === 'string' ? value : '#FFFFFF';
+  if (typeof value !== 'string' || !value) return { error: `${ref} is not set` };
+  try {
+    const rgb = parseToRgb(value);
+    if ('alpha' in rgb && rgb.alpha < 1) return { error: `${ref} is translucent (${value})` };
+  } catch {
+    return { error: `${ref} is not a color (${value})` };
+  }
+  return { color: value };
 };
 
-type ContrastScoreProps = {
-  contrastValue: number;
-  largeOnly: boolean;
-  meetsGuidelines: boolean;
-  setPassed: (passed: boolean) => void;
+const checkPair = (theme: Theme, check: ContrastCheck): CheckResult => {
+  const { foreground, background, level = 'text' } = check;
+  if (foreground === 'readable' && background === 'readable') {
+    return { status: 'error', message: 'both sides are readable' };
+  }
+  const fixed =
+    foreground === 'readable'
+      ? resolveThemeColor(theme, background as Exclude<ThemeColorRef, 'readable'>)
+      : resolveThemeColor(theme, foreground);
+  if ('error' in fixed) return { status: 'error', message: fixed.error };
+
+  let other: string;
+  if (foreground === 'readable' || background === 'readable') {
+    other = readableColor(fixed.color, theme.themeColors.black, theme.themeColors.white);
+  } else {
+    const res = resolveThemeColor(theme, background);
+    if ('error' in res) return { status: 'error', message: res.error };
+    other = res.color;
+  }
+
+  const [fg, bg] = foreground === 'readable' ? [other, fixed.color] : [fixed.color, other];
+  const ratio = getContrast(fg, bg);
+  return {
+    status: ratio >= CONTRAST_REQUIREMENTS[level] ? 'pass' : 'fail',
+    foreground: fg,
+    background: bg,
+    ratio,
+  };
 };
 
-const DisplayContrastScore = ({
-  contrastValue,
-  largeOnly,
-  meetsGuidelines,
-  setPassed,
-}: ContrastScoreProps) => {
-  useEffect(() => {
-    if (!meetsGuidelines) setPassed(false);
-  }, [meetsGuidelines, setPassed]);
+const TextContrast = ({ check, result }: { check: ContrastCheck; result: CheckResult }) => {
+  const { foreground, background, level = 'text', note } = check;
+  const isError = result.status === 'error';
 
   return (
-    <span>
-      {largeOnly ? <small>(Large)</small> : ''}
-      {meetsGuidelines ? <Badge>OK</Badge> : <Badge $bad>Fail</Badge>}
-      <br />
-      <small>{contrastValue}</small>
-    </span>
-  );
-};
-
-const TextContrast = (props: {
-  foreground: string;
-  background: string;
-  largeOnly?: boolean;
-  setPassed: (passed: boolean) => void;
-}) => {
-  const { foreground, background, largeOnly = false, setPassed } = props;
-  const theme = useTheme();
-
-  // 'readable' means that we check this color combination against the theme colors.white and theme colors.black in the component
-  const foregroundFromTheme =
-    foreground !== 'readable' ? getThemeColor(theme, foreground) : '#FFFFFF';
-  const backgroundFromTheme =
-    background !== 'readable' ? getThemeColor(theme, background) : '#FFFFFF';
-
-  const foregroundColor =
-    foreground !== 'readable'
-      ? foregroundFromTheme
-      : readableColor(backgroundFromTheme, theme.themeColors.black, theme.themeColors.white);
-  const backgroundColor =
-    background !== 'readable'
-      ? backgroundFromTheme
-      : readableColor(foregroundFromTheme, theme.themeColors.black, theme.themeColors.white);
-
-  const contrastScore = meetsContrastGuidelines(foregroundColor, backgroundColor);
-  const contrastValue = getContrast(foregroundColor, backgroundColor);
-
-  const meetsGuidelines = largeOnly ? contrastScore.AALarge : contrastScore.AA;
-
-  return (
-    <TextContrastOutput $foreground={foregroundColor} $background={backgroundColor}>
+    <TextContrastOutput
+      $foreground={isError ? 'black' : result.foreground}
+      $background={isError ? 'white' : result.background}
+    >
       <TestedItems>
         {foreground} on {background}
+        {note && (
+          <>
+            <br />
+            <small>{note}</small>
+          </>
+        )}
       </TestedItems>
       <Result>
-        <DisplayContrastScore
-          contrastValue={contrastValue}
-          largeOnly={largeOnly}
-          meetsGuidelines={meetsGuidelines}
-          setPassed={setPassed}
-        />
+        <small>{LEVEL_LABELS[level]}</small>
+        {result.status === 'pass' ? <Badge>OK</Badge> : <Badge $bad>Fail</Badge>}
+        <br />
+        <small>
+          {isError ? result.message : `${result.ratio} / ${CONTRAST_REQUIREMENTS[level]}`}
+        </small>
       </Result>
     </TextContrastOutput>
   );
 };
 
 const ThemeAccessibilityTest = () => {
-  const [passed, setPassed] = useState(true);
-  //const theme = useTheme();
+  const theme = useTheme();
+  const results = contrastChecks.map((check) => ({ check, result: checkPair(theme, check) }));
+  const passed = results.every(({ result }) => result.status === 'pass');
+
   return (
     <div>
       {passed ? (
@@ -129,132 +140,12 @@ const ThemeAccessibilityTest = () => {
           Some tests <Badge $bad>fail</Badge>
         </h2>
       )}
-      <TextContrast foreground="brandDark" background="readable" setPassed={setPassed} />
-      <TextContrast foreground="readable" background="brandDark" setPassed={setPassed} />
-      <TextContrast
-        foreground="textColor.primary"
-        background="cardBackground.primary"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="textColor.primary"
-        background="cardBackground.secondary"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="textColor.secondary"
-        background="cardBackground.primary"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="textColor.secondary"
-        background="cardBackground.secondary"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="textColor.tertiary"
-        background="cardBackground.primary"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="headingsColor"
-        background="themeColors.white"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="headingsColor"
-        background="themeColors.light"
-        setPassed={setPassed}
-      />
-      {/* image credit with transclusent bg */}
-      <TextContrast foreground="neutralDark" background="themeColors.white" setPassed={setPassed} />
-      {/* ToggleButton with readableColor function */}
-      <TextContrast
-        foreground="themeColors.black"
-        background="themeColors.light"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="graphColors.grey070"
-        background="themeColors.light"
-        setPassed={setPassed}
-      />
-      {/* ActionNumberBadge with brandLight bg and readableColor */}
-      {/* RestrictedBlockWrapper pink bg */}
-      {/* Attributes */}
-      Announcement banner
-      <TextContrast
-        foreground="graphColors.grey010"
-        background="graphColors.blue070"
-        setPassed={setPassed}
-      />
-      {/* BadgeTooltip against readableColor white or black */}
-      Navigation
-      <TextContrast
-        foreground="brandNavColor"
-        background="brandNavBackground"
-        largeOnly={true}
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="textColor.primary"
-        background="cardBackground.secondary"
-        setPassed={setPassed}
-      />
-      <TextContrast foreground="linkColor" background="themeColors.white" setPassed={setPassed} />
-      <TextContrast
-        foreground="linkColor"
-        background="cardBackground.primary"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="linkColor"
-        background="cardBackground.secondary"
-        setPassed={setPassed}
-      />
-      {/* SearchSection neutralLight bg with readable color text*/}
-      <TextContrast
-        foreground="footerColor"
-        background="footerBackgroundColor"
-        setPassed={setPassed}
-      />
-      <TextContrast foreground="graphColors.grey070" background="inputBg" setPassed={setPassed} />
-      <TextContrast
-        foreground="themeColors.black"
-        background="graphColors.blue010"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="section.indicatorShowcase.color"
-        background="section.indicatorShowcase.background"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="themeColors.white"
-        background="themeColors.dark"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="graphColors.grey020"
-        background="themeColors.dark"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="themeColors.black"
-        background="graphColors.blue010"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="themeColors.black"
-        background="graphColors.blue030"
-        setPassed={setPassed}
-      />
-      <TextContrast
-        foreground="themeColors.white"
-        background="graphColors.blue070"
-        setPassed={setPassed}
-      />
-      <TextContrast foreground="readable" background="actionColor" setPassed={setPassed} />
+      {results.map(({ check, result }, index) => (
+        <div key={`${check.foreground}-${check.background}`}>
+          {check.group && check.group !== results[index - 1]?.check.group && <h3>{check.group}</h3>}
+          <TextContrast check={check} result={result} />
+        </div>
+      ))}
     </div>
   );
 };
