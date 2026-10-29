@@ -567,8 +567,7 @@ const NavbarToggler = styled.button`
   }
 `;
 
-/* A visible name for the icon, also the button's accessible name; small, to
-   take no width beside the icon (BITV audit F25) */
+/* Also the button's accessible name */
 const NavbarTogglerLabel = styled.span`
   font-size: 11px;
   font-weight: ${(props) => props.theme.fontWeightNormal};

@@ -258,6 +258,9 @@ The steps go from the clearest conformance failures in shared components, which 
 
 4. **Organisation contact details (F5).** Fetch and show `email` on the organisation page. Use the organisation's name, not the raw URL, as the website link text. Add `alt` to the org logo. Check whether the backend has a phone number or address.
 5. **Link texts (F24).** Give the "Weiterlesen" links in `CategoryCardContent` the card title as visually hidden text. Ask the plan admins to fix "hier" links in their content.
+
+   Done in code: the `CategoryCardContent` link now reads "Weiterlesen: <category>" to screen readers. The tooltip link in `IndicatorValueSummary` was already removed (the tooltip is text only), `RichText`'s "read more" is an expand button rather than a link, and `RelatedIndicatorsBlock`'s link is switched off. A crawl of ten pages of the audited plan (home, topics, numbers and facts, actions) found no link whose text is only "Weiterlesen", "mehr" or "hier", so the remaining ones are in content the plan admins edit.
+
 6. **Platform contact (F4).** Kausal and the plan admins decide where the imprint and the contact person go; the footer links are set in the plan's settings.
 
 ### Afterwards
