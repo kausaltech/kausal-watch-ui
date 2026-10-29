@@ -419,9 +419,14 @@ function TaskList(props) {
   const { tasks } = props;
   const theme = useTheme();
   const t = useTranslations();
+  const locale = useLocale();
   const { taskSections, highlightLateTasks, collapseLongListsBy } = TASK_LIST_SETTINGS;
 
-  const sortedTasks = [...tasks].sort((a, b) => dayjs(getTaskDate(a)).diff(dayjs(getTaskDate(b))));
+  // Sort by date, breaking ties alphabetically whichever way the dates run
+  const compareTasks = (a, b, newestFirst) => {
+    const byDate = dayjs(getTaskDate(a)).diff(dayjs(getTaskDate(b)));
+    return (newestFirst ? -byDate : byDate) || a.name.localeCompare(b.name, locale);
+  };
   // Due dates are plain dates, so compare them as strings: a task is late from the day after it was due
   const today = dayjs().format('YYYY-MM-DD');
 
@@ -439,8 +444,10 @@ function TaskList(props) {
 
   const sections = taskSections
     .map((state) => {
-      const sectionTasks = sortedTasks.filter((item) => item.state === state);
-      if (TASK_SECTIONS[state].newestFirst) sectionTasks.reverse();
+      const { newestFirst } = TASK_SECTIONS[state];
+      const sectionTasks = tasks
+        .filter((item) => item.state === state)
+        .sort((a, b) => compareTasks(a, b, newestFirst));
       return { state, tasks: sectionTasks };
     })
     .filter((section) => section.tasks.length > 0);
