@@ -205,7 +205,8 @@ function RichTextImage(props: RichTextImageProps) {
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={imageUrl}
-      alt={alt || 'Image'}
+      // An empty alt marks the image as decorative in the editor
+      alt={alt ?? ''}
       height={height}
       width={width}
       // Apply image classes to the parent wrapper if grouped with an imageCredit
@@ -224,7 +225,9 @@ function RichTextImage(props: RichTextImageProps) {
     return (
       <RichTextImageWrapper className={className}>
         {zoomedElement}
-        <ImageCredit as="figcaption">{`${creditLabel}: ${imageCredit}`}</ImageCredit>
+        <ImageCredit as="figcaption" aria-hidden={alt ? undefined : true}>
+          {`${creditLabel}: ${imageCredit}`}
+        </ImageCredit>
       </RichTextImageWrapper>
     );
   }
