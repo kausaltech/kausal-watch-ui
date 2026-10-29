@@ -1,29 +1,12 @@
 import React from 'react';
 
-import { useTheme } from '@emotion/react';
+import { css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import type { Theme } from '@kausal/themes/types';
 import { transparentize } from 'polished';
 
 import { getThemeStaticURL } from '@common/themes/theme';
-
-const Tag = styled.span<{ $minWidth: string; $link?: boolean; $size: string }>`
-  display: flex;
-  align-items: flex-start;
-  min-width: ${(props) => props.$minWidth};
-  max-width: 600px;
-  padding: ${(props) => (props.$size === 'lg' ? props.theme.spaces.s050 : 0)};
-
-  ${(props) =>
-    props.$link === true &&
-    `
-    cursor: pointer;
-    &:hover {
-      text-decoration: underline;
-    }
-  `}
-`;
 
 type PlanAvatarProps = {
   size: keyof Theme['spaces'];
@@ -69,6 +52,24 @@ const PlanOrg = styled.span<{ $negative?: boolean }>`
      falls under 4.5:1 on mid-tone backgrounds */
   color: ${(props) =>
     props.$negative ? props.theme.themeColors.light : props.theme.graphColors.grey070};
+`;
+
+const Tag = styled.span<{ $minWidth: string; $link?: boolean; $size: string }>`
+  display: flex;
+  align-items: flex-start;
+  min-width: ${(props) => props.$minWidth};
+  max-width: 600px;
+  padding: ${(props) => (props.$size === 'lg' ? props.theme.spaces.s050 : 0)};
+
+  ${(props) =>
+    props.$link === true &&
+    css`
+      cursor: pointer;
+      /* On the texts, so each underline takes its text's colour */
+      &:hover ${PlanTitle}, &:hover ${PlanOrg} {
+        text-decoration: underline;
+      }
+    `}
 `;
 
 interface PlanChipProps {
