@@ -143,6 +143,22 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
         completedAt
         details
         state
+        responsibleParties {
+          id
+          organization {
+            id
+            abbreviation
+            name
+          }
+        }
+        contactPersons {
+          id
+          person {
+            id
+            firstName
+            lastName
+          }
+        }
       }
       status {
         id
