@@ -121,6 +121,14 @@ const OrgDescription = styled.div`
   font-size: ${(props) => props.theme.fontSizeSm};
 `;
 
+/** The URL without its protocol and trailing slash */
+const formatUrl = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+
+const OrgContact = styled.p`
+  font-size: ${(props) => props.theme.fontSizeSm};
+  margin-bottom: 0;
+`;
+
 const OrgLink = styled.a`
   display: block;
   font-size: ${(props) => props.theme.fontSizeSm};
@@ -203,7 +211,8 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
           <Row>
             {org.logo?.rendition?.src && (
               <Col md="2">
-                <OrgLogo src={org.logo?.rendition?.src} />
+                {/* The name is in the heading beside it */}
+                <OrgLogo src={org.logo?.rendition?.src} alt="" />
               </Col>
             )}
             <Col md="8" xl="7" className="mb-5">
@@ -221,7 +230,12 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
                   <RichText html={org.description} />
                 </OrgDescription>
               )}
-              {org.url && <OrgLink href={org.url}>{org.url}</OrgLink>}
+              {org.email && (
+                <OrgContact>
+                  {t('email')}: <a href={`mailto:${org.email}`}>{org.email}</a>
+                </OrgContact>
+              )}
+              {org.url && <OrgLink href={org.url}>{formatUrl(org.url)}</OrgLink>}
             </Col>
           </Row>
         </HeaderContainer>

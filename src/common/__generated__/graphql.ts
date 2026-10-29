@@ -7372,7 +7372,7 @@ export type OrganizationDetailsQuery_organization_logo_rendition = { __typename:
 
 export type OrganizationDetailsQuery_organization_logo = { __typename: 'Image', id: string, altText: string, rendition: OrganizationDetailsQuery_organization_logo_rendition | null };
 
-export type OrganizationDetailsQuery_organization = { __typename: 'Organization', id: string, name: string, abbreviation: string | null, distinctName: string | null, description: string, url: string, actionCount: number, contactPersonCount: number, classification: OrganizationDetailsQuery_organization_classification | null, ancestors: Array<OrganizationDetailsQuery_organization_ancestors | null> | null, plansWithActionResponsibilities: Array<OrganizationDetailsQuery_organization_plansWithActionResponsibilities>, parent: OrganizationDetailsQuery_organization_parent | null, logo: OrganizationDetailsQuery_organization_logo | null };
+export type OrganizationDetailsQuery_organization = { __typename: 'Organization', id: string, name: string, abbreviation: string | null, distinctName: string | null, description: string, url: string, email: string, actionCount: number, contactPersonCount: number, classification: OrganizationDetailsQuery_organization_classification | null, ancestors: Array<OrganizationDetailsQuery_organization_ancestors | null> | null, plansWithActionResponsibilities: Array<OrganizationDetailsQuery_organization_plansWithActionResponsibilities>, parent: OrganizationDetailsQuery_organization_parent | null, logo: OrganizationDetailsQuery_organization_logo | null };
 
 export type OrganizationDetailsQuery_plan_actionListPage = { __typename: 'ActionListPage', id: string | null, dashboardColumns: Array<DashboardActionListQuery_planPage_ActionListPage_dashboardColumns> | null };
 
