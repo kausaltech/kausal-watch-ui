@@ -105,7 +105,7 @@
   "outcome-bar-summary-forecast": "Mit dem gewählten <strong>Szenario {scenarioName}</strong> wird das Ziel von <strong>{nearestGoalValue}</strong> im Jahr {nearestGoalYear} erreicht. <strong>{goalType}</strong> im Jahr {selectedYear} betragen <strong>{selectedYearValue}</strong>.",
   "outcome-tabs-label": "Anzeigeoptionen",
   "do-not-show-again": "Nicht mehr anzeigen",
-  "close": "Schliessen",
+  "close": "Schließen",
   "coming-soon": "Werden später ergänzt",
   "return-to-front": "Zurück zur Titelseite",
   "cost-benefit": "Kosten-Nutzen",

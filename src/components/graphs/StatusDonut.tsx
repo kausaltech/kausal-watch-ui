@@ -1,18 +1,23 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
+
+import { useMediaQuery } from '@mui/material';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useLocale, useTranslations } from 'next-intl';
 
-import { Chart } from '@common/components/Chart';
+import { Chart, type ChartHandle } from '@common/components/Chart';
 
+import { useWindowSize } from '@/common/hooks/use-window-size';
 import { escapeHtml } from '@/common/utils';
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
+import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
+import { getChartDownloadFilename } from '@/components/graphs/indicator-graph.utils';
 
 // The legend under the donut is not in use yet; flip to show it
-const SHOW_LEGEND = false;
+const SHOW_LEGEND = true;
 
 /* Rows: heading, donut, legend; a subgrid, so the donuts line up across cards */
 const GraphCard = styled.div`
@@ -96,20 +101,51 @@ const ChartWrapper = styled.div`
   }
 `;
 
-const MODAL_CHART_WIDTH = 'min(350px, calc(100vw - 4rem))';
-const MODAL_CHART_HEIGHT = 'min(430px, calc(100vh - 12rem))';
+const MODAL_CHART_WIDTH = 'min(480px, calc(100vw - 4rem))';
+// Space for the labels of small slices above the donut
+const MODAL_LABEL_SPACE = 28;
+const MODAL_LEGEND_GAP = 24;
+const MODAL_LEGEND_ROW_HEIGHT = 22;
+
+/** The modal donut's layout in px, with the legend just under the donut */
+function getModalLayout(width: number, maxHeight: number, legendRows: number) {
+  const legendHeight = legendRows * MODAL_LEGEND_ROW_HEIGHT;
+  const radius = Math.max(
+    60,
+    Math.min(
+      // Leaves room at the sides for labels outside the donut
+      width * 0.35,
+      (maxHeight - MODAL_LABEL_SPACE - MODAL_LEGEND_GAP - legendHeight) / 2
+    )
+  );
+  const centerY = MODAL_LABEL_SPACE + radius;
+  const legendTop = centerY + radius + MODAL_LEGEND_GAP;
+  return {
+    radius,
+    centerX: width / 2,
+    centerY,
+    legendTop,
+    legendHeight,
+    height: legendTop + legendHeight,
+  };
+}
 
 const ModalChartWrapper = styled.div`
   position: relative;
   width: ${MODAL_CHART_WIDTH};
-  height: ${MODAL_CHART_HEIGHT};
   max-width: 100%;
-  margin: -0.75rem auto -1rem;
+  margin: -0.75rem auto 0;
 
   > div {
     width: 100% !important;
     height: 100% !important;
   }
+`;
+
+const ModalDownloadRow = styled.div`
+  width: ${MODAL_CHART_WIDTH};
+  max-width: 100%;
+  margin: 0 auto;
 `;
 
 const OpenModalButton = styled.button`
@@ -125,25 +161,21 @@ const OpenModalButton = styled.button`
   border: none;
   border-radius: ${(props) => props.theme.btnBorderRadius};
   background: ${(props) => props.theme.themeColors.white};
-  box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
   font-size: 20px;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out;
 
-  ${GraphCard}:hover &,
-  ${GraphCard}:focus-within & {
-    opacity: 1;
+  ${GraphCard}:hover & {
+    box-shadow: 0 2px 8px rgb(0 0 0 / 12%);
   }
 
   &:focus-visible {
-    opacity: 1;
     outline: 2px solid ${(props) => props.theme.themeColors.dark};
     outline-offset: 2px;
   }
 
   svg {
-    color: ${(props) => props.theme.themeColors.dark};
+    color: ${(props) => props.theme.textColor.tertiary};
   }
 `;
 
@@ -229,13 +261,6 @@ const formatPrecisePercent = (value: number, total: number) => {
   return `${roundedPercent}%`;
 };
 
-const getDownloadFilename = (header: string) =>
-  header
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/[^\p{L}\p{N}-]+/gu, '') || 'status-donut';
-
 const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDonutProps) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -258,6 +283,17 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const modalChartRef = useRef<ChartHandle>(null);
+  // Room for a two-column legend
+  const wideModal = useMediaQuery(theme.breakpoints.up('sm'));
+  const [modalChartWidth, setModalChartWidth] = useState<number>();
+  const { height: windowHeight } = useWindowSize(100);
+  const measureModalChart = useCallback((el: HTMLDivElement | null) => {
+    if (!el) return;
+    const observer = new ResizeObserver(([entry]) => setModalChartWidth(entry.contentRect.width));
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -353,8 +389,9 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         easing: 'cubicOut' as const,
       },
       color: chartColors,
+      // The legend list under the card already gives the values
       aria: {
-        enabled: true,
+        enabled: !SHOW_LEGEND,
       },
       legend: {
         show: false,
@@ -494,35 +531,46 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
     ]
   );
 
+  // A vertical legend wraps into a new column at its height
+  const legendColumns = wideModal && modalChartData.length > 4 ? 2 : 1;
+  const legendRows = Math.ceil(modalChartData.length / legendColumns);
+  const modalLayout = useMemo(
+    () =>
+      modalChartWidth
+        ? getModalLayout(
+            modalChartWidth,
+            // The modal's header and download row take about 14rem
+            Math.min(modalChartWidth + 64, (windowHeight ?? 800) - 224),
+            legendRows
+          )
+        : null,
+    [modalChartWidth, windowHeight, legendRows]
+  );
+
   const modalOption = useMemo(() => {
-    const modalDonutCenter = ['50%', '38%'] as const;
+    if (!modalLayout) return null;
+    const values = chartData
+      .filter((item) => item.value > 0)
+      .map((item) => `${item.name} ${item.value}`)
+      .join(', ');
 
     return {
       ...baseOption,
-      toolbox: {
-        show: true,
-        right: 0,
-        top: 0,
-        itemSize: 14,
-        feature: {
-          saveAsImage: {
-            show: true,
-            type: 'png',
-            name: getDownloadFilename(header),
-            title: t('download-chart-as-png'),
-            pixelRatio: 2,
-            backgroundColor: theme.themeColors.white ?? '#ffffff',
-          },
+      aria: {
+        enabled: true,
+        label: {
+          description: `${header}${currentValue ? ` (${currentValue})` : ''}: ${values}`,
         },
       },
       legend: {
         show: true,
         orient: 'vertical' as const,
         left: 'center',
-        top: '68%',
+        top: modalLayout.legendTop,
+        height: modalLayout.legendHeight,
         icon: 'circle',
-        itemWidth: 9,
-        itemHeight: 9,
+        itemWidth: 12,
+        itemHeight: 12,
         itemGap: 6,
         padding: 0,
         selectedMode: false,
@@ -532,14 +580,16 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
           fontSize: 12,
           color: theme.themeColors.dark,
           lineHeight: 16,
+          // Space between the columns
+          padding: legendColumns > 1 ? [0, 24, 0, 0] : 0,
         },
       },
       series: [
         {
           ...baseOption.series[0],
           data: modalChartData,
-          radius: ['28%', '52%'],
-          center: modalDonutCenter,
+          radius: [modalLayout.radius * 0.52, modalLayout.radius],
+          center: [modalLayout.centerX, modalLayout.centerY],
           padAngle: 1,
           avoidLabelOverlap: true,
           minShowLabelAngle: 1,
@@ -587,8 +637,8 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         ? [
             {
               type: 'group' as const,
-              left: modalDonutCenter[0],
-              top: modalDonutCenter[1],
+              left: modalLayout.centerX,
+              top: modalLayout.centerY,
               bounding: 'raw' as const,
               silent: true,
               children: [
@@ -613,11 +663,13 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
     };
   }, [
     baseOption,
+    chartData,
     currentValue,
     fontFamily,
     header,
     modalChartData,
-    t,
+    modalLayout,
+    legendColumns,
     theme.themeColors.dark,
     theme.themeColors.white,
   ]);
@@ -640,7 +692,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
             }}
             aria-label={`${t('expand-embed')}: ${header}`}
           >
-            <Icon.ArrowUpRightFromSquare />
+            <Icon.Search />
           </OpenModalButton>
 
           <Chart
@@ -670,16 +722,25 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       </GraphCard>
 
       <Modal isOpen={isModalOpen} onClose={closeModal} header={header} helpText={helpText}>
-        <ModalChartWrapper>
-          <Chart
-            isLoading={false}
-            data={modalOption}
-            height={MODAL_CHART_HEIGHT}
-            renderer="canvas"
-            withResizeLegend={false}
-            locale={locale}
-          />
+        <ModalChartWrapper ref={measureModalChart} style={{ height: modalLayout?.height }}>
+          {modalOption && modalLayout && (
+            <Chart
+              ref={modalChartRef}
+              isLoading={false}
+              data={modalOption}
+              height={`${modalLayout.height}px`}
+              renderer="canvas"
+              withResizeLegend={false}
+              locale={locale}
+            />
+          )}
         </ModalChartWrapper>
+        <ModalDownloadRow>
+          <ChartDownloadButton
+            chartRef={modalChartRef}
+            filename={getChartDownloadFilename(header, 'status-donut')}
+          />
+        </ModalDownloadRow>
       </Modal>
     </>
   );
