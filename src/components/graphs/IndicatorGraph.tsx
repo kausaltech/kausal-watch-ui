@@ -1,13 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useMemo } from 'react';
+import { type Ref, useCallback, useEffect, useMemo } from 'react';
 
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useLocale, useTranslations } from 'next-intl';
 
-import { Chart, type ECOption } from '@common/components/Chart';
+import { Chart, type ChartHandle, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import useNumberFormatter from '@/common/numbers';
@@ -25,7 +25,6 @@ import {
   alignTracesToDates,
   applyGoalMarkers,
   buildGoalSeries,
-  buildSaveAsImageToolbox,
   buildSeriesFromTraces,
   buildTimeTooltipFormatter,
   buildTimeXAxis,
@@ -34,7 +33,6 @@ import {
   collectChartDates,
   detectTimeDimension,
   formatNumber,
-  getChartDownloadFilename,
   niceTickInterval,
   parseGraphSettings,
   resolveGraphColors,
@@ -53,8 +51,10 @@ type IndicatorGraphProps = {
     axes: Array<[string, number]>;
   };
   title: string | null;
-  /** Basename for the save-as-PNG download; the indicator name in practice */
-  downloadFilename?: string | null;
+  /** The indicator (or factor metric) name; names the chart for screen readers when title is null */
+  chartName?: string | null;
+  /** For exporting the chart, e.g. as a PNG */
+  chartRef?: Ref<ChartHandle>;
   nonQuantifiedGoal?: NonQuantifiedGoalProp;
   referenceValue: ReferenceValueProp;
   height?: number;
@@ -79,7 +79,8 @@ function IndicatorGraph({
   trendTrace,
   specification,
   title,
-  downloadFilename,
+  chartName,
+  chartRef,
   nonQuantifiedGoal,
   referenceValue,
   height = 450,
@@ -208,10 +209,10 @@ function IndicatorGraph({
         : null;
 
     // ECharts sets the description as the chart's aria-label. Callers that
-    // render their own heading pass title=null, so fall back to the download
-    // basename, which is the indicator (or factor metric) name in practice.
+    // render their own heading pass title=null, so fall back to the chart's
+    // name.
     const ariaDescription = buildAriaDescription({
-      title: title ?? downloadFilename,
+      title: title ?? chartName,
       traces,
       goalTraces,
       trendTrace,
@@ -230,11 +231,6 @@ function IndicatorGraph({
         label: { description: ariaDescription },
       },
       backgroundColor: chartBackground,
-      toolbox: buildSaveAsImageToolbox({
-        filename: getChartDownloadFilename(downloadFilename ?? title),
-        buttonTitle: t('download-chart-as-png'),
-        backgroundColor: chartBackground,
-      }),
       title: {
         text: wrappedTitle ?? undefined,
         subtext: yRange.unit,
@@ -343,7 +339,7 @@ function IndicatorGraph({
     xAxisCategories,
     xAxisRange,
     title,
-    downloadFilename,
+    chartName,
     theme,
     locale,
     ariaDetail,
@@ -367,7 +363,13 @@ function IndicatorGraph({
 
   return (
     <PlotContainer data-element="indicator-graph-plot-container" $vizHeight={chartHeight}>
-      <Chart data={option} isLoading={false} height={`${chartHeight}px`} locale={locale} />
+      <Chart
+        ref={chartRef}
+        data={option}
+        isLoading={false}
+        height={`${chartHeight}px`}
+        locale={locale}
+      />
     </PlotContainer>
   );
 }

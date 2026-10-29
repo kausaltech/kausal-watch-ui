@@ -1,3 +1,5 @@
+import type { Ref } from 'react';
+
 import { useTheme } from '@emotion/react';
 
 import { PieChart } from 'echarts/charts';
@@ -7,17 +9,13 @@ import * as echarts from 'echarts/core';
 import type { CallbackDataParams } from 'echarts/types/dist/shared';
 import { useLocale, useTranslations } from 'next-intl';
 
-import { Chart, type ECOption } from '@common/components/Chart';
+import { Chart, type ChartHandle, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import type { PieChartVisualizationFragment } from '@/common/__generated__/graphql';
 import useNumberFormatter from '@/common/numbers';
 import { escapeHtml } from '@/common/utils';
 import type { AriaDetail } from '@/components/graphs/indicator-graph-aria';
-import {
-  buildSaveAsImageToolbox,
-  getChartDownloadFilename,
-} from '@/components/graphs/indicator-graph.utils';
 import { useChartBackground } from '@/components/graphs/use-chart-background';
 
 import { getDefaultColors } from './indicator-chart-colors';
@@ -35,6 +33,8 @@ type Props = Omit<
 > & {
   /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
   ariaDetail?: AriaDetail;
+  /** For exporting the chart, e.g. as a PNG */
+  chartRef?: Ref<ChartHandle>;
 };
 type IndicatorType = NonNullable<Props['indicator']>;
 
@@ -184,6 +184,7 @@ const DashboardIndicatorPieChartBlock = ({
   indicator,
   year,
   ariaDetail,
+  chartRef,
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -235,11 +236,6 @@ const DashboardIndicatorPieChartBlock = ({
       enabled: true,
       label: { description: ariaDescription },
     },
-    toolbox: buildSaveAsImageToolbox({
-      filename: getChartDownloadFilename(indicator?.name),
-      buttonTitle: t('download-chart-as-png'),
-      backgroundColor: chartBackground,
-    }),
     backgroundColor: chartBackground,
     tooltip: {
       appendTo: 'body',
@@ -327,7 +323,7 @@ const DashboardIndicatorPieChartBlock = ({
       <h5>
         {dimension?.name} ({assertedYear})
       </h5>
-      <Chart data={option} isLoading={false} height="400px" />
+      <Chart ref={chartRef} data={option} isLoading={false} height="400px" />
     </>
   );
 };
