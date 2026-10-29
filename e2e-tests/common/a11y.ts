@@ -165,12 +165,14 @@ export function runSummaryMarkdown(audits: PlanAudit[]): string {
   }
 
   const failed = audits.flatMap((audit) =>
-    audit.pages.filter((page) => page.error).map((page) => ({ planId: audit.planId, page }))
+    audit.pages.flatMap((page) =>
+      page.error ? [{ planId: audit.planId, page, error: page.error }] : []
+    )
   );
   if (failed.length) {
     lines.push('', '## Pages that could not be audited', '');
-    for (const { planId, page } of failed) {
-      lines.push(`- ${planId} / ${page.name} (${page.url}): ${page.error}`);
+    for (const { planId, page, error } of failed) {
+      lines.push(`- ${planId} / ${page.name} (${page.url}): ${error}`);
     }
   }
   return lines.join('\n') + '\n';
