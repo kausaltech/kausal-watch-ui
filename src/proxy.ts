@@ -34,6 +34,7 @@ import {
   isLegacyPathStructure,
   isPlanAvailable,
   rewriteUrl,
+  setMatomoAnalyticsUrl,
   usesAccessGate,
 } from './utils/middleware.utils';
 import { stripLocaleAndPlan } from './utils/urls';
@@ -272,7 +273,10 @@ const handleRequest = auth(async (request: NextAuthRequest) => {
     request.url
   );
 
-  return rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier);
+  return setMatomoAnalyticsUrl(
+    rewriteUrl(request, response, hostUrl, rewrittenUrl, planIdentifier),
+    parsedPlan
+  );
 });
 
 async function proxy(...args: Parameters<typeof handleRequest>) {

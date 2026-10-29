@@ -55,6 +55,7 @@
       "ActionStartDateBlock",
       "ActionStatusReportFieldBlock",
       "ActionTasksBlock",
+      "ActionTasksReportFieldBlock",
       "ActionUpdatedAtBlock"
     ],
     "ActionDashboardColumnBlock": [
@@ -322,6 +323,7 @@
       "ActionStartDateBlock",
       "ActionStatusReportFieldBlock",
       "ActionTasksBlock",
+      "ActionTasksReportFieldBlock",
       "ActionUpdatedAtBlock",
       "EndDateColumnBlock",
       "IdentifierColumnBlock",
@@ -499,7 +501,7 @@
       "ActionScheduleContinuousBlock",
       "ActionStartDateBlock",
       "ActionStatusReportFieldBlock",
-      "ActionTasksBlock",
+      "ActionTasksReportFieldBlock",
       "ActionUpdatedAtBlock"
     ],
     "ReportValueInterface": [
@@ -573,7 +575,9 @@
       "ActionStatusFilterBlock",
       "ActionStatusGraphsBlock",
       "ActionStatusReportFieldBlock",
+      "ActionTaskSectionBlock",
       "ActionTasksBlock",
+      "ActionTasksReportFieldBlock",
       "ActionUpdatedAtBlock",
       "AdaptiveEmbedBlock",
       "BlockQuoteBlock",

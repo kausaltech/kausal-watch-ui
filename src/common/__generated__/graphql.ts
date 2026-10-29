@@ -1212,7 +1212,11 @@ type ActionListFilter_ActionStatusGraphsBlock_Fragment = { __typename: 'ActionSt
 
 type ActionListFilter_ActionStatusReportFieldBlock_Fragment = { __typename: 'ActionStatusReportFieldBlock', field: string };
 
+type ActionListFilter_ActionTaskSectionBlock_Fragment = { __typename: 'ActionTaskSectionBlock', field: string };
+
 type ActionListFilter_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', field: string };
+
+type ActionListFilter_ActionTasksReportFieldBlock_Fragment = { __typename: 'ActionTasksReportFieldBlock', field: string };
 
 type ActionListFilter_ActionUpdatedAtBlock_Fragment = { __typename: 'ActionUpdatedAtBlock', field: string };
 
@@ -1446,7 +1450,9 @@ export type ActionListFilterFragment =
   | ActionListFilter_ActionStatusFilterBlock_Fragment
   | ActionListFilter_ActionStatusGraphsBlock_Fragment
   | ActionListFilter_ActionStatusReportFieldBlock_Fragment
+  | ActionListFilter_ActionTaskSectionBlock_Fragment
   | ActionListFilter_ActionTasksBlock_Fragment
+  | ActionListFilter_ActionTasksReportFieldBlock_Fragment
   | ActionListFilter_ActionUpdatedAtBlock_Fragment
   | ActionListFilter_AdaptiveEmbedBlock_Fragment
   | ActionListFilter_BlockQuoteBlock_Fragment
@@ -1807,7 +1813,11 @@ export type DashboardIndicatorBlockFragment_blocks_ActionStatusGraphsBlock = { _
 
 export type DashboardIndicatorBlockFragment_blocks_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', blockType: string };
 
+export type DashboardIndicatorBlockFragment_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', blockType: string };
+
 export type DashboardIndicatorBlockFragment_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', blockType: string };
+
+export type DashboardIndicatorBlockFragment_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', blockType: string };
 
 export type DashboardIndicatorBlockFragment_blocks_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', blockType: string };
 
@@ -2041,7 +2051,9 @@ export type DashboardIndicatorBlockFragment_blocks =
   | DashboardIndicatorBlockFragment_blocks_ActionStatusFilterBlock
   | DashboardIndicatorBlockFragment_blocks_ActionStatusGraphsBlock
   | DashboardIndicatorBlockFragment_blocks_ActionStatusReportFieldBlock
+  | DashboardIndicatorBlockFragment_blocks_ActionTaskSectionBlock
   | DashboardIndicatorBlockFragment_blocks_ActionTasksBlock
+  | DashboardIndicatorBlockFragment_blocks_ActionTasksReportFieldBlock
   | DashboardIndicatorBlockFragment_blocks_ActionUpdatedAtBlock
   | DashboardIndicatorBlockFragment_blocks_AdaptiveEmbedBlock
   | DashboardIndicatorBlockFragment_blocks_BlockQuoteBlock
@@ -2343,7 +2355,11 @@ type IndicatorListFilter_ActionStatusGraphsBlock_Fragment = { __typename: 'Actio
 
 type IndicatorListFilter_ActionStatusReportFieldBlock_Fragment = { __typename: 'ActionStatusReportFieldBlock', field: string };
 
+type IndicatorListFilter_ActionTaskSectionBlock_Fragment = { __typename: 'ActionTaskSectionBlock', field: string };
+
 type IndicatorListFilter_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', field: string };
+
+type IndicatorListFilter_ActionTasksReportFieldBlock_Fragment = { __typename: 'ActionTasksReportFieldBlock', field: string };
 
 type IndicatorListFilter_ActionUpdatedAtBlock_Fragment = { __typename: 'ActionUpdatedAtBlock', field: string };
 
@@ -2577,7 +2593,9 @@ export type IndicatorListFilterFragment =
   | IndicatorListFilter_ActionStatusFilterBlock_Fragment
   | IndicatorListFilter_ActionStatusGraphsBlock_Fragment
   | IndicatorListFilter_ActionStatusReportFieldBlock_Fragment
+  | IndicatorListFilter_ActionTaskSectionBlock_Fragment
   | IndicatorListFilter_ActionTasksBlock_Fragment
+  | IndicatorListFilter_ActionTasksReportFieldBlock_Fragment
   | IndicatorListFilter_ActionUpdatedAtBlock_Fragment
   | IndicatorListFilter_AdaptiveEmbedBlock_Fragment
   | IndicatorListFilter_BlockQuoteBlock_Fragment
@@ -2801,7 +2819,11 @@ export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_bl
 
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', field: string };
 
+export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', field: string };
+
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string };
+
+export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', field: string };
 
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', field: string };
 
@@ -3035,7 +3057,9 @@ export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_bl
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionStatusFilterBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionStatusGraphsBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionStatusReportFieldBlock
+  | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionTaskSectionBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionTasksBlock
+  | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionTasksReportFieldBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionUpdatedAtBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_AdaptiveEmbedBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_BlockQuoteBlock
@@ -3270,7 +3294,11 @@ export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionStatusGraph
 
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock' };
 
+export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock' };
+
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionTasksBlock = { __typename: 'ActionTasksBlock' };
+
+export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock' };
 
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock' };
 
@@ -3504,7 +3532,9 @@ export type StreamFieldFragment_IndicatorGroupBlock_indicators =
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionStatusFilterBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionStatusGraphsBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionStatusReportFieldBlock
+  | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionTaskSectionBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionTasksBlock
+  | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionTasksReportFieldBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionUpdatedAtBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_AdaptiveEmbedBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_BlockQuoteBlock
@@ -3681,7 +3711,11 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionStatusGraphs
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock' };
 
+export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock' };
+
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock' };
+
+export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock' };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock' };
 
@@ -3915,7 +3949,9 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_blocks =
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionStatusFilterBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionStatusGraphsBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionStatusReportFieldBlock
+  | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionTaskSectionBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionTasksBlock
+  | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionTasksReportFieldBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionUpdatedAtBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_AdaptiveEmbedBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_BlockQuoteBlock
@@ -4155,7 +4191,11 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionStatusGr
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', blockType: string };
 
+export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', blockType: string };
+
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionTasksBlock = { __typename: 'ActionTasksBlock', blockType: string };
+
+export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', blockType: string };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', blockType: string };
 
@@ -4389,7 +4429,9 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton =
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionStatusFilterBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionStatusGraphsBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionStatusReportFieldBlock
+  | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionTaskSectionBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionTasksBlock
+  | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionTasksReportFieldBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionUpdatedAtBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_AdaptiveEmbedBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_BlockQuoteBlock
@@ -4570,7 +4612,11 @@ type StreamField_ActionStatusGraphsBlock_Fragment = { __typename: 'ActionStatusG
 
 type StreamField_ActionStatusReportFieldBlock_Fragment = { __typename: 'ActionStatusReportFieldBlock', blockType: string, field: string };
 
+type StreamField_ActionTaskSectionBlock_Fragment = { __typename: 'ActionTaskSectionBlock', blockType: string, field: string };
+
 type StreamField_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', blockType: string, field: string };
+
+type StreamField_ActionTasksReportFieldBlock_Fragment = { __typename: 'ActionTasksReportFieldBlock', blockType: string, field: string };
 
 type StreamField_ActionUpdatedAtBlock_Fragment = { __typename: 'ActionUpdatedAtBlock', blockType: string, field: string };
 
@@ -4804,7 +4850,9 @@ export type StreamFieldFragment =
   | StreamField_ActionStatusFilterBlock_Fragment
   | StreamField_ActionStatusGraphsBlock_Fragment
   | StreamField_ActionStatusReportFieldBlock_Fragment
+  | StreamField_ActionTaskSectionBlock_Fragment
   | StreamField_ActionTasksBlock_Fragment
+  | StreamField_ActionTasksReportFieldBlock_Fragment
   | StreamField_ActionUpdatedAtBlock_Fragment
   | StreamField_AdaptiveEmbedBlock_Fragment
   | StreamField_BlockQuoteBlock_Fragment
@@ -5165,7 +5213,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', id: string | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionTasksBlock = { __typename: 'ActionTasksBlock', id: string | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', id: string | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', id: string | null };
 
@@ -5182,7 +5230,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionScheduleContinuousBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionStartDateBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionStatusReportFieldBlock
-  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionTasksBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionTasksReportFieldBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportsToCompare_valuesForAction_field_ActionUpdatedAtBlock
 ;
 
@@ -5299,7 +5347,11 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', field: string };
 
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', field: string };
+
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', field: string };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', field: string };
 
@@ -5533,7 +5585,9 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionStatusFilterBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionStatusGraphsBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionStatusReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTaskSectionBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksReportFieldBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionUpdatedAtBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_AdaptiveEmbedBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_BlockQuoteBlock
@@ -5980,7 +6034,11 @@ export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgr
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock' };
 
+export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock' };
+
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock' };
+
+export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock' };
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock' };
 
@@ -6214,7 +6272,9 @@ export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgr
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionStatusFilterBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionStatusGraphsBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionStatusReportFieldBlock
+  | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionTaskSectionBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionTasksBlock
+  | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionTasksReportFieldBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionUpdatedAtBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_AdaptiveEmbedBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_BlockQuoteBlock
@@ -7709,7 +7769,11 @@ export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_A
 
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', field: string };
 
+export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', field: string };
+
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string };
+
+export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', field: string };
 
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', field: string };
 
@@ -7943,7 +8007,9 @@ export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_A
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionStatusFilterBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionStatusGraphsBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionStatusReportFieldBlock
+  | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionTaskSectionBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionTasksBlock
+  | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionTasksReportFieldBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionUpdatedAtBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_AdaptiveEmbedBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_BlockQuoteBlock
@@ -8127,7 +8193,7 @@ export type PlanContextQueryVariables = Exact<{
 
 export type PlanContextFragment = { __typename: 'Plan', id: string, identifier: string, shortIdentifier: string | null, name: string, shortName: string | null, versionName: string, themeIdentifier: string | null, timezone: string, primaryLanguage: string, otherLanguages: Array<string>, hideActionIdentifiers: boolean, publishedAt: string | null, kausalPathsInstanceUuid: string, viewUrl: string | null, actionReportExportViewUrl: string | null, serveFileBaseUrl: string, adminUrl: string | null, accessibilityStatementUrl: string | null, externalFeedbackUrl: string | null, pledgeTermsUrl: string | null, pledgePrivacyUrl: string | null, pledgeAccountTitle: string | null, pledgeAccountDescription: string | null, pledgeMarketingConsentLabel: string | null, primaryActionClassification: PlanContextQuery_plan_primaryActionClassification | null, secondaryActionClassification: PlanContextQuery_plan_secondaryActionClassification | null, domain: PlanContextQuery_plan_domain | null, image: PlanContextQuery_plan_image | null, actionSchedules: Array<PlanContextQuery_plan_actionSchedules>, actionImplementationPhases: Array<PlanContextQuery_plan_actionImplementationPhases>, actionDependencyRoles: Array<PlanContextQuery_plan_actionDependencyRoles>, actionImpacts: Array<PlanContextQuery_plan_actionImpacts>, actionStatuses: Array<PlanContextQuery_plan_actionStatuses>, actionStatusSummaries: Array<PlanContextQuery_plan_actionStatusSummaries>, actionTimelinessClasses: Array<PlanContextQuery_plan_actionTimelinessClasses>, impactGroups: Array<PlanContextQuery_plan_impactGroups>, primaryOrgs: Array<PlanContextQuery_plan_primaryOrgs>, generalContent: PlanContextQuery_plan_generalContent, mainMenu: PlanContextQuery_plan_mainMenu | null, footer: PlanContextQuery_plan_footer | null, features: PlanContextQuery_plan_features, pledgeFormFields: Array<PlanContextQuery_plan_pledgeFormFields>, allRelatedPlans: Array<PlanContextQuery_plan_allRelatedPlans>, supersededBy: PlanContextQuery_plan_supersededBy | null, supersededPlans: Array<PlanContextQuery_plan_supersededPlans>, supersedingPlans: Array<PlanContextQuery_plan_supersedingPlans>, children: Array<PlanContextQuery_plan_children>, parent: PlanContextQuery_plan_parent | null, additionalLinks: PlanContextQuery_plan_additionalLinks | null, actionListPage: PlanContextQuery_plan_actionListPage | null };
 
-export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, availability: PlanDomainAvailability | null, statusMessage: string | null };
+export type PlansByHostnameQuery_plansForHostname_domain = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, availability: PlanDomainAvailability | null, statusMessage: string | null, matomoAnalyticsUrl: string | null };
 
 export type PlansByHostnameQuery_plansForHostname_domains = { __typename: 'PlanDomain', id: string, hostname: string, redirectToHostname: string | null, basePath: string | null, availability: PlanDomainAvailability | null, statusMessage: string | null };
 
@@ -8307,7 +8373,11 @@ type PledgeBody_ActionStatusGraphsBlock_Fragment = { __typename: 'ActionStatusGr
 
 type PledgeBody_ActionStatusReportFieldBlock_Fragment = { __typename: 'ActionStatusReportFieldBlock', blockType: string, field: string };
 
+type PledgeBody_ActionTaskSectionBlock_Fragment = { __typename: 'ActionTaskSectionBlock', blockType: string, field: string };
+
 type PledgeBody_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', blockType: string, field: string };
+
+type PledgeBody_ActionTasksReportFieldBlock_Fragment = { __typename: 'ActionTasksReportFieldBlock', blockType: string, field: string };
 
 type PledgeBody_ActionUpdatedAtBlock_Fragment = { __typename: 'ActionUpdatedAtBlock', blockType: string, field: string };
 
@@ -8541,7 +8611,9 @@ export type PledgeBodyFragment =
   | PledgeBody_ActionStatusFilterBlock_Fragment
   | PledgeBody_ActionStatusGraphsBlock_Fragment
   | PledgeBody_ActionStatusReportFieldBlock_Fragment
+  | PledgeBody_ActionTaskSectionBlock_Fragment
   | PledgeBody_ActionTasksBlock_Fragment
+  | PledgeBody_ActionTasksReportFieldBlock_Fragment
   | PledgeBody_ActionUpdatedAtBlock_Fragment
   | PledgeBody_AdaptiveEmbedBlock_Fragment
   | PledgeBody_BlockQuoteBlock_Fragment
