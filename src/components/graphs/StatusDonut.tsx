@@ -14,7 +14,6 @@ import { escapeHtml } from '@/common/utils';
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
 import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
-import { getChartDownloadFilename } from '@/components/graphs/indicator-graph.utils';
 
 // The legend under the donut is not in use yet; flip to show it
 const SHOW_LEGEND = true;
@@ -738,7 +737,8 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         <ModalDownloadRow>
           <ChartDownloadButton
             chartRef={modalChartRef}
-            filename={getChartDownloadFilename(header, 'status-donut')}
+            title={header}
+            filenameFallback="status-donut"
           />
         </ModalDownloadRow>
       </Modal>
