@@ -226,7 +226,7 @@ The steps go from the clearest conformance failures in shared components, which 
 
 6. **Theme colour pairs (F11, F12, F17).** Ask the auditor for the locations of F11 and F17, then fix the colour pairs in the theme. Run a contrast check across all themes for the same pairs, not only the audited plan's.
 
-   Located but open. F10: give the showcase bars an outline in the section's text colour (white, 7:1 on the red), or darken `latestColor`. F11 is done: the ECharts toolbox is replaced by `ChartDownloadButton`, an HTML "Download" menu button styled like the page PDF download, that saves the chart through the chart's `getDataURL` (the charts take a `chartRef`). It sits under the chart, right-aligned on the data table toggle's row (`GraphAsTable`'s `actions`). It shows wherever `IndicatorVisualisation` renders a chart, including configured visualisations and factor charts, but not on dashboard chart blocks. `StatusDonut`'s modal still uses the toolbox. F12: use a darker goal colour for margin (`green070` is 5.9:1), and check the other goal colours. F17: passes with current colours; recheck after any F10 colour change. Also done in this step: the plan switcher's `outline: inherit` hid its focus ring, and the organisation tabs' second line in `PlanChip` was below 4.5:1 on the sunnydale theme.
+   Located but open. F10: give the showcase bars an outline in the section's text colour (white, 7:1 on the red), or darken `latestColor`. F11 is done: the ECharts toolbox is replaced by `ChartDownloadButton`, an HTML "Download" menu button styled like the page PDF download, that saves the chart through the chart's `getDataURL` (the charts take a `chartRef`). It sits under the chart, right-aligned on the data table toggle's row (`GraphAsTable`'s `actions`). It shows wherever `IndicatorVisualisation` renders a chart, including configured visualisations and factor charts, but not on dashboard chart blocks. `StatusDonut`'s modal still uses the toolbox. F12 is done in the audited plan's theme: it now sets its own `trendLineColor`, `goalLineColors` and `categoryColors`, all at least 3:1 on the white chart background (the first goal colour, the crosses, is `green070` at 5.9:1). The lists are full length, because the themes build merges lists with the default theme's by index. Other themes still inherit default graph colours below 3:1; we rely on the data table and the chart's aria description as the text equivalent there. F17: passes with current colours; recheck after any F10 colour change. Also done in this step: the plan switcher's `outline: inherit` hid its focus ring, and the organisation tabs' second line in `PlanChip` was below 4.5:1 on the sunnydale theme.
 
 ### Step 4: charts
 
@@ -245,7 +245,13 @@ The steps go from the clearest conformance failures in shared components, which 
 ### Step 5: content and text
 
 1. **Image credits (F30).** When an image has no alt text, hide `ImageCredit` from screen readers with `aria-hidden`. Ask the plan admins to add alt texts to the hero and topic header images, which also solves it.
+
+   Done: every image that shows a credit (the three home heroes, `ContainedHeaderImage`, the content and category page headers, `ActionHero`, `LargeImageBlock` and the pledge image) sets `aria-hidden` on the credit when its alt text is empty. Images inside rich text are handled with F6.
+
 2. **Leftover image label (F6).** Remove the `sr-only` `role="img"` span in `CategoryPageHeaderBlock`. Recheck the home tiles on the live site.
+
+   Done: the span is removed, and `RichText` no longer replaces an empty alt (an image marked decorative in the editor) with "Image"; such an image's credit is hidden too, as in F30. Checked on the audited plan: the home page and topic pages have no "Bild" labels or `role="img"` elements, and all their images have an empty alt.
+
 3. **Menu label (F25).** Show a visible "Menu" text next to the hamburger icon at the widths where the toggle shows, and reuse it as the accessible name.
 4. **Organisation contact details (F5).** Fetch and show `email` on the organisation page. Use the organisation's name, not the raw URL, as the website link text. Add `alt` to the org logo. Check whether the backend has a phone number or address.
 5. **Link texts (F24).** Give the "Weiterlesen" links in `CategoryCardContent` the card title as visually hidden text. Ask the plan admins to fix "hier" links in their content.
