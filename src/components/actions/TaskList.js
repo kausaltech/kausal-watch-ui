@@ -465,9 +465,14 @@ function TaskList(props) {
   const { tasks, sections } = props;
   const theme = useTheme();
   const t = useTranslations();
+  const locale = useLocale();
   const { collapseLongListsBy } = TASK_LIST_SETTINGS;
 
-  const sortedTasks = [...tasks].sort((a, b) => dayjs(getTaskDate(a)).diff(dayjs(getTaskDate(b))));
+  // Sort by date, breaking ties alphabetically whichever way the dates run
+  const compareTasks = (a, b, newestFirst) => {
+    const byDate = dayjs(getTaskDate(a)).diff(dayjs(getTaskDate(b)));
+    return (newestFirst ? -byDate : byDate) || a.name.localeCompare(b.name, locale);
+  };
 
   // A task is late once the day it was due has passed. "Today" is the viewer's date, which only the
   // browser knows: the server's date can differ, so the server and the hydration render mark no task
@@ -485,9 +490,10 @@ function TaskList(props) {
   return (
     <div>
       {getSectionConfigs(sections).map((config) => {
-        const sectionTasks = sortedTasks.filter((item) => item.state === config.state);
+        const sectionTasks = tasks
+          .filter((item) => item.state === config.state)
+          .sort((a, b) => compareTasks(a, b, config.newestFirst));
         if (!sectionTasks.length) return null;
-        if (config.newestFirst) sectionTasks.reverse();
         return (
           <Fragment key={config.field}>
             <ListGroupTitle>{config.heading || t(config.headingKey)}</ListGroupTitle>
