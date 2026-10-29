@@ -43,6 +43,7 @@ const GET_ORG_DETAILS: TypedDocumentNode<
       distinctName
       description
       url
+      email
       ancestors {
         id
       }
