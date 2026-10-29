@@ -154,6 +154,7 @@
     "municipality": "Commune",
     "name": "Nom",
     "nav-menu-close": "Fermer le menu",
+    "nav-menu-label": "Menu",
     "nav-menu-open": "Menu de navigation",
     "next": "Suivant",
     "next-indicator": "{context, select, MEASURE {Mesure suivante} other {Indicateur suivant}}",
