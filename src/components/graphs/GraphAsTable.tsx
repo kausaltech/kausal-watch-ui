@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react';
+import { type ReactNode, useId, useMemo, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -40,6 +40,8 @@ type GraphAsTableProps = {
   title?: string;
   openByDefault?: boolean;
   extraColumns?: ExtraColumn[];
+  /** Controls at the right end of the toggle's row, e.g. the chart download */
+  actions?: ReactNode;
 };
 
 const CollapsibleTable = styled.div`
@@ -49,6 +51,16 @@ const CollapsibleTable = styled.div`
   @media print {
     background-color: #fff;
   }
+`;
+
+const TriggerRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${(p) => p.theme.spaces.s100};
+  /* The table's background, so the open table and its row form one block */
+  padding: ${(p) => `${p.theme.spaces.s025} ${p.theme.spaces.s100}`};
+  background-color: ${(p) => p.theme.cardBackground.primary};
 `;
 
 const TableContainer = styled.div`
@@ -123,6 +135,7 @@ function GraphAsTable({
   title,
   extraColumns = [],
   openByDefault = false,
+  actions,
 }: GraphAsTableProps) {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
@@ -246,16 +259,19 @@ function GraphAsTable({
   }
   return (
     <CollapsibleTable>
-      <TriggerButton
-        variant="link"
-        size="small"
-        onClick={toggle}
-        aria-expanded={isOpen}
-        aria-controls={panelId}
-      >
-        {isOpen ? t('graph-hideTable') : t('graph-showTable')}
-        <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
-      </TriggerButton>
+      <TriggerRow>
+        <TriggerButton
+          variant="link"
+          size="small"
+          onClick={toggle}
+          aria-expanded={isOpen}
+          aria-controls={panelId}
+        >
+          {isOpen ? t('graph-hideTable') : t('graph-showTable')}
+          <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
+        </TriggerButton>
+        {actions}
+      </TriggerRow>
 
       <Collapse in={isOpen} id={panelId}>
         {dataTable}

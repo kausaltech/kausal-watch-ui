@@ -63,5 +63,7 @@
     "actions-non-continuous": "Ei-jatkuvat toimenpiteet",
     "filter-action-type": "Toimenpiteen tyyppi",
     "see-all-actions": "Kaikki toimet",
-    "download-chart-as-png": "Lataa kaavio PNG-kuvana"
+    "download-chart-as-png": "Lataa kaavio PNG-kuvana",
+    "download": "Lataa",
+    "download-chart-png": "Kaavio PNG-kuvana"
 }

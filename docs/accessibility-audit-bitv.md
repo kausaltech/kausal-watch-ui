@@ -71,15 +71,15 @@ Cause (code): `SelectDropdown.tsx` marks the keyboard-focused option with only a
 
 **F10. Blue bar on red.** "The contrast of the blue bar against the red background is too low."
 
-Likely cause (code and theme): `ActionStatus.tsx` draws a `LinearProgress` whose track is the status colour (red for late actions) and whose bar is `graphColors.green090`. Confirm on the audited page.
+Cause (theme and code): the indicator showcase on the audited plan's home page (`IndicatorProgressBar.tsx`, in `IndicatorShowcaseBlock`). Its background is the theme's red `section.indicatorShowcase.background`, and the latest-value bar is `latestColor`, a mid blue at 2.25:1 against it. The start and goal bars pass at 3.2:1. The bars have no border, so nothing else marks their edges. `ActionStatus.tsx` was suspected first, and its progress bar was fixed in step 3 anyway.
 
 **F11. Button against its background.** "The button's contrast with its background is too low for it to be seen as an active control. Add, for example, a high-contrast border."
 
-Cause: not located; the audit report needs to say which button. Candidates: the `outlined` variant in `Button.tsx`, whose colours aren't checked against their background, and the filter submit button in `ActionListFilters.tsx`.
+Likely cause (code, already replaced): the chart's save-as-PNG button on the indicator page, the same page as F12. The only other control there is "Show data table", plain link-coloured text at 7:1. Before the move to ECharts, the indicator graph used Plotly's modebar with its default colours, a dark grey at 30 % opacity that shows only on hover, which fits the finding. The ECharts toolbox icon is `#666` (5.7:1, `buildSaveAsImageToolbox` in `indicator-graph.utils.ts`), so its colour passes. It is a thin 1 px outline icon with no button shape, though. It is drawn on the canvas, so it can't take keyboard focus and has no accessible name, which fails 2.1.1 and 4.1.2 on every chart that has it.
 
 **F12. Green crosses in a chart.** "The contrast of the green crosses in the chart is too low."
 
-Cause (theme): the goal markers in indicator charts. The audited plan's theme sets `goalSymbol` to a cross, drawn in the theme's goal colour.
+Cause (theme): the goal markers in the audited plan's main emissions indicator chart. The theme sets `goalSymbol` to a cross, drawn in the first `goalLineColors` entry. The crosses render in that colour at 3.54:1 on white, which passes 3:1 but only just. The audit may have seen an older theme colour. The theme's second goal colour, used when an indicator has several goal series, is 2.19:1.
 
 **F13. Status donut colours.** "The contrasts orange / white (in progress), grey / white (not started) and light green / white (less than 3 months) are too low. You can mostly guess the value when the neighbouring colours have enough contrast. But in the 'actions by phase' chart, where white and grey are next to each other, you can't tell them apart. The white separator lines are good!"
 
@@ -87,7 +87,7 @@ Cause (code and theme): `StatusDonut.tsx`, used by `ActionStatusGraphs.tsx`. Pro
 
 **F14. Line charts told apart only by colour.** "The three lines don't have enough contrast with each other. People with colour vision deficiency can't tell which line belongs to which organisation. Use different markers for the yearly data points too, e.g. a circle for the first organisation, a square for the second and a triangle for the third."
 
-Cause (code): `buildSeriesFromTraces` (`indicator-graph.utils.ts`) and `DashboardIndicatorLineChartBlock.tsx` pick each series' marker with `categorySymbol`. Unless the theme sets `categorySymbols`, it falls back to `DEFAULT_CATEGORY_SYMBOLS = ['circle']` (`chart-symbols.ts`), and every line is solid. The audited plan's theme does set `categorySymbols`, though, and both use them in current code (see step 4).
+Cause (code): `buildSeriesFromTraces` (`indicator-graph.utils.ts`) and `DashboardIndicatorLineChartBlock.tsx` pick each series' marker with `categorySymbol`. Unless the theme sets `categorySymbols`, it falls back to `DEFAULT_CATEGORY_SYMBOLS = ['circle']` (`chart-symbols.ts`), and every line is solid. The audited plan's theme does set `categorySymbols`, though, and both use them in current code, so this is fixed (see step 4).
 
 **F15. Stacked charts.** "The stacked charts' contrasts are too low too, both against the white background and against each other. Use, e.g., separator lines and hatching between the stacks, and order the legend to match, so it's clear which value is on top and which below."
 
@@ -101,7 +101,7 @@ Likely cause (code): the remove button on the active filter badges, `.badge-clos
 
 **F17. Black text on blue.** "The contrast of black text on blue is too low."
 
-Cause (theme): not located; the audit report needs to say where. It is a theme colour pair.
+Likely cause (theme and code): the latest-value label on the home page indicator showcase (see F10), black text that `readableColor` picks over the blue `latestColor` bar. With the current theme it is 5.7:1, which passes 4.5:1, and the label fades in to full opacity. Unless the theme's blue was darker at the time of the audit, this passes now. The unit text is small, though.
 
 **F18. Previous / next action focus.** "When the 'Next action' / 'Previous action' buttons get keyboard focus, they are barely readable. Use the same colours as on mouse hover."
 
@@ -226,7 +226,7 @@ The steps go from the clearest conformance failures in shared components, which 
 
 6. **Theme colour pairs (F11, F12, F17).** Ask the auditor for the locations of F11 and F17, then fix the colour pairs in the theme. Run a contrast check across all themes for the same pairs, not only the audited plan's.
 
-   Open. Also done in this step: the plan switcher's `outline: inherit` hid its focus ring, and the organisation tabs' second line in `PlanChip` was below 4.5:1 on the sunnydale theme.
+   Located but open. F10: give the showcase bars an outline in the section's text colour (white, 7:1 on the red), or darken `latestColor`. F11 is done: the ECharts toolbox is replaced by `ChartDownloadButton`, an HTML "Download" menu button styled like the page PDF download, that saves the chart through the chart's `getDataURL` (the charts take a `chartRef`). It sits under the chart, right-aligned on the data table toggle's row (`GraphAsTable`'s `actions`). It shows wherever `IndicatorVisualisation` renders a chart, including configured visualisations and factor charts, but not on dashboard chart blocks. `StatusDonut`'s modal still uses the toolbox. F12: use a darker goal colour for margin (`green070` is 5.9:1), and check the other goal colours. F17: passes with current colours; recheck after any F10 colour change. Also done in this step: the plan switcher's `outline: inherit` hid its focus ring, and the organisation tabs' second line in `PlanChip` was below 4.5:1 on the sunnydale theme.
 
 ### Step 4: charts
 
@@ -236,7 +236,7 @@ The steps go from the clearest conformance failures in shared components, which 
 
 2. **Distinct markers per series (F14).** Change `DEFAULT_CATEGORY_SYMBOLS` to a cycle of different shapes (circle, rect, triangle, diamond, …) and make sure the markers show. This changes every plan's charts, so review it with design. Optionally also vary `lineStyle.type`.
 
-   Not changed. Decided to keep the code default and set markers in the theme only, but the audited plan's theme already sets `categorySymbols` (empty circle, square, diamond, …), and since `cbbc5c54` (in production) the line chart blocks use them as the default graph already did. The audit probably predates that, or looked at a chart not identified yet: confirm on the live site.
+   No code change needed. The code default stays, and markers are set in the theme only. The audited plan's theme already sets `categorySymbols` (empty circle, square, diamond, …), and since `cbbc5c54` (in production) the line chart blocks use them as the default graph already did, so the audit predates that. Checked on the audited page: every line chart with several series, including the three-organisation one, has a different marker per series, in the legend too.
 
 3. **Stacked charts (F15).** Give stacked bar and area series a white `borderColor` / `borderWidth` (for areas, a line between bands). Turn on ECharts decal patterns (`aria.decal.show`) as the hatching the auditor suggests, and order the legend to match the stack. Give `BarChart.tsx`'s segments a 1 px gap.
 

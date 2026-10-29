@@ -60,5 +60,7 @@
     "actions-non-continuous": "Nenotiekošās rīcības",
     "filter-action-type": "Rīcības veids",
     "see-all-actions": "Visas rīcības",
-    "download-chart-as-png": "Lejupielādēt diagrammu kā PNG"
+    "download-chart-as-png": "Lejupielādēt diagrammu kā PNG",
+    "download": "Lejupielādēt",
+    "download-chart-png": "Diagramma kā PNG"
 }

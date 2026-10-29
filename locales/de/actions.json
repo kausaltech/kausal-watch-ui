@@ -72,5 +72,6 @@
     "download-chart-as-png": "Diagramm als PNG herunterladen",
     "download": "Herunterladen",
     "download-page-as-pdf": "Seite als PDF",
-    "pdf-export-failed": "PDF-Export fehlgeschlagen"
+    "pdf-export-failed": "PDF-Export fehlgeschlagen",
+    "download-chart-png": "Diagramm als PNG"
 }

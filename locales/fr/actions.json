@@ -72,5 +72,6 @@
     "download": "Télécharger",
     "download-page-as-pdf": "Page au format PDF",
     "pdf-export-failed": "Échec de l’export PDF",
-    "download-chart-as-png": "Télécharger le graphique au format PNG"
+    "download-chart-as-png": "Télécharger le graphique au format PNG",
+    "download-chart-png": "Graphique au format PNG"
 }

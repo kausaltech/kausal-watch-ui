@@ -1,5 +1,7 @@
 'use client';
 
+import type { Ref } from 'react';
+
 import { useTheme } from '@emotion/react';
 
 import { LineChart, type LineSeriesOption, ScatterChart } from 'echarts/charts';
@@ -12,7 +14,7 @@ import {
 import * as echarts from 'echarts/core';
 import { useLocale, useTranslations } from 'next-intl';
 
-import { Chart, type ECOption } from '@common/components/Chart';
+import { Chart, type ChartHandle, type ECOption } from '@common/components/Chart';
 import { getEChartsLocaleStrings } from '@common/components/register-echarts-locales';
 
 import type { AreaChartVisualizationFragment } from '@/common/__generated__/graphql';
@@ -24,11 +26,7 @@ import {
   markerItemStyle,
 } from '@/components/graphs/chart-symbols';
 import type { AriaDetail } from '@/components/graphs/indicator-graph-aria';
-import {
-  buildSaveAsImageToolbox,
-  buildTimeTooltipFormatter,
-  getChartDownloadFilename,
-} from '@/components/graphs/indicator-graph.utils';
+import { buildTimeTooltipFormatter } from '@/components/graphs/indicator-graph.utils';
 import { useChartBackground } from '@/components/graphs/use-chart-background';
 
 import { getDefaultColors } from './indicator-chart-colors';
@@ -56,6 +54,8 @@ type Props = Omit<
 > & {
   /** Detail of the generated aria description; 'summary' when a data table accompanies the chart */
   ariaDetail?: AriaDetail;
+  /** For exporting the chart, e.g. as a PNG */
+  chartRef?: Ref<ChartHandle>;
 };
 
 const DashboardIndicatorAreaChartBlock = ({
@@ -64,6 +64,7 @@ const DashboardIndicatorAreaChartBlock = ({
   dimension,
   showTotalLine,
   ariaDetail,
+  chartRef,
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -274,11 +275,6 @@ const DashboardIndicatorAreaChartBlock = ({
       enabled: true,
       label: { description: ariaDescription },
     },
-    toolbox: buildSaveAsImageToolbox({
-      filename: getChartDownloadFilename(indicator?.name),
-      buttonTitle: t('download-chart-as-png'),
-      backgroundColor: chartBackground,
-    }),
     backgroundColor: chartBackground,
     // Same legend style as the pie chart block
     legend: {
@@ -335,7 +331,7 @@ const DashboardIndicatorAreaChartBlock = ({
   return (
     <>
       <h5>{dimension?.name}</h5>
-      <Chart data={option} isLoading={false} height="400px" />
+      <Chart ref={chartRef} data={option} isLoading={false} height="400px" />
     </>
   );
 };

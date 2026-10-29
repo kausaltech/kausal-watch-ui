@@ -1,15 +1,23 @@
 'use client';
 
+import { type ComponentProps, useRef } from 'react';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
+import type { ChartHandle } from '@common/components/Chart';
+
 import type { IndicatorGraphDataQuery } from '@/common/__generated__/graphql';
 import { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import { capitalizeFirstLetter } from '@/common/utils';
+import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
-import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
+import {
+  getChartDownloadFilename,
+  resolveValueRounding,
+} from '@/components/graphs/indicator-graph.utils';
 
 import { calculateBounds, padAndRoundBounds } from './indicator-data-helpers';
 
@@ -19,6 +27,38 @@ const FactorChartTitle = styled.div`
   font-size: ${(props) => props.theme.fontSizeBase};
   font-weight: ${(props) => props.theme.fontWeightBold};
 `;
+
+type FactorChartProps = {
+  label: string;
+  showGraph: boolean;
+  showTable: boolean;
+  graphProps: Omit<ComponentProps<typeof IndicatorGraph>, 'chartRef'>;
+  tableProps: Omit<ComponentProps<typeof GraphAsTable>, 'openByDefault' | 'actions'>;
+};
+
+/** One factor's chart and table, with the chart's download under it */
+function FactorChart({ label, showGraph, showTable, graphProps, tableProps }: FactorChartProps) {
+  const chartRef = useRef<ChartHandle>(null);
+  const downloadButton = showGraph ? (
+    <ChartDownloadButton chartRef={chartRef} filename={getChartDownloadFilename(label)} />
+  ) : null;
+
+  return (
+    <div>
+      <FactorChartTitle>{label}</FactorChartTitle>
+      {showGraph && (
+        <div>
+          <IndicatorGraph {...graphProps} chartRef={chartRef} />
+        </div>
+      )}
+      {showTable ? (
+        <GraphAsTable {...tableProps} openByDefault={!showGraph} actions={downloadButton} />
+      ) : (
+        downloadButton
+      )}
+    </div>
+  );
+}
 
 type FactorChartsProps = {
   datasets: NonNullable<IndicatorGraphDataQuery['indicator']>['datasets'];
@@ -104,39 +144,35 @@ function FactorCharts({
           const factorSpec = { axes: [['time', 1]] as [string, number][] };
 
           return (
-            <div key={`${dataset.uuid}-${metric.label}`}>
-              <FactorChartTitle>{metric.label}</FactorChartTitle>
-              {showGraph && (
-                <div>
-                  <IndicatorGraph
-                    ariaDetail={showTable ? 'summary' : 'full'}
-                    specification={factorSpec}
-                    yRange={factorYRange}
-                    timeResolution={timeResolution}
-                    traces={[factorTrace]}
-                    goalTraces={[]}
-                    trendTrace={null}
-                    title={null}
-                    downloadFilename={metric.label}
-                    referenceValue={null}
-                    nonQuantifiedGoal={{ trend: null, date: null }}
-                    height={225}
-                    xAxisRange={mainXAxisRange}
-                  />
-                </div>
-              )}
-              {showTable && (
-                <GraphAsTable
-                  specification={factorYRange}
-                  timeResolution={timeResolution}
-                  data={[factorTrace]}
-                  goalTraces={[]}
-                  title={metric.label}
-                  extraColumns={[factorExtraColumn]}
-                  openByDefault={!showGraph}
-                />
-              )}
-            </div>
+            <FactorChart
+              key={`${dataset.uuid}-${metric.label}`}
+              label={metric.label}
+              showGraph={showGraph}
+              showTable={showTable}
+              graphProps={{
+                ariaDetail: showTable ? 'summary' : 'full',
+                specification: factorSpec,
+                yRange: factorYRange,
+                timeResolution,
+                traces: [factorTrace],
+                goalTraces: [],
+                trendTrace: null,
+                title: null,
+                chartName: metric.label,
+                referenceValue: null,
+                nonQuantifiedGoal: { trend: null, date: null },
+                height: 225,
+                xAxisRange: mainXAxisRange,
+              }}
+              tableProps={{
+                specification: factorYRange,
+                timeResolution,
+                data: [factorTrace],
+                goalTraces: [],
+                title: metric.label,
+                extraColumns: [factorExtraColumn],
+              }}
+            />
           );
         });
       })}
