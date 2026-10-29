@@ -521,7 +521,9 @@ export default function CategoryPageHeaderBlock(props: Props) {
         <span className="sr-only" role="img" aria-label={headerImage?.altText} />
       )}
       {headerImage?.imageCredit && (
-        <ImageCredit>{`${t('image-credit')}: ${headerImage?.imageCredit}`}</ImageCredit>
+        <ImageCredit aria-hidden={headerImage.altText ? undefined : true}>
+          {`${t('image-credit')}: ${headerImage?.imageCredit}`}
+        </ImageCredit>
       )}
     </CategoryHeader>
   );

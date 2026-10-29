@@ -142,7 +142,11 @@ export default function ContentPageHeaderBlock(props: Props) {
             />
           </HeaderImage>
         )}
-        {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
+        {imageCredit && (
+          <ImageCredit
+            aria-hidden={altText ? undefined : true}
+          >{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>
+        )}
       </HeaderBg>
       <HeaderBg>
         <Container>

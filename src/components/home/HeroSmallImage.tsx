@@ -187,7 +187,9 @@ const HeroSmallImage = (props: HeroSmallImageProps) => {
             $showImageAccent={shouldShowImageAccent}
           />
           {imageCredit && (
-            <StyledImageCredit>{`${t('image-credit')}: ${imageCredit}`}</StyledImageCredit>
+            <StyledImageCredit
+              aria-hidden={altText ? undefined : true}
+            >{`${t('image-credit')}: ${imageCredit}`}</StyledImageCredit>
           )}
         </HeroImageWrapper>
 

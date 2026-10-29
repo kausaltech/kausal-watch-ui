@@ -79,7 +79,11 @@ export default function ContainedHeaderImage({ image, imageAlign, altText, image
             alt={altText ?? ''}
             $imageAlign={imageAlign}
           />
-          {imageCredit && <ImageCredit>{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>}
+          {imageCredit && (
+            <ImageCredit
+              aria-hidden={altText ? undefined : true}
+            >{`${t('image-credit')}: ${imageCredit}`}</ImageCredit>
+          )}
         </ImageFrame>
       </ImageContainer>
     </ImageBand>

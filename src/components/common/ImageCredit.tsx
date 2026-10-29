@@ -1,5 +1,10 @@
 import styled from '@emotion/styled';
 
+/**
+ * The photographer credit on an image. Give it aria-hidden when the image has
+ * no alt text: the image is then decorative and hidden from screen readers, and
+ * a credit for an image they can't perceive only confuses (BITV audit F30).
+ */
 export const ImageCredit = styled.span`
   position: absolute;
   top: 0;
