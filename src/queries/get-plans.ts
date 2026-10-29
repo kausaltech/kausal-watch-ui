@@ -19,6 +19,7 @@ export const GET_PLANS_BY_HOSTNAME: TypedDocumentNode<
         basePath
         availability
         statusMessage
+        matomoAnalyticsUrl
       }
       domains {
         id

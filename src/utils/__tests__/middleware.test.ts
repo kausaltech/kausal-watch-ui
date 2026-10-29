@@ -16,6 +16,7 @@ import {
   isPlanAvailable,
   resolveStalePlan,
   rewriteUrl,
+  setMatomoAnalyticsUrl,
 } from '../middleware.utils';
 
 const primaryLanguage = 'en-US';
@@ -175,6 +176,26 @@ describe('applyWatchSecurityHeaders', () => {
   });
 
   /*
+   * The served plan's Matomo setting reaches the policy through a response header, which must
+   * not be left on the response the browser gets.
+   */
+  it('removes the Matomo setting it was handed', () => {
+    const plan = {
+      ...MOCK_PLAN,
+      domain: { matomoAnalyticsUrl: 'https://matomo.city.example?3' },
+    } as PlanFromPlansQuery;
+    const response = setMatomoAnalyticsUrl(new Response(null), plan);
+
+    expect(response.headers.get('x-kausal-matomo-analytics-url')).toBe(
+      'https://matomo.city.example?3'
+    );
+
+    const { headers } = applyWatchSecurityHeaders(response, secureRequest);
+
+    expect(headers.has('x-kausal-matomo-analytics-url')).toBe(false);
+  });
+
+  /*
    * Next propagates middleware response headers onto the rewritten request, which is how
    * the RSC layouts read the resolved plan back. Stripping them here would break plan
    * resolution.
@@ -222,11 +243,24 @@ describe('buildWatchReportOnlyPolicy', () => {
     );
   });
 
-  it('allows the analytics host', () => {
-    const policy = buildWatchReportOnlyPolicy(options)!;
+  it.each([
+    ['https://ana.kausal.tech?12', 'https://ana.kausal.tech', 'our own'],
+    ['https://matomo.city.example/analytics/?3', 'https://matomo.city.example', "a customer's"],
+  ])('allows the Matomo host the plan reports to (%s, %s)', (matomoAnalyticsUrl, origin) => {
+    const policy = buildWatchReportOnlyPolicy({ ...options, matomoAnalyticsUrl })!;
 
-    expect(sourcesOf(policy, 'script-src')).toContain('https://ana.kausal.tech');
-    expect(sourcesOf(policy, 'connect-src')).toContain('https://ana.kausal.tech');
+    expect(sourcesOf(policy, 'script-src')).toContain(origin);
+    expect(sourcesOf(policy, 'connect-src')).toContain(origin);
+  });
+
+  it.each([
+    ['not configured', null],
+    ['malformed', 'matomo.city.example?3'],
+  ])('allows no Matomo host when it is %s', (_name, matomoAnalyticsUrl) => {
+    const policy = buildWatchReportOnlyPolicy({ ...options, matomoAnalyticsUrl })!;
+
+    expect(policy).not.toContain('matomo');
+    expect(policy).not.toContain('ana.kausal.tech');
   });
 
   it('allows the backend origin the deployment points at', () => {

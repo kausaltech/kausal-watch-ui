@@ -353,6 +353,7 @@ export type FilterColumnInput = {
 };
 
 export type FilterDimensionInput = {
+  allowEmpty?: Scalars['Boolean']['input'];
   categories?: Array<Scalars['String']['input']>;
   dimension: Scalars['String']['input'];
   exclude?: Scalars['Boolean']['input'];

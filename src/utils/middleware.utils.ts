@@ -364,32 +364,55 @@ const INTEGRATION_HOSTS = INTEGRATIONS.filter(
 /* The cartography block renders with Mapbox GL, which fetches styles, tiles and glyphs. */
 const MAPBOX_HOSTS = ['https://api.mapbox.com', 'https://events.mapbox.com'];
 
-/* Our own Matomo, which most plans report to. */
-const ANALYTICS_HOST = 'https://ana.kausal.tech';
-
 type WatchReportOnlyOptions = Omit<ReportOnlyPolicyOptions, 'scriptSources' | 'connectSources'> & {
   backendUrl: string | undefined;
+  /* The Matomo the served plan reports to: our own, or one the customer runs. */
+  matomoAnalyticsUrl?: string | null;
 };
 
-export const buildWatchReportOnlyPolicy = ({ backendUrl, ...options }: WatchReportOnlyOptions) =>
-  buildReportOnlyPolicy({
+export const buildWatchReportOnlyPolicy = ({
+  backendUrl,
+  matomoAnalyticsUrl,
+  ...options
+}: WatchReportOnlyOptions) => {
+  const analyticsHosts = [originOf(matomoAnalyticsUrl ?? undefined)].filter((o) => o !== undefined);
+
+  return buildReportOnlyPolicy({
     ...options,
-    scriptSources: [ANALYTICS_HOST, ...INTEGRATION_HOSTS],
+    scriptSources: [...analyticsHosts, ...INTEGRATION_HOSTS],
     connectSources: [
       ...MAPBOX_HOSTS,
-      ANALYTICS_HOST,
+      ...analyticsHosts,
       ...INTEGRATION_HOSTS,
       ...[originOf(backendUrl)].filter((o) => o !== undefined),
     ],
   });
+};
 
-const REPORT_ONLY_POLICY = buildWatchReportOnlyPolicy({
+const REPORT_ONLY_OPTIONS = {
   dsn: getSentryDsn(),
   assetPrefix: getAssetPrefix(),
   backendUrl: getWatchBackendUrl(),
   environment: getDeploymentType(),
   release: getSentryRelease(),
-});
+};
+
+/*
+ * Carries the served plan's Matomo setting from the request handler to the security headers.
+ * The Auth.js wrapper rebuilds both the request and the response in between, so a header on
+ * the response is the one thing that survives. It is removed again before the response leaves.
+ */
+const MATOMO_ANALYTICS_URL_HEADER = 'x-kausal-matomo-analytics-url';
+
+export function setMatomoAnalyticsUrl(response: Response, plan: PlanFromPlansQuery) {
+  const matomoAnalyticsUrl = plan.domain?.matomoAnalyticsUrl;
+
+  if (matomoAnalyticsUrl) {
+    response.headers.set(MATOMO_ANALYTICS_URL_HEADER, matomoAnalyticsUrl);
+  }
+
+  return response;
+}
 
 /*
  * Decided from the rewritten path (`/root/<host>/<locale>/<plan>/<app path>`), because only
@@ -416,11 +439,19 @@ const isEmbedResponse = (response: Response) => {
   return segments[0] === 'embed' && /^v\d+$/.test(segments[1] ?? '');
 };
 
-export const applyWatchSecurityHeaders = <R>(response: R, request: NextRequest): R =>
-  applySecurityHeaders(response, request, {
-    reportOnlyPolicy: REPORT_ONLY_POLICY,
+export const applyWatchSecurityHeaders = <R>(response: R, request: NextRequest): R => {
+  if (!(response instanceof Response)) {
+    return response;
+  }
+
+  const matomoAnalyticsUrl = response.headers.get(MATOMO_ANALYTICS_URL_HEADER);
+  response.headers.delete(MATOMO_ANALYTICS_URL_HEADER);
+
+  return applySecurityHeaders(response, request, {
+    reportOnlyPolicy: buildWatchReportOnlyPolicy({ ...REPORT_ONLY_OPTIONS, matomoAnalyticsUrl }),
     isFramable: isEmbedResponse,
   });
+};
 
 function createApolloClient(req: NextAuthRequest, logger: Logger, skipAuth = false) {
   const uri = getWatchGraphQLUrl();
