@@ -56,7 +56,7 @@ const CategoryCardContent = (props: CategoryCardContentProps) => {
         <Link href={category?.categoryPage?.urlPath}>
           {t('read-more')}
           {/* Names the target for screen readers */}
-          <span className="visually-hidden">: {category?.name}</span>
+          <span className="visually-hidden">({category?.name})</span>
           <Icon.ArrowRight />
         </Link>
       ) : null}

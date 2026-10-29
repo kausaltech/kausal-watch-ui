@@ -10,6 +10,7 @@ import { ChevronDown, FiletypePng } from 'react-bootstrap-icons';
 import type { ChartHandle } from '@common/components/Chart';
 
 import Icon from '@/components/common/Icon';
+import { getChartDownloadFilename } from '@/components/graphs/indicator-graph.utils';
 
 function saveDataUrl(dataUrl: string, filename: string) {
   const a = document.createElement('a');
@@ -22,8 +23,10 @@ function saveDataUrl(dataUrl: string, filename: string) {
 
 type Props = {
   chartRef: RefObject<ChartHandle | null>;
-  /** Without the extension */
-  filename: string;
+  /** Names the button for screen readers and the downloaded file */
+  title: string | null | undefined;
+  /** File name when the title is empty */
+  filenameFallback?: string;
 };
 
 /**
@@ -31,7 +34,7 @@ type Props = {
  * toolbox, which draws on the canvas and can't take keyboard focus.
  * Styled like the page's PDF download (ExportActionPdfButton).
  */
-export default function ChartDownloadButton({ chartRef, filename }: Props) {
+export default function ChartDownloadButton({ chartRef, title, filenameFallback }: Props) {
   const t = useTranslations();
   const menuId = useId();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -48,7 +51,7 @@ export default function ChartDownloadButton({ chartRef, filename }: Props) {
     handleClose();
     // The background defaults to the chart option's backgroundColor
     const dataUrl = chartRef.current?.getDataURL({ type: 'png', pixelRatio: 2 });
-    if (dataUrl) saveDataUrl(dataUrl, `${filename}.png`);
+    if (dataUrl) saveDataUrl(dataUrl, `${getChartDownloadFilename(title, filenameFallback)}.png`);
   };
 
   return (
@@ -78,6 +81,8 @@ export default function ChartDownloadButton({ chartRef, filename }: Props) {
         }}
       >
         {t('download')}
+        {/* Tells it apart from other download buttons for screen readers */}
+        {title && <span className="visually-hidden">({title})</span>}
       </Button>
       <Menu
         id={menuId}

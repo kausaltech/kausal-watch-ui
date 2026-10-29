@@ -14,7 +14,6 @@ import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
 import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
-import { getChartDownloadFilename } from '@/components/graphs/indicator-graph.utils';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
 import IndicatorNormalizationSelect from '@/components/indicators/IndicatorNormalizationSelect';
 import { usePlan } from '@/context/plan';
@@ -187,9 +186,7 @@ function IndicatorVisualisation({
     : traces.length > 0 || goalTraces.length > 0;
   // Under the chart, on the data table toggle's row when there is one
   const downloadButton =
-    showGraph && hasChart ? (
-      <ChartDownloadButton chartRef={chartRef} filename={getChartDownloadFilename(plotTitle)} />
-    ) : null;
+    showGraph && hasChart ? <ChartDownloadButton chartRef={chartRef} title={plotTitle} /> : null;
 
   return (
     <div>

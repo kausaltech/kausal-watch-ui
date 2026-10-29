@@ -14,10 +14,7 @@ import { capitalizeFirstLetter } from '@/common/utils';
 import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
-import {
-  getChartDownloadFilename,
-  resolveValueRounding,
-} from '@/components/graphs/indicator-graph.utils';
+import { resolveValueRounding } from '@/components/graphs/indicator-graph.utils';
 
 import { calculateBounds, padAndRoundBounds } from './indicator-data-helpers';
 
@@ -40,7 +37,7 @@ type FactorChartProps = {
 function FactorChart({ label, showGraph, showTable, graphProps, tableProps }: FactorChartProps) {
   const chartRef = useRef<ChartHandle>(null);
   const downloadButton = showGraph ? (
-    <ChartDownloadButton chartRef={chartRef} filename={getChartDownloadFilename(label)} />
+    <ChartDownloadButton chartRef={chartRef} title={label} />
   ) : null;
 
   return (
