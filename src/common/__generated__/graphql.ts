@@ -1174,6 +1174,8 @@ type ActionListFilter_ActionImplementationPhaseFilterBlock_Fragment = { __typena
 
 type ActionListFilter_ActionImplementationPhaseReportFieldBlock_Fragment = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
 
+type ActionListFilter_ActionInProgressTaskSectionBlock_Fragment = { __typename: 'ActionInProgressTaskSectionBlock', field: string };
+
 type ActionListFilter_ActionLeadParagraphBlock_Fragment = { __typename: 'ActionLeadParagraphBlock', field: string };
 
 type ActionListFilter_ActionLinksBlock_Fragment = { __typename: 'ActionLinksBlock', field: string };
@@ -1431,6 +1433,7 @@ export type ActionListFilterFragment =
   | ActionListFilter_ActionHighlightsBlock_Fragment
   | ActionListFilter_ActionImplementationPhaseFilterBlock_Fragment
   | ActionListFilter_ActionImplementationPhaseReportFieldBlock_Fragment
+  | ActionListFilter_ActionInProgressTaskSectionBlock_Fragment
   | ActionListFilter_ActionLeadParagraphBlock_Fragment
   | ActionListFilter_ActionLinksBlock_Fragment
   | ActionListFilter_ActionListBlock_Fragment
@@ -1775,6 +1778,8 @@ export type DashboardIndicatorBlockFragment_blocks_ActionImplementationPhaseFilt
 
 export type DashboardIndicatorBlockFragment_blocks_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', blockType: string };
 
+export type DashboardIndicatorBlockFragment_blocks_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock', blockType: string };
+
 export type DashboardIndicatorBlockFragment_blocks_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock', blockType: string };
 
 export type DashboardIndicatorBlockFragment_blocks_ActionLinksBlock = { __typename: 'ActionLinksBlock', blockType: string };
@@ -2032,6 +2037,7 @@ export type DashboardIndicatorBlockFragment_blocks =
   | DashboardIndicatorBlockFragment_blocks_ActionHighlightsBlock
   | DashboardIndicatorBlockFragment_blocks_ActionImplementationPhaseFilterBlock
   | DashboardIndicatorBlockFragment_blocks_ActionImplementationPhaseReportFieldBlock
+  | DashboardIndicatorBlockFragment_blocks_ActionInProgressTaskSectionBlock
   | DashboardIndicatorBlockFragment_blocks_ActionLeadParagraphBlock
   | DashboardIndicatorBlockFragment_blocks_ActionLinksBlock
   | DashboardIndicatorBlockFragment_blocks_ActionListBlock
@@ -2317,6 +2323,8 @@ type IndicatorListFilter_ActionImplementationPhaseFilterBlock_Fragment = { __typ
 
 type IndicatorListFilter_ActionImplementationPhaseReportFieldBlock_Fragment = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
 
+type IndicatorListFilter_ActionInProgressTaskSectionBlock_Fragment = { __typename: 'ActionInProgressTaskSectionBlock', field: string };
+
 type IndicatorListFilter_ActionLeadParagraphBlock_Fragment = { __typename: 'ActionLeadParagraphBlock', field: string };
 
 type IndicatorListFilter_ActionLinksBlock_Fragment = { __typename: 'ActionLinksBlock', field: string };
@@ -2574,6 +2582,7 @@ export type IndicatorListFilterFragment =
   | IndicatorListFilter_ActionHighlightsBlock_Fragment
   | IndicatorListFilter_ActionImplementationPhaseFilterBlock_Fragment
   | IndicatorListFilter_ActionImplementationPhaseReportFieldBlock_Fragment
+  | IndicatorListFilter_ActionInProgressTaskSectionBlock_Fragment
   | IndicatorListFilter_ActionLeadParagraphBlock_Fragment
   | IndicatorListFilter_ActionLinksBlock_Fragment
   | IndicatorListFilter_ActionListBlock_Fragment
@@ -2780,6 +2789,8 @@ export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_bl
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionImplementationPhaseFilterBlock = { __typename: 'ActionImplementationPhaseFilterBlock', field: string };
 
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
+
+export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock', field: string };
 
 export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock', field: string };
 
@@ -3038,6 +3049,7 @@ export type StreamFieldFragment_AccessibilityStatementContactInformationBlock_bl
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionHighlightsBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionImplementationPhaseFilterBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionImplementationPhaseReportFieldBlock
+  | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionInProgressTaskSectionBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionLeadParagraphBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionLinksBlock
   | StreamFieldFragment_AccessibilityStatementContactInformationBlock_blocks_ActionListBlock
@@ -3255,6 +3267,8 @@ export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionHighlightsB
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionImplementationPhaseFilterBlock = { __typename: 'ActionImplementationPhaseFilterBlock' };
 
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock' };
+
+export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock' };
 
 export type StreamFieldFragment_IndicatorGroupBlock_indicators_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock' };
 
@@ -3513,6 +3527,7 @@ export type StreamFieldFragment_IndicatorGroupBlock_indicators =
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionHighlightsBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionImplementationPhaseFilterBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionImplementationPhaseReportFieldBlock
+  | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionInProgressTaskSectionBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionLeadParagraphBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionLinksBlock
   | StreamFieldFragment_IndicatorGroupBlock_indicators_ActionListBlock
@@ -3672,6 +3687,8 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionHighlightsBl
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionImplementationPhaseFilterBlock = { __typename: 'ActionImplementationPhaseFilterBlock' };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock' };
+
+export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock' };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock' };
 
@@ -3930,6 +3947,7 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_blocks =
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionHighlightsBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionImplementationPhaseFilterBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionImplementationPhaseReportFieldBlock
+  | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionInProgressTaskSectionBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionLeadParagraphBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionLinksBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_blocks_ActionListBlock
@@ -4152,6 +4170,8 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionHighligh
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionImplementationPhaseFilterBlock = { __typename: 'ActionImplementationPhaseFilterBlock', blockType: string };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', blockType: string };
+
+export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock', blockType: string };
 
 export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock', blockType: string };
 
@@ -4410,6 +4430,7 @@ export type StreamFieldFragment_IndicatorShowcaseBlock_linkButton =
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionHighlightsBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionImplementationPhaseFilterBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionImplementationPhaseReportFieldBlock
+  | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionInProgressTaskSectionBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionLeadParagraphBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionLinksBlock
   | StreamFieldFragment_IndicatorShowcaseBlock_linkButton_ActionListBlock
@@ -4573,6 +4594,8 @@ type StreamField_ActionHighlightsBlock_Fragment = { __typename: 'ActionHighlight
 type StreamField_ActionImplementationPhaseFilterBlock_Fragment = { __typename: 'ActionImplementationPhaseFilterBlock', blockType: string, field: string };
 
 type StreamField_ActionImplementationPhaseReportFieldBlock_Fragment = { __typename: 'ActionImplementationPhaseReportFieldBlock', blockType: string, field: string };
+
+type StreamField_ActionInProgressTaskSectionBlock_Fragment = { __typename: 'ActionInProgressTaskSectionBlock', blockType: string, field: string };
 
 type StreamField_ActionLeadParagraphBlock_Fragment = { __typename: 'ActionLeadParagraphBlock', blockType: string, field: string };
 
@@ -4831,6 +4854,7 @@ export type StreamFieldFragment =
   | StreamField_ActionHighlightsBlock_Fragment
   | StreamField_ActionImplementationPhaseFilterBlock_Fragment
   | StreamField_ActionImplementationPhaseReportFieldBlock_Fragment
+  | StreamField_ActionInProgressTaskSectionBlock_Fragment
   | StreamField_ActionLeadParagraphBlock_Fragment
   | StreamField_ActionLinksBlock_Fragment
   | StreamField_ActionListBlock_Fragment
@@ -5169,7 +5193,425 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionContentCategoryTypeBlock_categoryType = { __typename: 'CategoryType', id: string, name: string, identifier: string, helpText: string, hideCategoryIdentifiers: boolean, levels: Array<CategoryTypeFragment_levels> };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections = { __typename: 'ActionTaskSectionBlock', field: string, heading: string | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementComplianceStatusBlock = { __typename: 'AccessibilityStatementComplianceStatusBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementContactFormBlock = { __typename: 'AccessibilityStatementContactFormBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementContactInformationBlock = { __typename: 'AccessibilityStatementContactInformationBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementPreparationInformationBlock = { __typename: 'AccessibilityStatementPreparationInformationBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionAttributeTypeFilterBlock = { __typename: 'ActionAttributeTypeFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionAttributeTypeReportFieldBlock = { __typename: 'ActionAttributeTypeReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionCategoryFilterCardBlock = { __typename: 'ActionCategoryFilterCardBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionCategoryFilterCardsBlock = { __typename: 'ActionCategoryFilterCardsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionCategoryReportFieldBlock = { __typename: 'ActionCategoryReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContactFormBlock = { __typename: 'ActionContactFormBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContactPersonsBlock = { __typename: 'ActionContactPersonsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContentAttributeTypeBlock = { __typename: 'ActionContentAttributeTypeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContentCategoryTypeBlock = { __typename: 'ActionContentCategoryTypeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContentSectionBlock = { __typename: 'ActionContentSectionBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionDependenciesBlock = { __typename: 'ActionDependenciesBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionDescriptionBlock = { __typename: 'ActionDescriptionBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionEndDateBlock = { __typename: 'ActionEndDateBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionHighlightsBlock = { __typename: 'ActionHighlightsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionImplementationPhaseFilterBlock = { __typename: 'ActionImplementationPhaseFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock', field: string, heading: string | null, highlightLateTasks: boolean | null };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionLinksBlock = { __typename: 'ActionLinksBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionListBlock = { __typename: 'ActionListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionManualStatusReasonBlock = { __typename: 'ActionManualStatusReasonBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionMergedActionsBlock = { __typename: 'ActionMergedActionsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionOfficialNameBlock = { __typename: 'ActionOfficialNameBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionPledgesBlock = { __typename: 'ActionPledgesBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionPrimaryOrgBlock = { __typename: 'ActionPrimaryOrgBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionRelatedActionsBlock = { __typename: 'ActionRelatedActionsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionResponsiblePartiesBlock = { __typename: 'ActionResponsiblePartiesBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionResponsiblePartyReportFieldBlock = { __typename: 'ActionResponsiblePartyReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionScheduleBlock = { __typename: 'ActionScheduleBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionScheduleContinuousBlock = { __typename: 'ActionScheduleContinuousBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionScheduleFilterBlock = { __typename: 'ActionScheduleFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStartDateBlock = { __typename: 'ActionStartDateBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStatusFilterBlock = { __typename: 'ActionStatusFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStatusGraphsBlock = { __typename: 'ActionStatusGraphsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', field: string, heading: string | null };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AdaptiveEmbedBlock = { __typename: 'AdaptiveEmbedBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_BlockQuoteBlock = { __typename: 'BlockQuoteBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_BooleanBlock = { __typename: 'BooleanBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CardBlock = { __typename: 'CardBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CardListBlock = { __typename: 'CardListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryListBlock = { __typename: 'CategoryListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageAttributeTypeBlock = { __typename: 'CategoryPageAttributeTypeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageBodyBlock = { __typename: 'CategoryPageBodyBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageCategoryListBlock = { __typename: 'CategoryPageCategoryListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageContactFormBlock = { __typename: 'CategoryPageContactFormBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageProgressBlock = { __typename: 'CategoryPageProgressBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTreeMapBlock = { __typename: 'CategoryTreeMapBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTypeDatasetsBlock = { __typename: 'CategoryTypeDatasetsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTypeFilterBlock = { __typename: 'CategoryTypeFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTypeLevelListBlock = { __typename: 'CategoryTypeLevelListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ChangeLogMessageBlock = { __typename: 'ChangeLogMessageBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CharBlock = { __typename: 'CharBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ChoiceBlock = { __typename: 'ChoiceBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ContinuousActionFilterBlock = { __typename: 'ContinuousActionFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardHeaderBlock = { __typename: 'DashboardHeaderBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorAreaChartBlock = { __typename: 'DashboardIndicatorAreaChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorBarChartBlock = { __typename: 'DashboardIndicatorBarChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorLineChartBlock = { __typename: 'DashboardIndicatorLineChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorPieChartBlock = { __typename: 'DashboardIndicatorPieChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorSummaryBlock = { __typename: 'DashboardIndicatorSummaryBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardParagraphBlock = { __typename: 'DashboardParagraphBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardRowBlock = { __typename: 'DashboardRowBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DateBlock = { __typename: 'DateBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DateTimeBlock = { __typename: 'DateTimeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DecimalBlock = { __typename: 'DecimalBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DocumentChooserBlock = { __typename: 'DocumentChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_EmailBlock = { __typename: 'EmailBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_EmbedBlock = { __typename: 'EmbedBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_EndDateColumnBlock = { __typename: 'EndDateColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FieldColumnBlock = { __typename: 'FieldColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FloatBlock = { __typename: 'FloatBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FormChoiceBlock = { __typename: 'FormChoiceBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FormFieldBlock = { __typename: 'FormFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FrontPageHeroAdditionalSettingsBlock = { __typename: 'FrontPageHeroAdditionalSettingsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FrontPageHeroBlock = { __typename: 'FrontPageHeroBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IdentifierColumnBlock = { __typename: 'IdentifierColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ImageBlock = { __typename: 'ImageBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ImageChooserBlock = { __typename: 'ImageChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ImplementationPhaseColumnBlock = { __typename: 'ImplementationPhaseColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorBlock = { __typename: 'IndicatorBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorCategoryColumn = { __typename: 'IndicatorCategoryColumn', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorCategoryContentBlock = { __typename: 'IndicatorCategoryContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorCausalChainBlock = { __typename: 'IndicatorCausalChainBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorContentBlock = { __typename: 'IndicatorContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorFactorValueSummaryContentBlock = { __typename: 'IndicatorFactorValueSummaryContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorFilterBlock = { __typename: 'IndicatorFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorGroupBlock = { __typename: 'IndicatorGroupBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorHighlightsBlock = { __typename: 'IndicatorHighlightsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorListColumn = { __typename: 'IndicatorListColumn', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorShowcaseBlock = { __typename: 'IndicatorShowcaseBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorValueColumn = { __typename: 'IndicatorValueColumn', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorValueSummaryContentBlock = { __typename: 'IndicatorValueSummaryContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorVisualizationContentBlock = { __typename: 'IndicatorVisualizationContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorsColumnBlock = { __typename: 'IndicatorsColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IntegerBlock = { __typename: 'IntegerBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_LargeImageBlock = { __typename: 'LargeImageBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_NameColumnBlock = { __typename: 'NameColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_OrganizationColumnBlock = { __typename: 'OrganizationColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PageChooserBlock = { __typename: 'PageChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PageLinkBlock = { __typename: 'PageLinkBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PathsNodeSummaryBlock = { __typename: 'PathsNodeSummaryBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PlanDatasetsBlock = { __typename: 'PlanDatasetsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PlanFilterBlock = { __typename: 'PlanFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PrimaryOrganizationFilterBlock = { __typename: 'PrimaryOrganizationFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_QuestionAnswerBlock = { __typename: 'QuestionAnswerBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_QuestionBlock = { __typename: 'QuestionBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RawHTMLBlock = { __typename: 'RawHTMLBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RegexBlock = { __typename: 'RegexBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RelatedIndicatorsBlock = { __typename: 'RelatedIndicatorsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RelatedPlanListBlock = { __typename: 'RelatedPlanListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ReportComparisonBlock = { __typename: 'ReportComparisonBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ReportTypeFieldChooserBlock = { __typename: 'ReportTypeFieldChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ResponsiblePartiesColumnBlock = { __typename: 'ResponsiblePartiesColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ResponsiblePartyFilterBlock = { __typename: 'ResponsiblePartyFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RichTextBlock = { __typename: 'RichTextBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ScheduleContinuousColumnBlock = { __typename: 'ScheduleContinuousColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_SnippetChooserBlock = { __typename: 'SnippetChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StartDateColumnBlock = { __typename: 'StartDateColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StaticBlock = { __typename: 'StaticBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StatusColumnBlock = { __typename: 'StatusColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StreamBlock = { __typename: 'StreamBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StreamFieldBlock = { __typename: 'StreamFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StructBlock = { __typename: 'StructBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_TasksColumnBlock = { __typename: 'TasksColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_TextBlock = { __typename: 'TextBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_TimeBlock = { __typename: 'TimeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_URLBlock = { __typename: 'URLBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_UpdatedAtColumnBlock = { __typename: 'UpdatedAtColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections =
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementComplianceStatusBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementContactFormBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementContactInformationBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AccessibilityStatementPreparationInformationBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionAttributeTypeFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionAttributeTypeReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionCategoryFilterCardBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionCategoryFilterCardsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionCategoryReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContactFormBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContactPersonsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContentAttributeTypeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContentCategoryTypeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionContentSectionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionDependenciesBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionDescriptionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionEndDateBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionHighlightsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionImplementationPhaseFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionImplementationPhaseReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionInProgressTaskSectionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionLeadParagraphBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionLinksBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionManualStatusReasonBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionMergedActionsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionOfficialNameBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionPledgesBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionPrimaryOrgBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionRelatedActionsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionRelatedIndicatorsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionResponsiblePartiesBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionResponsiblePartyReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionScheduleBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionScheduleContinuousBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionScheduleFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStartDateBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStatusFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStatusGraphsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionStatusReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionTaskSectionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionTasksBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionTasksReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ActionUpdatedAtBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_AdaptiveEmbedBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_BlockQuoteBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_BooleanBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CardBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CardListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CartographyVisualisationBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageAttributeTypeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageBodyBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageCategoryListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageContactFormBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryPageProgressBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTreeMapBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTypeDatasetsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTypeFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CategoryTypeLevelListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ChangeLogMessageBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_CharBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ChoiceBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ContinuousActionFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardHeaderBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorAreaChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorBarChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorLineChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorPieChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardIndicatorSummaryBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardParagraphBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DashboardRowBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DateBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DateTimeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DecimalBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_DocumentChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_EmailBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_EmbedBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_EndDateColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FieldColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FloatBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FormChoiceBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FormFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FrontPageHeroAdditionalSettingsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_FrontPageHeroBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IdentifierColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ImageBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ImageChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ImplementationPhaseColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorCategoryColumn
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorCategoryContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorCausalChainBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorFactorValueSummaryContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorGroupBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorHighlightsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorListColumn
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorShowcaseBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorValueColumn
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorValueSummaryContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorVisualizationContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IndicatorsColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_IntegerBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_LargeImageBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_NameColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_OrganizationColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PageChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PageLinkBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PathsNodeSummaryBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PathsOutcomeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PlanDatasetsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PlanFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_PrimaryOrganizationFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_QuestionAnswerBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_QuestionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RawHTMLBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RegexBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RelatedIndicatorsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RelatedPlanListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ReportComparisonBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ReportTypeFieldChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ResponsiblePartiesColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ResponsiblePartyFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_RichTextBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_ScheduleContinuousColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_SnippetChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StartDateColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StaticBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StatusColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StreamBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StreamFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_StructBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_TasksColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_TextBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_TimeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_URLBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections_UpdatedAtColumnBlock
+;
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ReportComparisonBlock_reportType = { __typename: 'ReportType', id: string, name: string };
 
@@ -5311,6 +5753,8 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
 
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock', field: string };
+
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock', field: string };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionLinksBlock = { __typename: 'ActionLinksBlock', field: string };
@@ -5351,7 +5795,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', field: string };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections> | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksBlock_sections | null> | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', field: string };
 
@@ -5568,6 +6012,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionHighlightsBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionImplementationPhaseFilterBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionImplementationPhaseReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionInProgressTaskSectionBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionLeadParagraphBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionLinksBlock
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_ActionListBlock
@@ -5688,7 +6133,425 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentS
   | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_UpdatedAtColumnBlock
 ;
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections = { __typename: 'ActionTaskSectionBlock', field: string, heading: string | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementComplianceStatusBlock = { __typename: 'AccessibilityStatementComplianceStatusBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementContactFormBlock = { __typename: 'AccessibilityStatementContactFormBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementContactInformationBlock = { __typename: 'AccessibilityStatementContactInformationBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementPreparationInformationBlock = { __typename: 'AccessibilityStatementPreparationInformationBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionAttributeTypeFilterBlock = { __typename: 'ActionAttributeTypeFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionAttributeTypeReportFieldBlock = { __typename: 'ActionAttributeTypeReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionCategoryFilterCardBlock = { __typename: 'ActionCategoryFilterCardBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionCategoryFilterCardsBlock = { __typename: 'ActionCategoryFilterCardsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionCategoryReportFieldBlock = { __typename: 'ActionCategoryReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContactFormBlock = { __typename: 'ActionContactFormBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContactPersonsBlock = { __typename: 'ActionContactPersonsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContentAttributeTypeBlock = { __typename: 'ActionContentAttributeTypeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContentCategoryTypeBlock = { __typename: 'ActionContentCategoryTypeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContentSectionBlock = { __typename: 'ActionContentSectionBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionDependenciesBlock = { __typename: 'ActionDependenciesBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionDescriptionBlock = { __typename: 'ActionDescriptionBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionEndDateBlock = { __typename: 'ActionEndDateBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionHighlightsBlock = { __typename: 'ActionHighlightsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionImplementationPhaseFilterBlock = { __typename: 'ActionImplementationPhaseFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock', field: string, heading: string | null, highlightLateTasks: boolean | null };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionLinksBlock = { __typename: 'ActionLinksBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionListBlock = { __typename: 'ActionListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionManualStatusReasonBlock = { __typename: 'ActionManualStatusReasonBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionMergedActionsBlock = { __typename: 'ActionMergedActionsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionOfficialNameBlock = { __typename: 'ActionOfficialNameBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionPledgesBlock = { __typename: 'ActionPledgesBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionPrimaryOrgBlock = { __typename: 'ActionPrimaryOrgBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionRelatedActionsBlock = { __typename: 'ActionRelatedActionsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionResponsiblePartiesBlock = { __typename: 'ActionResponsiblePartiesBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionResponsiblePartyReportFieldBlock = { __typename: 'ActionResponsiblePartyReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionScheduleBlock = { __typename: 'ActionScheduleBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionScheduleContinuousBlock = { __typename: 'ActionScheduleContinuousBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionScheduleFilterBlock = { __typename: 'ActionScheduleFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStartDateBlock = { __typename: 'ActionStartDateBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStatusFilterBlock = { __typename: 'ActionStatusFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStatusGraphsBlock = { __typename: 'ActionStatusGraphsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStatusReportFieldBlock = { __typename: 'ActionStatusReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionTaskSectionBlock = { __typename: 'ActionTaskSectionBlock', field: string, heading: string | null };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionTasksReportFieldBlock = { __typename: 'ActionTasksReportFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionUpdatedAtBlock = { __typename: 'ActionUpdatedAtBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AdaptiveEmbedBlock = { __typename: 'AdaptiveEmbedBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_BlockQuoteBlock = { __typename: 'BlockQuoteBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_BooleanBlock = { __typename: 'BooleanBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CardBlock = { __typename: 'CardBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CardListBlock = { __typename: 'CardListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CartographyVisualisationBlock = { __typename: 'CartographyVisualisationBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryListBlock = { __typename: 'CategoryListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageAttributeTypeBlock = { __typename: 'CategoryPageAttributeTypeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageBodyBlock = { __typename: 'CategoryPageBodyBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageCategoryListBlock = { __typename: 'CategoryPageCategoryListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageContactFormBlock = { __typename: 'CategoryPageContactFormBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageProgressBlock = { __typename: 'CategoryPageProgressBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTreeMapBlock = { __typename: 'CategoryTreeMapBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTypeDatasetsBlock = { __typename: 'CategoryTypeDatasetsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTypeFilterBlock = { __typename: 'CategoryTypeFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTypeLevelListBlock = { __typename: 'CategoryTypeLevelListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ChangeLogMessageBlock = { __typename: 'ChangeLogMessageBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CharBlock = { __typename: 'CharBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ChoiceBlock = { __typename: 'ChoiceBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ContinuousActionFilterBlock = { __typename: 'ContinuousActionFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardHeaderBlock = { __typename: 'DashboardHeaderBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorAreaChartBlock = { __typename: 'DashboardIndicatorAreaChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorBarChartBlock = { __typename: 'DashboardIndicatorBarChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorLineChartBlock = { __typename: 'DashboardIndicatorLineChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorPieChartBlock = { __typename: 'DashboardIndicatorPieChartBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorSummaryBlock = { __typename: 'DashboardIndicatorSummaryBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardParagraphBlock = { __typename: 'DashboardParagraphBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardRowBlock = { __typename: 'DashboardRowBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DateBlock = { __typename: 'DateBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DateTimeBlock = { __typename: 'DateTimeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DecimalBlock = { __typename: 'DecimalBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DocumentChooserBlock = { __typename: 'DocumentChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_EmailBlock = { __typename: 'EmailBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_EmbedBlock = { __typename: 'EmbedBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_EndDateColumnBlock = { __typename: 'EndDateColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FieldColumnBlock = { __typename: 'FieldColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FloatBlock = { __typename: 'FloatBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FormChoiceBlock = { __typename: 'FormChoiceBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FormFieldBlock = { __typename: 'FormFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FrontPageHeroAdditionalSettingsBlock = { __typename: 'FrontPageHeroAdditionalSettingsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FrontPageHeroBlock = { __typename: 'FrontPageHeroBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IdentifierColumnBlock = { __typename: 'IdentifierColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ImageBlock = { __typename: 'ImageBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ImageChooserBlock = { __typename: 'ImageChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ImplementationPhaseColumnBlock = { __typename: 'ImplementationPhaseColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorBlock = { __typename: 'IndicatorBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorCategoryColumn = { __typename: 'IndicatorCategoryColumn', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorCategoryContentBlock = { __typename: 'IndicatorCategoryContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorCausalChainBlock = { __typename: 'IndicatorCausalChainBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorContentBlock = { __typename: 'IndicatorContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorFactorValueSummaryContentBlock = { __typename: 'IndicatorFactorValueSummaryContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorFilterBlock = { __typename: 'IndicatorFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorGroupBlock = { __typename: 'IndicatorGroupBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorHighlightsBlock = { __typename: 'IndicatorHighlightsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorListColumn = { __typename: 'IndicatorListColumn', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorShowcaseBlock = { __typename: 'IndicatorShowcaseBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorValueColumn = { __typename: 'IndicatorValueColumn', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorValueSummaryContentBlock = { __typename: 'IndicatorValueSummaryContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorVisualizationContentBlock = { __typename: 'IndicatorVisualizationContentBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorsColumnBlock = { __typename: 'IndicatorsColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IntegerBlock = { __typename: 'IntegerBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_LargeImageBlock = { __typename: 'LargeImageBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_NameColumnBlock = { __typename: 'NameColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_OrganizationColumnBlock = { __typename: 'OrganizationColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PageChooserBlock = { __typename: 'PageChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PageLinkBlock = { __typename: 'PageLinkBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PathsNodeSummaryBlock = { __typename: 'PathsNodeSummaryBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PathsOutcomeBlock = { __typename: 'PathsOutcomeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PlanDatasetsBlock = { __typename: 'PlanDatasetsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PlanFilterBlock = { __typename: 'PlanFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PrimaryOrganizationFilterBlock = { __typename: 'PrimaryOrganizationFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_QuestionAnswerBlock = { __typename: 'QuestionAnswerBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_QuestionBlock = { __typename: 'QuestionBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RawHTMLBlock = { __typename: 'RawHTMLBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RegexBlock = { __typename: 'RegexBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RelatedIndicatorsBlock = { __typename: 'RelatedIndicatorsBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RelatedPlanListBlock = { __typename: 'RelatedPlanListBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ReportComparisonBlock = { __typename: 'ReportComparisonBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ReportTypeFieldChooserBlock = { __typename: 'ReportTypeFieldChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ResponsiblePartiesColumnBlock = { __typename: 'ResponsiblePartiesColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ResponsiblePartyFilterBlock = { __typename: 'ResponsiblePartyFilterBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RichTextBlock = { __typename: 'RichTextBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ScheduleContinuousColumnBlock = { __typename: 'ScheduleContinuousColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_SnippetChooserBlock = { __typename: 'SnippetChooserBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StartDateColumnBlock = { __typename: 'StartDateColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StaticBlock = { __typename: 'StaticBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StatusColumnBlock = { __typename: 'StatusColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StreamBlock = { __typename: 'StreamBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StreamFieldBlock = { __typename: 'StreamFieldBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StructBlock = { __typename: 'StructBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_TasksColumnBlock = { __typename: 'TasksColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_TextBlock = { __typename: 'TextBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_TimeBlock = { __typename: 'TimeBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_URLBlock = { __typename: 'URLBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_UpdatedAtColumnBlock = { __typename: 'UpdatedAtColumnBlock', field: string };
+
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections =
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementComplianceStatusBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementContactFormBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementContactInformationBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AccessibilityStatementPreparationInformationBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionAttributeTypeFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionAttributeTypeReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionCategoryFilterCardBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionCategoryFilterCardsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionCategoryReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContactFormBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContactPersonsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContentAttributeTypeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContentCategoryTypeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionContentSectionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionDependenciesBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionDescriptionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionEndDateBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionHighlightsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionImplementationPhaseFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionImplementationPhaseReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionInProgressTaskSectionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionLeadParagraphBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionLinksBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionManualStatusReasonBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionMergedActionsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionOfficialNameBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionPledgesBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionPrimaryOrgBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionRelatedActionsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionRelatedIndicatorsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionResponsiblePartiesBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionResponsiblePartyReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionScheduleBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionScheduleContinuousBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionScheduleFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStartDateBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStatusFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStatusGraphsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionStatusReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionTaskSectionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionTasksBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionTasksReportFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ActionUpdatedAtBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_AdaptiveEmbedBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_BlockQuoteBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_BooleanBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CardBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CardListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CartographyVisualisationBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageAttributeTypeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageBodyBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageCategoryListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageContactFormBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryPageProgressBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTreeMapBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTypeDatasetsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTypeFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CategoryTypeLevelListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ChangeLogMessageBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_CharBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ChoiceBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ContinuousActionFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardHeaderBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorAreaChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorBarChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorLineChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorPieChartBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardIndicatorSummaryBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardParagraphBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DashboardRowBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DateBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DateTimeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DecimalBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_DocumentChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_EmailBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_EmbedBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_EndDateColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FieldColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FloatBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FormChoiceBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FormFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FrontPageHeroAdditionalSettingsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_FrontPageHeroBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IdentifierColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ImageBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ImageChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ImplementationPhaseColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorCategoryColumn
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorCategoryContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorCausalChainBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorFactorValueSummaryContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorGroupBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorHighlightsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorListColumn
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorShowcaseBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorValueColumn
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorValueSummaryContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorVisualizationContentBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IndicatorsColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_IntegerBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_LargeImageBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_NameColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_OrganizationColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PageChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PageLinkBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PathsNodeSummaryBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PathsOutcomeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PlanDatasetsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PlanFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_PrimaryOrganizationFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_QuestionAnswerBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_QuestionBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RawHTMLBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RegexBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RelatedIndicatorsBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RelatedPlanListBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ReportComparisonBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ReportTypeFieldChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ResponsiblePartiesColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ResponsiblePartyFilterBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_RichTextBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_ScheduleContinuousColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_SnippetChooserBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StartDateColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StaticBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StatusColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StreamBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StreamFieldBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_StructBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_TasksColumnBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_TextBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_TimeBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_URLBlock
+  | ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections_UpdatedAtColumnBlock
+;
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_PlanDatasetsBlock_datasetSchema = { __typename: 'DatasetSchema', uuid: string };
 
@@ -5718,7 +6581,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionRelatedA
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', field: string, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections> | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections | null> | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainTop_ChangeLogMessageBlock = { __typename: 'ChangeLogMessageBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
 
@@ -5775,7 +6638,7 @@ export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionRelat
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionRelatedIndicatorsBlock = { __typename: 'ActionRelatedIndicatorsBlock', field: string, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
 
-export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections> | null };
+export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ActionTasksBlock = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections | null> | null };
 
 export type ActionDetailsQuery_plan_actionListPage_detailsMainBottom_ChangeLogMessageBlock = { __typename: 'ChangeLogMessageBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
 
@@ -5900,7 +6763,7 @@ type ActionMainContentBlocks_ActionRelatedActionsBlock_Fragment = { __typename: 
 
 type ActionMainContentBlocks_ActionRelatedIndicatorsBlock_Fragment = { __typename: 'ActionRelatedIndicatorsBlock', field: string, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null };
 
-type ActionMainContentBlocks_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections> | null };
+type ActionMainContentBlocks_ActionTasksBlock_Fragment = { __typename: 'ActionTasksBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null, meta: ActionDetailsQuery_plan_actionListPage_detailsMainTop_meta | null, sections: Array<ActionDetailsQuery_plan_actionListPage_detailsMainTop_ActionTasksBlock_sections | null> | null };
 
 type ActionMainContentBlocks_ChangeLogMessageBlock_Fragment = { __typename: 'ChangeLogMessageBlock', field: string, fieldLabel: string | null, fieldHelpText: string | null };
 
@@ -5999,6 +6862,8 @@ export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgr
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionImplementationPhaseFilterBlock = { __typename: 'ActionImplementationPhaseFilterBlock' };
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock' };
+
+export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock' };
 
 export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock' };
 
@@ -6257,6 +7122,7 @@ export type TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgr
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionHighlightsBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionImplementationPhaseFilterBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionImplementationPhaseReportFieldBlock
+  | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionInProgressTaskSectionBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionLeadParagraphBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionLinksBlock
   | TemplatedCategoryPageFragment_layout_layoutMainTop_CategoryPageProgressBlock_blocks_ActionListBlock
@@ -7735,6 +8601,8 @@ export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_A
 
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionImplementationPhaseReportFieldBlock = { __typename: 'ActionImplementationPhaseReportFieldBlock', field: string };
 
+export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionInProgressTaskSectionBlock = { __typename: 'ActionInProgressTaskSectionBlock', field: string };
+
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionLeadParagraphBlock = { __typename: 'ActionLeadParagraphBlock', field: string };
 
 export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionLinksBlock = { __typename: 'ActionLinksBlock', field: string };
@@ -7992,6 +8860,7 @@ export type PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_A
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionHighlightsBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionImplementationPhaseFilterBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionImplementationPhaseReportFieldBlock
+  | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionInProgressTaskSectionBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionLeadParagraphBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionLinksBlock
   | PlanContextQuery_plan_additionalLinks_items_PageMenuItem_page_body_AccessibilityStatementContactInformationBlock_blocks_ActionListBlock
@@ -8339,6 +9208,8 @@ type PledgeBody_ActionImplementationPhaseFilterBlock_Fragment = { __typename: 'A
 
 type PledgeBody_ActionImplementationPhaseReportFieldBlock_Fragment = { __typename: 'ActionImplementationPhaseReportFieldBlock', blockType: string, field: string };
 
+type PledgeBody_ActionInProgressTaskSectionBlock_Fragment = { __typename: 'ActionInProgressTaskSectionBlock', blockType: string, field: string };
+
 type PledgeBody_ActionLeadParagraphBlock_Fragment = { __typename: 'ActionLeadParagraphBlock', blockType: string, field: string };
 
 type PledgeBody_ActionLinksBlock_Fragment = { __typename: 'ActionLinksBlock', blockType: string, field: string };
@@ -8596,6 +9467,7 @@ export type PledgeBodyFragment =
   | PledgeBody_ActionHighlightsBlock_Fragment
   | PledgeBody_ActionImplementationPhaseFilterBlock_Fragment
   | PledgeBody_ActionImplementationPhaseReportFieldBlock_Fragment
+  | PledgeBody_ActionInProgressTaskSectionBlock_Fragment
   | PledgeBody_ActionLeadParagraphBlock_Fragment
   | PledgeBody_ActionLinksBlock_Fragment
   | PledgeBody_ActionListBlock_Fragment

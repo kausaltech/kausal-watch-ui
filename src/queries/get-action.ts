@@ -442,8 +442,16 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
       fieldLabel
       fieldHelpText
       sections {
-        field
-        heading
+        ... on StreamFieldInterface {
+          field
+        }
+        ... on ActionTaskSectionBlock {
+          heading
+        }
+        ... on ActionInProgressTaskSectionBlock {
+          heading
+          highlightLateTasks
+        }
       }
     }
     ... on ActionContentAttributeTypeBlock {
@@ -502,8 +510,16 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
           fieldLabel
           fieldHelpText
           sections {
-            field
-            heading
+            ... on StreamFieldInterface {
+              field
+            }
+            ... on ActionTaskSectionBlock {
+              heading
+            }
+            ... on ActionInProgressTaskSectionBlock {
+              heading
+              highlightLateTasks
+            }
           }
         }
         ... on ActionContentAttributeTypeBlock {

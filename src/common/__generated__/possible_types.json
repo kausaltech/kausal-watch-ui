@@ -556,6 +556,7 @@
       "ActionHighlightsBlock",
       "ActionImplementationPhaseFilterBlock",
       "ActionImplementationPhaseReportFieldBlock",
+      "ActionInProgressTaskSectionBlock",
       "ActionLeadParagraphBlock",
       "ActionLinksBlock",
       "ActionListBlock",
