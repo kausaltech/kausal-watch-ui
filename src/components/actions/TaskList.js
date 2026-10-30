@@ -1,4 +1,4 @@
-import { Fragment, useId, useState } from 'react';
+import { Fragment, useId, useState, useSyncExternalStore } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
@@ -23,6 +23,13 @@ const StyledDate = styled.span`
 
 const TaskWrapper = styled.div`
   display: flex;
+`;
+
+const LateLabel = styled.span`
+  display: block;
+  font-size: ${(props) => props.theme.fontSizeSm};
+  font-weight: ${(props) => props.theme.fontWeightBold};
+  color: ${(props) => props.theme.graphColors.red070};
 `;
 
 const TaskMeta = styled.div`
@@ -134,7 +141,7 @@ const ListGroupItem = styled.li`
     border-bottom-right-radius: ${(props) => props.theme.cardBorderRadius};
   }
 
-  &.state--cancelled .task-header {
+  &.state--CANCELLED .task-title {
     text-decoration: line-through;
   }
 `;
@@ -147,7 +154,7 @@ function parseTimestamp(timestamp) {
 const Task = (props) => {
   const t = useTranslations();
   const locale = useLocale();
-  const { task, theme, completed } = props;
+  const { task, theme, completed, late } = props;
   const [isOpen, setIsOpen] = useState(false);
   const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
@@ -165,8 +172,12 @@ const Task = (props) => {
         </TaskMeta>
       ) : (
         <TaskMeta>
-          <Icon.Calendar color={theme.graphColors.blue070} alt={t('action-task-todo')} />
+          <Icon.Calendar
+            color={late ? theme.graphColors.red070 : theme.graphColors.blue070}
+            alt={t(task.state === 'CANCELLED' ? 'action-task-cancelled' : 'action-task-todo')}
+          />
           <StyledDate>{formattedDueAt}</StyledDate>
+          {late && <LateLabel>{t('action-task-late')}</LateLabel>}
         </TaskMeta>
       )}
       <TaskContent>
@@ -209,11 +220,13 @@ const taskShape = {
 
 Task.propTypes = {
   completed: PropTypes.bool.isRequired,
+  late: PropTypes.bool,
   task: PropTypes.shape(taskShape).isRequired,
   theme: PropTypes.shape({
     graphColors: PropTypes.shape({
       blue070: PropTypes.string.isRequired,
       green050: PropTypes.string.isRequired,
+      red070: PropTypes.string.isRequired,
     }).isRequired,
   }).isRequired,
 };
@@ -224,6 +237,7 @@ const SECTIONS = {
   not_started: { state: 'NOT_STARTED', headingKey: 'action-tasks-todo', completed: false },
   in_progress: { state: 'IN_PROGRESS', headingKey: 'action-tasks-doing', completed: false },
   completed: { state: 'COMPLETED', headingKey: 'action-tasks-done', completed: true },
+  cancelled: { state: 'CANCELLED', headingKey: 'action-tasks-cancelled', completed: false },
 };
 
 // The order the sections had before plan admins could choose it, for backends that don't send one.
@@ -242,6 +256,7 @@ function getSectionConfigs(sections) {
       ...SECTIONS[section.field],
       field: section.field,
       heading: section.heading,
+      highlightLate: !!section.highlightLateTasks,
     }));
 }
 
@@ -250,6 +265,24 @@ function getSectionConfigs(sections) {
 export function hasVisibleTasks(tasks, sections) {
   const states = new Set(getSectionConfigs(sections).map((config) => config.state));
   return tasks.some((task) => states.has(task.state));
+}
+
+// A string, so that the snapshot stays the same between reads on the same day
+const getToday = () => dayjs().format('YYYY-MM-DD');
+const getServerToday = () => null;
+
+// Notifies at each local midnight, so that tasks become late while the page stays open
+function subscribeToDate(onChange) {
+  let timeoutId;
+  const schedule = () => {
+    const untilMidnight = dayjs().add(1, 'day').startOf('day').diff(dayjs());
+    timeoutId = setTimeout(() => {
+      onChange();
+      schedule();
+    }, untilMidnight);
+  };
+  schedule();
+  return () => clearTimeout(timeoutId);
 }
 
 function TaskList(props) {
@@ -263,12 +296,23 @@ function TaskList(props) {
     return dayjs(adate).diff(dayjs(bdate));
   });
 
-  function filterTasks(state, completed) {
+  // A task is late once the day it was due has passed. "Today" is the viewer's date, which only the
+  // browser knows: the server's date can differ, so the server and the hydration render mark no task
+  // as late.
+  const today = useSyncExternalStore(subscribeToDate, getToday, getServerToday);
+  const isLate = (task) => today !== null && dayjs(task.dueAt).isBefore(today, 'day');
+
+  function filterTasks(state, completed, highlightLate) {
     const items = sortedTasks
       .filter((item) => item.state === state)
       .map((item) => (
         <ListGroupItem key={item.id} className={`state--${item.state}`}>
-          <Task task={item} theme={theme} completed={completed} />
+          <Task
+            task={item}
+            theme={theme}
+            completed={completed}
+            late={highlightLate && isLate(item)}
+          />
         </ListGroupItem>
       ));
     // Completed tasks are listed newest first
@@ -278,7 +322,7 @@ function TaskList(props) {
   return (
     <div>
       {getSectionConfigs(sections).map((config) => {
-        const items = filterTasks(config.state, config.completed);
+        const items = filterTasks(config.state, config.completed, config.highlightLate);
         if (!items.length) return null;
         return (
           <Fragment key={config.field}>
@@ -298,6 +342,7 @@ TaskList.propTypes = {
     PropTypes.shape({
       field: PropTypes.string.isRequired,
       heading: PropTypes.string,
+      highlightLateTasks: PropTypes.bool,
     })
   ),
 };
