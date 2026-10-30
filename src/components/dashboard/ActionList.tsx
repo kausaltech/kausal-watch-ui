@@ -25,7 +25,9 @@ import {
   mapResponsibleParties,
   orgHasActions,
 } from '@/common/organizations';
+import { themeShowsActionColorLegend } from '@/common/theme-settings';
 import ActionCardList from '@/components/actions/ActionCardList';
+import ActionColorLegend from '@/components/actions/ActionColorLegend';
 import type {
   ActionListFilterSection,
   FilterValue,
@@ -96,6 +98,10 @@ const ActionListHeader = styled.div`
       font-size: ${(props) => props.theme.fontSizeXxl};
     }
   }
+`;
+
+const ColorLegend = styled(ActionColorLegend)`
+  margin: ${({ theme }) => `${theme.spaces.s400} 0 ${theme.spaces.s300}`};
 `;
 
 const IndicatorsTabs = styled.div`
@@ -567,6 +573,8 @@ const ActionList = (props: ActionListProps) => {
   const showUpdateStatus =
     theme.settings.dashboard?.showActionUpdateStatus === false ? false : true;
 
+  const showColorLegend = themeShowsActionColorLegend(theme);
+
   return (
     <>
       <ActionListSection id="actions" data-testid={testId}>
@@ -667,12 +675,16 @@ const ActionList = (props: ActionListProps) => {
           hidden={displayDashboard}
         >
           {!displayDashboard && filteredActions.length > 0 ? (
-            <ActionCardList
-              actions={filteredActions}
-              groupBy={groupBy}
-              includeRelatedPlans={includeRelatedPlans}
-              headingHierarchyDepth={headingHierarchyDepth}
-            />
+            <>
+              {showColorLegend && <ColorLegend actions={filteredActions} align="start" />}
+              <ActionCardList
+                actions={filteredActions}
+                groupBy={groupBy}
+                includeRelatedPlans={includeRelatedPlans}
+                headingHierarchyDepth={headingHierarchyDepth}
+                compactTopMargin={showColorLegend}
+              />
+            </>
           ) : (
             <Alert severity="info">{t('search-no-results')}</Alert>
           )}

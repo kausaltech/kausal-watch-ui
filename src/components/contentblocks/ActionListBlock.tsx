@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react';
 
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { type TypedDocumentNode, gql } from '@apollo/client';
@@ -14,8 +15,10 @@ import type {
   ActionListForBlockQueryVariables,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
+import { themeShowsActionColorLegend } from '@/common/theme-settings';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
+import ActionColorLegend from '@/components/actions/ActionColorLegend';
 import ErrorMessage from '@/components/common/ErrorMessage';
 import { Container } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
@@ -215,6 +218,7 @@ type ActionListBlockProps = {
 const ActionListBlock = (props: ActionListBlockProps) => {
   const { id = '', categoryId, heading, groupByLevel } = props;
   const t = useTranslations();
+  const theme = useTheme();
 
   const plan = usePlan();
   const { workflow, setLoading } = useWorkflowSelector();
@@ -280,6 +284,12 @@ const ActionListBlock = (props: ActionListBlockProps) => {
         {displayHeader && displayHeader !== '-' ? (
           <SectionHeader>{displayHeader}</SectionHeader>
         ) : null}
+        {themeShowsActionColorLegend(theme) && (
+          <ActionColorLegend
+            actions={planActions}
+            backgroundColor={theme.section.actionListBlock.background}
+          />
+        )}
         {!groups || namedGroupCount === 0 ? (
           // No grouping configured, or nothing resolved to a group — plain list
           <ActionCardList
