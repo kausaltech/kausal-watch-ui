@@ -12,6 +12,7 @@ import { getActionTermContext } from '@/common/i18n';
 import ActionAttribute from '@/components/common/ActionAttribute';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
+import RichText from '@/components/common/RichText';
 import { Col, Row } from '@/components/common/layout/LayoutGrid';
 import { usePlan } from '@/context/plan';
 
@@ -110,18 +111,15 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
   const plan = usePlan();
 
   const { reportField, reportsToCompare } = block;
-  // Augment each report with the field we're looking for
-  // TODO: Right now we're only interested in attributes. Display report field values of other types as well.
+  // Augment each report with the field we're looking for. Action fields (attributes) are shown as on the action
+  // page; the backend formats the values of the other fields.
   const reports = (reportsToCompare ?? [])
     .flatMap((report) => {
       if (!report) return [];
-      const reportValue = report.valuesForAction?.find(
-        (value) =>
-          value?.field.id === reportField &&
-          value.field.__typename === 'ActionAttributeTypeReportFieldBlock'
-      );
+      const reportValue = report.valuesForAction?.find((value) => value?.field.id === reportField);
       const attribute = reportValue && 'attribute' in reportValue ? reportValue.attribute : null;
-      return [{ ...report, attribute }];
+      const formattedValue = reportValue?.formattedValue ?? null;
+      return [{ ...report, attribute, formattedValue }];
     })
     .sort((a, b) => {
       if (a.endDate == null && b.endDate == null) return 0;
@@ -173,6 +171,8 @@ const ReportComparisonBlock = (props: ReportComparisonBlockProps) => {
                     attributeType={undefined}
                     fontSize="fontSizeBase"
                   />
+                ) : report.formattedValue ? (
+                  <RichText html={report.formattedValue} />
                 ) : (
                   <div>{t('no-action-data-for-report', getActionTermContext(plan))}</div>
                 )}
