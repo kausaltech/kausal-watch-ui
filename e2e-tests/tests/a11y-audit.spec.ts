@@ -9,7 +9,8 @@
  *   A11Y_AUDIT=1 pnpm exec playwright test a11y-audit --project=chromium
  *
  * Plans come from A11Y_PLAN_IDENTIFIERS (comma-separated), falling back to
- * TEST_PLAN_IDENTIFIERS.
+ * TEST_PLAN_IDENTIFIERS. Plans whose site requires sign-in, or that the backend
+ * does not serve at their test URL, are skipped rather than failed.
  */
 import { AxeBuilder } from '@axe-core/playwright';
 import { type Page, expect, test } from '@playwright/test';
@@ -21,7 +22,7 @@ import {
   formatImpactCounts,
   planAuditHtml,
 } from '../common/a11y.ts';
-import { PlanContext, getIdentifiersToTest } from '../common/context.ts';
+import { PlanContext, getIdentifiersToTest, getPlanAvailability } from '../common/context.ts';
 
 /** WCAG 2.2 AA, which covers EN 301 549 (WCAG 2.1 AA) and adds a few criteria. */
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
@@ -109,6 +110,9 @@ async function auditPage(page: Page, { name, url }: PageToAudit): Promise<Audite
 const describeAudit = (planId: string) => {
   test(planId, async ({ page }, testInfo) => {
     test.setTimeout(300_000);
+    // Plans behind sign-in (or not served at all) would only audit the gate page, so skip them.
+    const availability = await getPlanAvailability(planId);
+    test.skip(availability !== 'AVAILABLE', `Not public: ${availability}`);
     const ctx = await PlanContext.fromPlanId(planId);
     const audit: PlanAudit = { planId, auditedAt: new Date().toISOString(), pages: [] };
     for (const pageToAudit of getPagesToAudit(ctx)) {

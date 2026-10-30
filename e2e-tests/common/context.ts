@@ -3,6 +3,8 @@ import { AxeBuilder } from '@axe-core/playwright';
 import { type Page, expect } from '@playwright/test';
 
 import type {
+  PlaywrightGetPlanAvailabilityQuery,
+  PlaywrightGetPlanAvailabilityQueryVariables,
   PlaywrightGetPlanBasicsQuery,
   PlaywrightGetPlanBasicsQueryVariables,
   PlaywrightGetPlanInfoQuery,
@@ -36,6 +38,20 @@ const GET_PLAN_BASICS = gql`
       identifier
       primaryLanguage
       otherLanguages
+    }
+  }
+`;
+
+// Asks what the UI's proxy asks before serving a hostname. Only interface fields, so the
+// answer is the same for a full Plan and for a RestrictedPlanNode.
+const GET_PLAN_AVAILABILITY = gql`
+  query PlaywrightGetPlanAvailability($hostname: String) {
+    plansForHostname(hostname: $hostname) {
+      __typename
+      identifier
+      domain {
+        availability
+      }
     }
   }
 `;
@@ -435,6 +451,30 @@ export function getIdentifiersToTest(): string[] {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+export type PlanAvailability = 'AVAILABLE' | 'SIGN_IN_REQUIRED' | 'UNAVAILABLE' | 'NOT_FOUND';
+
+/**
+ * What the site at the plan's test URL serves an anonymous visitor, as the backend reports it.
+ *
+ * Mirrors getDomainAvailability in src/utils/middleware.utils.ts: without an availability from
+ * the backend, a full Plan counts as available and a restricted one as needing sign-in.
+ */
+export async function getPlanAvailability(planId: string): Promise<PlanAvailability> {
+  const hostname = new URL(getPageBaseUrlToTest(planId)).hostname;
+  const res = await apolloClient.query<
+    PlaywrightGetPlanAvailabilityQuery,
+    PlaywrightGetPlanAvailabilityQueryVariables
+  >({
+    query: GET_PLAN_AVAILABILITY,
+    variables: { hostname },
+    fetchPolicy: 'no-cache',
+  });
+  const plan = res.data.plansForHostname?.find((p) => p?.identifier === planId);
+  if (!plan) return 'NOT_FOUND';
+  if (plan.domain?.availability) return plan.domain.availability as PlanAvailability;
+  return plan.__typename === 'Plan' ? 'AVAILABLE' : 'SIGN_IN_REQUIRED';
 }
 
 export function getPageBaseUrlToTest(planId: string): string {
