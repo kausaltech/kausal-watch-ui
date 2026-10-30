@@ -222,6 +222,7 @@ const GET_CONTENT_PAGE: TypedDocumentNode<ContentPageQuery, ContentPageQueryVari
           }
           type {
             id
+            name
             hideCategoryIdentifiers
           }
           image {
