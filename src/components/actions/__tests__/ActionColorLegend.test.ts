@@ -81,17 +81,72 @@ describe('getActionColorLegend', () => {
 
     const entries = getActionColorLegend(actions, plan, theme, labels);
     expect(entries).toEqual([
-      { color: '#22cc22', labels: ['On time', 'In progress'], kinds: ['status'] },
-      { color: '#123456', labels: ['Planning'], kinds: ['phase'] },
-      { color: '#ddffdd', labels: ['Not started'], kinds: ['status'] },
-      { color: '#00aa00', labels: ['Continuous'], kinds: ['continuous'] },
-      { color: '#eeeeee', labels: ['Not set'], kinds: ['not-set'] },
+      { colors: ['#22cc22'], labels: ['On time', 'In progress'], kinds: ['status'] },
+      { colors: ['#123456'], labels: ['Planning'], kinds: ['phase'] },
+      { colors: ['#ddffdd'], labels: ['Not started'], kinds: ['status'] },
+      { colors: ['#00aa00'], labels: ['Continuous'], kinds: ['continuous'] },
+      { colors: ['#eeeeee'], labels: ['Not set'], kinds: ['not-set'] },
     ]);
     expect(getLegendHeadingKind(entries)).toBe('both');
   });
 
   it('returns nothing when no action color can be explained', () => {
     expect(getActionColorLegend([action({ color: null })], plan, theme, labels)).toEqual([]);
+  });
+
+  it("resolves a related plan action's phase from its own plan", () => {
+    const actions = [
+      action({
+        color: '#654321',
+        status: { id: 's9', identifier: 'on_time', name: 'On time', color: 'green050' },
+        statusSummary: { identifier: ActionStatusSummaryIdentifier.NotStarted },
+        implementationPhase: { id: 'p9', identifier: 'execution', name: 'Execution' },
+        plan: {
+          id: 'related',
+          actionImplementationPhases: [
+            { id: 'p9', identifier: 'execution', name: 'Execution', color: '#654321' },
+          ],
+        },
+      }),
+    ];
+    const entries = getActionColorLegend(actions, plan, theme, labels);
+    expect(entries).toEqual([{ colors: ['#654321'], labels: ['Execution'], kinds: ['phase'] }]);
+    expect(getLegendHeadingKind(entries)).toBe('phase');
+  });
+
+  it('shows a label once with each color it stands for', () => {
+    const related = (id: string, color: string) => ({
+      id,
+      actionImplementationPhases: [
+        { id: `${id}-p`, identifier: 'planning', name: 'Planning', color },
+      ],
+    });
+    const actions = [
+      action({
+        color: '#123456',
+        implementationPhase: { id: 'p1', identifier: 'planning', name: 'Planning' },
+      }),
+      action({
+        color: '#abcdef',
+        implementationPhase: { id: 'r1-p', identifier: 'planning', name: 'Planning' },
+        plan: related('r1', '#abcdef'),
+      }),
+      // Same name and color in another plan adds no swatch
+      action({
+        color: '#123456',
+        implementationPhase: { id: 'r2-p', identifier: 'planning', name: 'Planning' },
+        plan: related('r2', '#123456'),
+      }),
+      // A status sharing one of the colors still gets its own entry
+      action({
+        color: '#123456',
+        status: { id: 's2', identifier: 'in_progress', name: 'In progress', color: '#123456' },
+      }),
+    ];
+    expect(getActionColorLegend(actions, plan, theme, labels)).toEqual([
+      { colors: ['#123456'], labels: ['In progress'], kinds: ['status'] },
+      { colors: ['#123456', '#abcdef'], labels: ['Planning'], kinds: ['phase'] },
+    ]);
   });
 
   it('heads the legend by phase when only phases and unset actions show', () => {

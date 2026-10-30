@@ -25,6 +25,7 @@ import {
   mapResponsibleParties,
   orgHasActions,
 } from '@/common/organizations';
+import { themeShowsActionColorLegend } from '@/common/theme-settings';
 import ActionCardList from '@/components/actions/ActionCardList';
 import ActionColorLegend from '@/components/actions/ActionColorLegend';
 import type {
@@ -572,7 +573,7 @@ const ActionList = (props: ActionListProps) => {
   const showUpdateStatus =
     theme.settings.dashboard?.showActionUpdateStatus === false ? false : true;
 
-  const showColorLegend = theme.settings.showActionColorLegend === true;
+  const showColorLegend = themeShowsActionColorLegend(theme);
 
   return (
     <>

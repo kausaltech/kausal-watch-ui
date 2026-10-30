@@ -15,6 +15,7 @@ import type {
   ActionListForBlockQueryVariables,
 } from '@/common/__generated__/graphql';
 import { getActionTermContext } from '@/common/i18n';
+import { themeShowsActionColorLegend } from '@/common/theme-settings';
 import ActionCard from '@/components/actions/ActionCard';
 import ActionCardList from '@/components/actions/ActionCardList';
 import ActionColorLegend from '@/components/actions/ActionColorLegend';
@@ -283,7 +284,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
         {displayHeader && displayHeader !== '-' ? (
           <SectionHeader>{displayHeader}</SectionHeader>
         ) : null}
-        {theme.settings.showActionColorLegend && (
+        {themeShowsActionColorLegend(theme) && (
           <ActionColorLegend
             actions={planActions}
             backgroundColor={theme.section.actionListBlock.background}

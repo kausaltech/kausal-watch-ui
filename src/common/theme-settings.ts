@@ -14,3 +14,8 @@ export function themeLeftAlignsCategoryHeroContent(theme: Theme): boolean {
 export function themeLabelsCategoryPagesWithType(theme: Theme): boolean {
   return theme.settings.categories.categoryPageTypeAsLabel ?? false;
 }
+
+/** Explain the action card colors above action lists */
+export function themeShowsActionColorLegend(theme: Theme): boolean {
+  return theme.settings.showActionColorLegend ?? false;
+}
