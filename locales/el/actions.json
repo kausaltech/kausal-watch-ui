@@ -67,5 +67,6 @@
     "actions-non-continuous": "Μη συνεχείς ενέργειες",
     "filter-action-type": "Τύπος ενέργειας",
     "see-all-actions": "Όλες οι δράσεις",
-    "download-chart-as-png": "Λήψη γραφήματος ως PNG"
+    "download": "Λήψη",
+    "download-chart-png": "Γράφημα ως PNG"
 }

@@ -22,6 +22,18 @@ describe('Modal component', () => {
     expect(screen.getByTestId(contentId)).toBeInTheDocument();
   });
 
+  it('is a dialog named by its header and described by its help text', () => {
+    render(
+      <Modal isOpen={true} onClose={jest.fn()} header={header} helpText={helpText}>
+        <div data-testid={contentId}>Child Content</div>
+      </Modal>
+    );
+
+    const dialog = screen.getByRole('dialog', { name: header });
+    expect(dialog).toHaveAttribute('aria-modal', 'true');
+    expect(dialog).toHaveAccessibleDescription(helpText);
+  });
+
   it('closes the modal when the close button is clicked', () => {
     const onCloseMock = jest.fn();
 
@@ -64,7 +76,7 @@ describe('Modal component', () => {
     expect(screen.getByText(header)).toBeInTheDocument();
     expect(screen.getByText(helpText)).toBeInTheDocument();
 
-    fireEvent.keyDown(document, { key: 'Escape', code: 'Escape' });
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape', code: 'Escape' });
 
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
@@ -81,8 +93,10 @@ describe('Modal component', () => {
     expect(screen.getByText(header)).toBeInTheDocument();
     expect(screen.getByText(helpText)).toBeInTheDocument();
 
-    const modalOverlay = screen.getByTestId('modal-overlay');
-    fireEvent.click(modalOverlay);
+    // The backdrop area around the dialog; a click must also start there
+    const backdropArea = screen.getByRole('dialog').parentElement!;
+    fireEvent.mouseDown(backdropArea);
+    fireEvent.click(backdropArea);
 
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });

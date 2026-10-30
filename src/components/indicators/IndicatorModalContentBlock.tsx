@@ -254,27 +254,26 @@ const IndicatorCategoryBlock = (props: IndicatorCategoryBlockProps) => {
 
         <CategoryBadges>
           {categories.map((cat) => (
-            <IndicatorListLink
+            <BadgeTooltip
               key={cat.id}
-              categoryFilters={[
-                {
-                  typeIdentifier: cat.type.identifier,
-                  categoryId: cat.id,
-                },
-              ]}
-              filterGroupLabel={groupLabel}
-              filterValueLabel={cat.name}
-            >
-              <BadgeTooltip
-                id={cat.id}
-                tooltip=""
-                content={cat.name}
-                size={context === 'grouped' ? 'sm' : 'md'}
-                themeColor="neutralLight"
-                color={cat.color || cat.parent?.color || undefined}
-                isLink={true}
-              />
-            </IndicatorListLink>
+              id={cat.id}
+              content={cat.name}
+              size={context === 'grouped' ? 'sm' : 'md'}
+              themeColor="neutralLight"
+              color={cat.color || cat.parent?.color || undefined}
+              link={
+                <IndicatorListLink
+                  categoryFilters={[
+                    {
+                      typeIdentifier: cat.type.identifier,
+                      categoryId: cat.id,
+                    },
+                  ]}
+                  filterGroupLabel={groupLabel}
+                  filterValueLabel={cat.name}
+                />
+              }
+            />
           ))}
         </CategoryBadges>
       </CategoryTypeBlock>

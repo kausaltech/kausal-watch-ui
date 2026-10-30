@@ -37,46 +37,30 @@ function OrganizationChip(props: OrganizationChipProps) {
   const t = useTranslations();
 
   let size = 'md' as BadgeTooltipProps['size'];
-  let ariaLabel: string | undefined;
+  let ariaLabel: string;
 
-  // PRIMARY, COLLABORATOR
-
+  const name = [organization.abbreviation, organization.name].filter(Boolean).join(' ');
   if (role === ActionResponsiblePartyRole.Primary) {
     size = 'lg';
-    ariaLabel = `${t('responsible-party-main')}: ${organization.abbreviation} ${organization.name}`;
-  }
-  if (role === ActionResponsiblePartyRole.Collaborator) {
-    size = 'sm';
-    ariaLabel = `${t('responsible-party-main')}: ${organization.abbreviation} ${organization.name}`;
+    ariaLabel = `${t('responsible-party-main')}: ${name}`;
   } else {
-    ariaLabel = `${organization.abbreviation} ${organization.name}`;
+    if (role === ActionResponsiblePartyRole.Collaborator) size = 'sm';
+    ariaLabel = name;
   }
 
   return (
     <>
-      {linkToOrganization ? (
-        <OrganizationLink organizationId={organization.id}>
-          <BadgeTooltip
-            id={`org-${slugify(organization.id)}`}
-            tooltip={organization.abbreviation !== '' ? (organization.name ?? '') : undefined}
-            ariaLabel={ariaLabel}
-            content={organization.abbreviation || organization.name}
-            size={size}
-            themeColor="badgeColor"
-            isLink
-          />
-        </OrganizationLink>
-      ) : (
-        <BadgeTooltip
-          id={`org-${slugify(organization.id)}`}
-          tooltip={organization.abbreviation !== '' ? (organization.name ?? '') : undefined}
-          ariaLabel={ariaLabel}
-          content={organization.abbreviation || organization.name}
-          size={size}
-          themeColor="badgeColor"
-          isLink
-        />
-      )}
+      <BadgeTooltip
+        id={`org-${slugify(organization.id)}`}
+        tooltip={organization.abbreviation !== '' ? (organization.name ?? '') : undefined}
+        ariaLabel={ariaLabel}
+        content={organization.abbreviation || organization.name}
+        size={size}
+        themeColor="badgeColor"
+        link={
+          linkToOrganization ? <OrganizationLink organizationId={organization.id} /> : undefined
+        }
+      />
       {specifier && <ResponsibleSpecifier>{specifier}</ResponsibleSpecifier>}
       {organization.email && (
         <Address>

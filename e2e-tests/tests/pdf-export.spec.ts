@@ -72,7 +72,7 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     await ctx.waitForLoadingFinished(page);
 
     // The Download button should be visible
-    const downloadButton = page.getByRole('button', { name: /download/i });
+    const downloadButton = page.getByRole('button', { name: /^download$/i });
     test.skip(
       !(await downloadButton.count()),
       'PDF export button not visible (feature flag likely disabled)'
@@ -116,7 +116,7 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     await page.goto(actionPageUrl);
     await ctx.waitForLoadingFinished(page);
 
-    const downloadButton = page.getByRole('button', { name: /download/i });
+    const downloadButton = page.getByRole('button', { name: /^download$/i });
     test.skip(
       !(await downloadButton.count()),
       'PDF export button not visible (feature flag likely disabled)'
@@ -161,7 +161,7 @@ test.describe('pdf-export', { annotation: annotations }, () => {
     await page.goto(actionPageUrl);
     await ctx.waitForLoadingFinished(page);
 
-    const downloadButton = page.getByRole('button', { name: /download/i });
+    const downloadButton = page.getByRole('button', { name: /^download$/i });
     test.skip(
       !(await downloadButton.count()),
       'PDF export button not visible (feature flag likely disabled)'

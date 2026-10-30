@@ -162,6 +162,7 @@ const HeroSideBySide = (props: HeroSideBySideProps) => {
           {imageCredit && (
             <StyledImageCredit
               $fitImage={shouldFitImage}
+              aria-hidden={altText ? undefined : true}
             >{`${t('image-credit')}: ${imageCredit}`}</StyledImageCredit>
           )}
         </SideBySideImageWrapper>

@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react';
+
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -6,7 +8,7 @@ import { usePlan } from '@/context/plan';
 
 import { getActionTermContext } from '../../common/i18n';
 import type { ActionLinkProps } from '../../common/links';
-import { ActionLink } from '../../common/links';
+import { UnprefetchedLink, useActionHref } from '../../common/links';
 import Button from '../common/Button';
 import Icon from '../common/Icon';
 
@@ -32,6 +34,22 @@ const PageButton = styled(Button)`
   line-height: ${(props) => props.theme.lineHeightSm};
 `;
 
+/** A button-styled link to an action: a single `<a>`, not a button inside a link. */
+function PageLink({
+  action,
+  children,
+}: {
+  action: ActionLinkProps['action'];
+  children: ReactNode;
+}) {
+  const href = useActionHref(action);
+  return (
+    <PageButton variant="outlined" href={href} LinkComponent={UnprefetchedLink}>
+      {children}
+    </PageButton>
+  );
+}
+
 type Props = {
   previousAction: ActionLinkProps['action'] | null;
   nextAction: ActionLinkProps['action'] | null;
@@ -45,22 +63,18 @@ const ActionPager = ({ nextAction = null, previousAction = null }: Props) => {
     <Pager>
       <Previous>
         {previousAction && (
-          <ActionLink action={previousAction}>
-            <PageButton variant="outlined">
-              <Icon.ArrowLeft />
-              {t('action-previous', getActionTermContext(plan))}
-            </PageButton>
-          </ActionLink>
+          <PageLink action={previousAction}>
+            <Icon.ArrowLeft />
+            {t('action-previous', getActionTermContext(plan))}
+          </PageLink>
         )}
       </Previous>
       <Next>
         {nextAction && (
-          <ActionLink action={nextAction}>
-            <PageButton variant="outlined">
-              {t('action-next', getActionTermContext(plan))}
-              <Icon.ArrowRight />
-            </PageButton>
-          </ActionLink>
+          <PageLink action={nextAction}>
+            {t('action-next', getActionTermContext(plan))}
+            <Icon.ArrowRight />
+          </PageLink>
         )}
       </Next>
     </Pager>

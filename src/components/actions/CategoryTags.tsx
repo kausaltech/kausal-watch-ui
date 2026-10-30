@@ -62,23 +62,23 @@ type CategoryLinkProps<ExtraCatProps = object, ExtraCTProps = object> = {
     identifier: string;
   } & ExtraCTProps;
   categoryTypeHeader?: string | null;
-  noLink?: boolean;
   ListLinkComponent?: ComponentType<ListLinkComponentProps>;
   linkMode?: CategoryLinkMode;
 };
 
+/**
+ * A link to the category's page, or to the list filtered by the category.
+ * Passes other props (the tooltip's aria and event props, ref) on to the link.
+ */
 function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
   const {
     category,
     categoryType,
     categoryTypeHeader,
-    noLink = false,
-    children,
     ListLinkComponent = ActionListLink,
     linkMode = 'default',
+    ...linkProps
   } = props;
-
-  if (noLink) return <>{children}</>;
 
   const filters = [
     {
@@ -93,17 +93,16 @@ function CategoryLink(props: PropsWithChildren<CategoryLinkProps>) {
         categoryFilters={filters}
         filterGroupLabel={categoryTypeHeader || categoryType.identifier}
         filterValueLabel={category.name}
-      >
-        {children}
-      </ListLinkComponent>
+        {...linkProps}
+      />
     );
   }
 
   if (category.categoryPage) {
-    return <StaticPageLink page={category.categoryPage}>{children}</StaticPageLink>;
+    return <StaticPageLink page={category.categoryPage} {...linkProps} />;
   }
 
-  return <ActionListLink categoryFilters={filters}>{children}</ActionListLink>;
+  return <ActionListLink categoryFilters={filters} {...linkProps} />;
 }
 
 const Identifier = styled.span`
@@ -159,39 +158,38 @@ export const CategoryContent = (props: CategoryContentProps) => {
     <CategoryBadges>
       {categories.map((item) => (
         <li key={item.id}>
-          <CategoryLink
-            category={item}
-            categoryType={categoryType}
-            categoryTypeHeader={categoryTypeHeader}
-            noLink={noLink}
-            ListLinkComponent={ListLinkComponent}
-            linkMode={linkMode}
-          >
-            <BadgeTooltip
-              id={item.id}
-              tooltip={item.helpText ?? undefined}
-              content={
-                item.identifier && !item.type.hideCategoryIdentifiers ? (
-                  <>
-                    <Identifier>{item.identifier}.</Identifier> {item.name}
-                  </>
-                ) : (
-                  item.name
-                )
-              }
-              iconImage={
-                item.iconImage?.rendition?.src ||
-                item.parent?.iconImage?.rendition?.src ||
-                undefined
-              }
-              iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
-              size={compact ? 'sm' : 'md'}
-              themeColor="badgeColorNeutral"
-              color={item.color || item.parent?.color || undefined}
-              isLink={!noLink}
-              maxLines={item.name.length > 50 ? 2 : 4}
-            />
-          </CategoryLink>
+          <BadgeTooltip
+            id={item.id}
+            tooltip={item.helpText ?? undefined}
+            content={
+              item.identifier && !item.type.hideCategoryIdentifiers ? (
+                <>
+                  <Identifier>{item.identifier}.</Identifier> {item.name}
+                </>
+              ) : (
+                item.name
+              )
+            }
+            iconImage={
+              item.iconImage?.rendition?.src || item.parent?.iconImage?.rendition?.src || undefined
+            }
+            iconSvg={item.iconSvgUrl || item.parent?.iconSvgUrl || undefined}
+            size={compact ? 'sm' : 'md'}
+            themeColor="badgeColorNeutral"
+            color={item.color || item.parent?.color || undefined}
+            link={
+              noLink ? undefined : (
+                <CategoryLink
+                  category={item}
+                  categoryType={categoryType}
+                  categoryTypeHeader={categoryTypeHeader}
+                  ListLinkComponent={ListLinkComponent}
+                  linkMode={linkMode}
+                />
+              )
+            }
+            maxLines={item.name.length > 50 ? 2 : 4}
+          />
         </li>
       ))}
     </CategoryBadges>

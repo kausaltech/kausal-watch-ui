@@ -15,7 +15,7 @@ import SVG from 'react-inlinesvg';
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
-import { Link, NavigationLink } from '@/common/links';
+import { Link, NavigationLink, UnprefetchedLink, getNavigationHref } from '@/common/links';
 import {
   DropdownItem,
   DropdownMenu,
@@ -89,6 +89,14 @@ const TopNav = styled(Navbar)`
     border-bottom: 1px solid ${(props) => props.theme.themeColors.light};
   }
 
+  /* Forced colors don't recolour SVG fills, so draw icons in the text colour */
+  @media (forced-colors: active) {
+    svg.icon,
+    svg.icon use {
+      fill: currentColor !important;
+    }
+  }
+
   @media print {
     position: static !important;
     animation: none;
@@ -109,6 +117,14 @@ const BotNav = styled(Navbar, transientOptions)<{ $offsetTop?: number; $expanded
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.07);
 
   ${({ fixed, $expanded, theme }) => fixed && !$expanded && baseFixedNavStyles(theme)}
+
+  /* Forced colors don't recolour SVG fills, so draw icons in the text colour */
+  @media (forced-colors: active) {
+    svg.icon,
+    svg.icon use {
+      fill: currentColor !important;
+    }
+  }
 
   ${({ $offsetTop, $expanded }) =>
     !!$expanded &&
@@ -216,6 +232,18 @@ const HomeLink = styled(Link, transientOptions)<{ $hideLogoOnMobile?: boolean }>
       ${(props) => props.theme.spaces.s050} 0;
   }
 
+  /* Forced colors don't recolour logos: keep the nav background they were
+     designed for behind them, so that a dark logo stays visible on a dark
+     system background */
+  @media (forced-colors: active) {
+    .org-logo {
+      forced-color-adjust: none;
+      background-color: ${(props) => props.theme.brandNavBackground};
+      padding: 2px;
+      box-sizing: content-box;
+    }
+  }
+
   // Support png logos. PNG logos are always full height.
   img.org-logo {
     margin-top: 0;
@@ -247,7 +275,8 @@ const EmptyLogo = styled.div`
   }
 `;
 
-export function OrgLogo({ label }: { label: string }) {
+/** The theme's logo. Without a label it is decorative, for links named by their text. */
+export function OrgLogo({ label }: { label?: string }) {
   const theme = useTheme();
 
   if (theme.navLogoVisible === false) {
@@ -258,7 +287,7 @@ export function OrgLogo({ label }: { label: string }) {
     return (
       // Theme assets are already deployment-owned static files; Next image optimization adds no value.
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={getThemeStaticURL(theme.themeLogoUrl)} alt={label} className="org-logo" />
+      <img src={getThemeStaticURL(theme.themeLogoUrl)} alt={label ?? ''} className="org-logo" />
     );
   }
 
@@ -266,9 +295,60 @@ export function OrgLogo({ label }: { label: string }) {
     <SVG
       src={getThemeStaticURL(theme.themeLogoUrl)}
       title={label}
+      aria-hidden={label ? undefined : true}
       preserveAspectRatio="xMinYMid meet"
       className="org-logo"
     />
+  );
+}
+
+type SiteHomeLinksProps = {
+  logoHref: string;
+  titleHref: string;
+  /** Names the logo link, e.g. "Owner, Site front page" */
+  logoLabel: string;
+  title?: string;
+  hideLogoOnMobile?: boolean;
+  /** Render plain `<a>`s, for pages outside the plan context */
+  plainLinks?: boolean;
+};
+
+/**
+ * The logo and the site title. When both go to the same page they are one
+ * link, as two adjacent links to the same target are tabbed through and read
+ * out twice.
+ */
+export function SiteHomeLinks(props: SiteHomeLinksProps) {
+  const { logoHref, titleHref, logoLabel, title, hideLogoOnMobile, plainLinks } = props;
+  const theme = useTheme();
+  const as = plainLinks ? 'a' : undefined;
+  const titleVisible = !!title && theme.navTitleVisible;
+  const siteTitle = title ? (
+    <SiteTitle aria-hidden={!titleVisible}>{titleVisible ? title : '\u00A0'}</SiteTitle>
+  ) : null;
+
+  if (logoHref === titleHref) {
+    return (
+      <HomeLink as={as} $hideLogoOnMobile={hideLogoOnMobile} href={titleHref}>
+        <OrgLogo />
+        {siteTitle}
+        {!titleVisible && <span className="visually-hidden">{logoLabel}</span>}
+      </HomeLink>
+    );
+  }
+
+  return (
+    <>
+      <HomeLink as={as} $hideLogoOnMobile={hideLogoOnMobile} href={logoHref}>
+        <OrgLogo />
+        <span className="visually-hidden">{logoLabel}</span>
+      </HomeLink>
+      {siteTitle && (
+        <HomeLink as={as} href={titleHref} aria-label={!titleVisible ? title : undefined}>
+          {siteTitle}
+        </HomeLink>
+      )}
+    </>
   );
 }
 
@@ -379,7 +459,12 @@ const StyledDropdown = styled(UncontrolledDropdown)`
     box-shadow: none;
   }
   .dropdown-item {
+    /* The item is the link: the extra padding keeps the spacing the link had
+       when it was inside the item */
+    display: flex;
     margin: 0 0 0 ${(props) => props.theme.spaces.s150};
+    padding-left: calc(var(--bs-dropdown-item-padding-x) + ${(props) => props.theme.spaces.s100});
+    padding-bottom: calc(var(--bs-dropdown-item-padding-y) + ${(props) => props.theme.spaces.s050});
     color: ${(props) => props.theme.siteNavColor};
     white-space: normal;
 
@@ -390,6 +475,8 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
     &:hover {
       background-color: transparent;
+      text-decoration: none;
+      color: ${(props) => props.theme.siteNavColor};
 
       .highlighter {
         border-bottom: 5px solid ${(props) => props.theme.siteNavHighlightColor};
@@ -404,6 +491,11 @@ const StyledDropdown = styled(UncontrolledDropdown)`
 
     .dropdown-item {
       margin: 0;
+      padding-left: var(--bs-dropdown-item-padding-x);
+      padding-right: calc(
+        var(--bs-dropdown-item-padding-x) + ${(props) => props.theme.spaces.s200}
+      );
+      padding-bottom: var(--bs-dropdown-item-padding-y);
     }
   }
 `;
@@ -448,12 +540,14 @@ const StyledDropdownMenu = styled(DropdownMenu)`
 `;
 
 const NavbarToggler = styled.button`
-  display: inline-block;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0;
   margin: 0;
-  text-align: right;
   font-size: 1.5rem;
-  width: ${(props) => props.theme.spaces.s300};
+  min-width: ${(props) => props.theme.spaces.s300};
+  color: ${(props) => props.theme.brandNavColor};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
   hyphens: manual;
@@ -471,6 +565,13 @@ const NavbarToggler = styled.button`
   @media print {
     display: none;
   }
+`;
+
+/* Also the button's accessible name */
+const NavbarTogglerLabel = styled.span`
+  font-size: 11px;
+  font-weight: ${(props) => props.theme.fontWeightNormal};
+  line-height: 1;
 `;
 
 type CustomToolbarProps = {
@@ -508,9 +609,11 @@ type DropdownListProps = {
 
 function DropdownList(props: DropdownListProps) {
   const { parentName, items, active = false, onClickLink } = props;
+  const plan = usePlan();
+  const locale = useLocale();
   return (
     <StyledDropdown nav inNavbar className={active ? 'active' : undefined}>
-      <StyledDropdownToggle nav caret role="button">
+      <StyledDropdownToggle nav caret tag="button">
         <NavHighlighter className={`highlighter ${active && 'active'}`}>
           {parentName}
         </NavHighlighter>
@@ -518,12 +621,14 @@ function DropdownList(props: DropdownListProps) {
       <DropdownMenuWrapper>
         <StyledDropdownMenu>
           {items.map((child) => (
-            <DropdownItem key={child.id}>
-              <NavLink>
-                <NavigationLink slug={child.urlPath} onClick={onClickLink}>
-                  <NavHighlighter className="highlighter">{child.name}</NavHighlighter>
-                </NavigationLink>
-              </NavLink>
+            // The menu item is the link itself, so that Enter follows it
+            <DropdownItem
+              key={child.id}
+              tag={UnprefetchedLink}
+              href={getNavigationHref(plan, child.urlPath, locale)}
+              onClick={onClickLink}
+            >
+              <NavHighlighter className="highlighter">{child.name}</NavHighlighter>
             </DropdownItem>
           ))}
         </StyledDropdownMenu>
@@ -710,17 +815,13 @@ function GlobalNav(props: GlobalNavProps) {
           container={fullwidth ? 'fluid' : true}
         >
           <Site>
-            <HomeLink $hideLogoOnMobile={hideLogoOnMobile} href={logoLink}>
-              <OrgLogo label={`${ownerName}, ${siteTitle} ${t('front-page')}`} />
-              <span className="visually-hidden">
-                + {`${ownerName}, ${siteTitle} ${t('front-page')}`}+{' '}
-              </span>
-            </HomeLink>
-            <HomeLink href={rootLink} aria-label={!theme.navTitleVisible ? siteTitle : undefined}>
-              <SiteTitle aria-hidden={!theme.navTitleVisible}>
-                {theme.navTitleVisible ? siteTitle : '\u00A0'}
-              </SiteTitle>
-            </HomeLink>
+            <SiteHomeLinks
+              logoHref={logoLink}
+              titleHref={rootLink}
+              logoLabel={`${ownerName}, ${siteTitle} ${t('front-page')}`}
+              title={siteTitle}
+              hideLogoOnMobile={hideLogoOnMobile}
+            />
             {!hidePlanSelector && <PlanSelector color={theme.brandNavColor} />}
           </Site>
 
@@ -732,7 +833,6 @@ function GlobalNav(props: GlobalNavProps) {
           </Nav>
           <NavbarToggler
             onClick={() => setIsOpen(!isOpen)}
-            aria-label={isOpen ? t('nav-menu-close') : t('nav-menu-open')}
             aria-controls="global-navigation-bar"
             aria-expanded={isOpen}
             type="button"
@@ -742,6 +842,7 @@ function GlobalNav(props: GlobalNavProps) {
             ) : (
               <Icon.Bars color={theme.brandNavColor} />
             )}
+            <NavbarTogglerLabel>{t('nav-menu-label')}</NavbarTogglerLabel>
           </NavbarToggler>
         </TopNav>
       </div>
@@ -856,6 +957,6 @@ function GlobalNav(props: GlobalNavProps) {
   );
 }
 
-export { HomeLink, Site, SiteTitle, TopNav };
+export { Site, TopNav };
 
 export default GlobalNav;

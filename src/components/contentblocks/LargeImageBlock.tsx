@@ -92,7 +92,9 @@ export default function LargeImageBlock({ id, image, width, hasSidebar }: LargeI
                 alt={image?.altText}
               />
               {image?.imageCredit && (
-                <ImageCredit>{`${t('image-credit')}: ${image.imageCredit}`}</ImageCredit>
+                <ImageCredit aria-hidden={image.altText ? undefined : true}>
+                  {`${t('image-credit')}: ${image.imageCredit}`}
+                </ImageCredit>
               )}
             </ImageWrapper>
           </Col>
