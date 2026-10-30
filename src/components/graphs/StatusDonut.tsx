@@ -15,7 +15,7 @@ import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
 import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
 
-// The legend under the donut is not in use yet; flip to show it
+// The legend under the donut
 const SHOW_LEGEND = true;
 
 /* Rows: heading, donut, legend; a subgrid, so the donuts line up across cards */

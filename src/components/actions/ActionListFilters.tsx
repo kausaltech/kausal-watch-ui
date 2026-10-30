@@ -1158,7 +1158,12 @@ function ActionListFilters(props: ActionListFiltersProps) {
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
             ) : null}
-            <Collapse in={section.hidden ? isOpen : true} id={`${panelId}-${section.id}`}>
+            {/* inert: react-select keeps its input visible, so it stays focusable when closed */}
+            <Collapse
+              in={section.hidden ? isOpen : true}
+              inert={section.hidden && !isOpen}
+              id={`${panelId}-${section.id}`}
+            >
               <FilterSection key={section.id}>
                 {section.filters.map((filter) => (
                   <FilterField

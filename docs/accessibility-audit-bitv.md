@@ -1,6 +1,6 @@
 # Fixing the BITV audit findings
 
-Status: steps 1 and 2 done on `fix/a11y`, step 3 apart from the theme colour pairs (item 6), step 4 apart from the status donuts (item 1); step 2 also changes kausal_common. This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
+Status: steps 1–4 done on `fix/a11y`, and step 5 apart from the platform contact (F4); step 2 also changes kausal_common, and F10 and F12 are fixed in the themes (`@kausal/themes` 0.9.0, `@kausal-private/themes-private` 0.6.0). Left: the content for the plan's admins in step 5 and the checks under "Afterwards". This doc translates the findings of a manual BITV accessibility audit of a customer's plan site, names their causes in the code, and orders the fixes.
 
 ## Background
 
@@ -71,7 +71,7 @@ Cause (code): `SelectDropdown.tsx` marks the keyboard-focused option with only a
 
 **F10. Blue bar on red.** "The contrast of the blue bar against the red background is too low."
 
-Cause (theme and code): the indicator showcase on the audited plan's home page (`IndicatorProgressBar.tsx`, in `IndicatorShowcaseBlock`). Its background is the theme's red `section.indicatorShowcase.background`, and the latest-value bar is `latestColor`, a mid blue at 2.25:1 against it. The start and goal bars pass at 3.2:1. The bars have no border, so nothing else marks their edges. `ActionStatus.tsx` was suspected first, and its progress bar was fixed in step 3 anyway.
+Cause (theme and code): the indicator showcase on the audited plan's home page (`IndicatorProgressBar.tsx`, in `IndicatorShowcaseBlock`). Its background is the theme's red `section.indicatorShowcase.background`, and the latest-value bar is `latestColor`, a mid blue at 2.25:1 against it. The start and goal bars pass at 3.2:1. The bars have no border, so nothing else marks their edges. `ActionStatus.tsx` was suspected first, and its progress bar was fixed in step 3 anyway. Fixed in the themes (step 3, item 6).
 
 **F11. Button against its background.** "The button's contrast with its background is too low for it to be seen as an active control. Add, for example, a high-contrast border."
 
@@ -101,7 +101,7 @@ Likely cause (code): the remove button on the active filter badges, `.badge-clos
 
 **F17. Black text on blue.** "The contrast of black text on blue is too low."
 
-Likely cause (theme and code): the latest-value label on the home page indicator showcase (see F10), black text that `readableColor` picks over the blue `latestColor` bar. With the current theme it is 5.7:1, which passes 4.5:1, and the label fades in to full opacity. Unless the theme's blue was darker at the time of the audit, this passes now. The unit text is small, though.
+Likely cause (theme and code): the latest-value label on the home page indicator showcase (see F10), black text that `readableColor` picks over the blue `latestColor` bar. With the current theme it is 5.7:1, which passes 4.5:1, and the label fades in to full opacity. Unless the theme's blue was darker at the time of the audit, this passes now. The unit text is small, though. The themes build now checks the label against the bar colours (step 3, item 6).
 
 **F18. Previous / next action focus.** "When the 'Next action' / 'Previous action' buttons get keyboard focus, they are barely readable. Use the same colours as on mouse hover."
 
@@ -226,7 +226,7 @@ The steps go from the clearest conformance failures in shared components, which 
 
 6. **Theme colour pairs (F11, F12, F17).** Ask the auditor for the locations of F11 and F17, then fix the colour pairs in the theme. Run a contrast check across all themes for the same pairs, not only the audited plan's.
 
-   Located but open. F10: give the showcase bars an outline in the section's text colour (white, 7:1 on the red), or darken `latestColor`. F11 is done: the ECharts toolbox is replaced by `ChartDownloadButton`, an HTML "Download" menu button styled like the page PDF download, that saves the chart through the chart's `getDataURL` (the charts take a `chartRef`). It sits under the chart, right-aligned on the data table toggle's row (`GraphAsTable`'s `actions`). It shows wherever `IndicatorVisualisation` renders a chart, including configured visualisations and factor charts, but not on dashboard chart blocks. `StatusDonut`'s modal still uses the toolbox. F12 is done in the audited plan's theme: it now sets its own `trendLineColor`, `goalLineColors` and `categoryColors`, all at least 3:1 on the white chart background (the first goal colour, the crosses, is `green070` at 5.9:1). The lists are full length, because the themes build merges lists with the default theme's by index. Other themes still inherit default graph colours below 3:1; we rely on the data table and the chart's aria description as the text equivalent there. F17: passes with current colours; recheck after any F10 colour change. Also done in this step: the plan switcher's `outline: inherit` hid its focus ring, and the organisation tabs' second line in `PlanChip` was below 4.5:1 on the sunnydale theme.
+   Done. F10 is fixed in the theme colours of all themes, and the themes build now checks every theme's colour pairs, including the showcase bars against their background at 3:1 (`src/contrast-checks.ts` in kausal-themes; failures are build warnings, not errors). F11: the ECharts toolbox is replaced by `ChartDownloadButton`, an HTML "Download" menu button styled like the page PDF download, that saves the chart through the chart's `getDataURL` (the charts take a `chartRef`). It sits under the chart, right-aligned on the data table toggle's row (`GraphAsTable`'s `actions`). It shows wherever `IndicatorVisualisation` renders a chart, including configured visualisations and factor charts, but not on dashboard chart blocks. `StatusDonut`'s modal uses it too. F12 is done in the audited plan's theme: it now sets its own `trendLineColor`, `goalLineColors` and `categoryColors`, all at least 3:1 on the white chart background (the first goal colour, the crosses, is `green070` at 5.9:1). The lists are full length, because the themes build merges lists with the default theme's by index. Other themes still inherit default graph colours below 3:1; we rely on the data table and the chart's aria description as the text equivalent there. F17 passes, and the themes build checks the showcase label against the bar colours. Also done in this step: the plan switcher's `outline: inherit` hid its focus ring, and the organisation tabs' second line in `PlanChip` was below 4.5:1 on a theme with a mid-tone header.
 
 ### Step 4: charts
 
@@ -269,5 +269,8 @@ The steps go from the clearest conformance failures in shared components, which 
 ### Afterwards
 
 - Rerun the axe audit (`A11Y_AUDIT=1`, see `e2e-tests/tests/a11y-audit.spec.ts`) on the audited plan and a few others; F28 should be gone.
+
+  Done on a copy of the audited plan and on other public plans: no findings left on the copy. Plans that need sign-in are skipped. The run also showed that the action list's collapsed "more filters" section kept its fields in the tab order (react-select keeps its input visible), so it is now `inert` while closed. One plan has an embedded map iframe without a title, which its admins fix in the content.
+
 - Add e2e checks for what axe can't see: the skip link moves focus, Enter in the topic menu navigates, and a popover opens with Enter.
 - Retest by hand with NVDA or JAWS, VoiceOver, keyboard only, 400 % zoom and a Windows contrast theme.
