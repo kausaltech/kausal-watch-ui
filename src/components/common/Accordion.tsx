@@ -19,6 +19,11 @@ const Header = styled.h3<{ $small?: boolean }>`
   position: relative;
   font-size: ${({ theme, $small }) => ($small ? theme.fontSizeSm : theme.fontSizeMd)};
 
+  /* Room for the copy link, which can't stick out past a narrow screen */
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    padding-right: 2rem;
+  }
+
   &:hover {
     .copy-link {
       visibility: visible;
@@ -31,7 +36,9 @@ const Header = styled.h3<{ $small?: boolean }>`
 `;
 
 const CopyLink = styled.button`
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   visibility: hidden;
 
@@ -40,8 +47,15 @@ const CopyLink = styled.button`
   }
 
   width: 2rem;
+  /* At least the 24px target size */
+  height: 1.5rem;
   right: -1rem;
   top: -0.5rem;
+
+  ${({ theme }) => theme.breakpoints.down('md')} {
+    right: 0;
+  }
+
   border: none;
   border-radius: 0;
   margin: 0;

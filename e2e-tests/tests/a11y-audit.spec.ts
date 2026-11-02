@@ -105,7 +105,7 @@ type PlanRun = {
 };
 
 /** The header search's suggestions */
-const SEARCH_SUGGESTIONS = '#navbar-search-results-listbox';
+const SEARCH_SUGGESTIONS = '#navbar-search-results';
 
 function getPlanIdentifiers(): string[] {
   const val = process.env.A11Y_PLAN_IDENTIFIERS;
@@ -472,7 +472,7 @@ async function auditSearchSuggestions(
   term: string
 ): Promise<AuditedPage | null> {
   const { name, url } = pageToAudit;
-  const form = page.locator(`header form:has([aria-controls="${SEARCH_SUGGESTIONS.slice(1)}"])`);
+  const form = page.locator('header form:has(input[type="search"])');
   const button = form.locator('button[type="submit"]').filter({ visible: true }).first();
   if (!(await button.count())) return null;
   try {

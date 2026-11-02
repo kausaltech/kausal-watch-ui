@@ -59,9 +59,15 @@ const IndexLink = styled.span`
 
 const IndicatorHeadline = styled.h1`
   hyphens: manual;
+  /* Long compound words would otherwise widen a narrow page */
+  overflow-wrap: break-word;
   margin: ${(props) => props.theme.spaces.s100} 0 ${(props) => props.theme.spaces.s200};
   font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;
+
+  ${(props) => props.theme.breakpoints.down('md')} {
+    hyphens: auto;
+  }
 
   ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;

@@ -216,7 +216,7 @@ type ResultItemProps = {
   hit: SearchHit;
 };
 
-const RESULTS_LISTBOX_ID = 'navbar-search-results-listbox';
+const RESULTS_LIST_ID = 'navbar-search-results';
 
 function ResultItem(props: ResultItemProps) {
   const t = useTranslations();
@@ -243,7 +243,7 @@ function ResultItem(props: ResultItemProps) {
   };
 
   return (
-    <HitItem key={hit.id} role="option">
+    <HitItem key={hit.id}>
       <a href={hit.url!}>
         <HitHeader>
           <PlanChip
@@ -302,8 +302,9 @@ const ResultList = (props: ResultListProps) => {
           {!loading && results.length === 0 && t('search-no-results')}
         </ResultCount>
       </ResultsHeader>
+      {/* A plain list of links: options can't contain links, and there is no arrow-key handling */}
       {!loading && (
-        <HitList id={RESULTS_LISTBOX_ID} role="listbox">
+        <HitList id={RESULTS_LIST_ID}>
           {results.slice(0, RESULTS_LIMIT).map((r, i) => (
             <ResultItem key={i} hit={r} />
           ))}
@@ -464,13 +465,8 @@ function Search({ isLoading, searchTerm, setSearchTerm, results }: SearchProps) 
               id="q"
               name="q"
               autoComplete="off"
-              aria-autocomplete="list"
               placeholder={t('search')}
               aria-label={t('search')}
-              role="combobox"
-              aria-expanded={searchTerm && searchTerm.length > 1 ? 'true' : 'false'}
-              aria-haspopup="listbox"
-              aria-controls={RESULTS_LISTBOX_ID}
               value={searchTerm}
               onChange={(e) =>
                 setSearchTerm?.(e.target.value, {

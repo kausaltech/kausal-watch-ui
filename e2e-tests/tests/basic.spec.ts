@@ -297,7 +297,7 @@ const testPlan = (planId: string) => {
       await expect(searchButton).toBeVisible();
 
       const searchForm = page.locator('form').filter({ has: searchButton });
-      const searchInput = searchForm.getByRole('combobox');
+      const searchInput = searchForm.getByRole('searchbox');
       await expect(searchInput).toBeHidden();
       await searchButton.click();
       await expect(searchInput).toBeVisible();
