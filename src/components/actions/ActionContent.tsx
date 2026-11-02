@@ -136,6 +136,8 @@ const ContentGroup = styled.div<{ $vertical: boolean }>`
 const StyledContentGrid = styled(Container)`
   display: grid;
   grid-gap: var(--bs-gutter-x);
+  /* Not wider than the container, whatever the content's min width */
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
     'top'
     'aside'

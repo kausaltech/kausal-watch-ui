@@ -53,6 +53,8 @@ const TableWrapper = styled.div`
   ${(props) => props.theme.breakpoints.down('md')} {
     max-height: calc(100vh - ${(props) => props.theme.spaces.s100});
     overflow: auto;
+    /* Clips the cells' visually hidden texts, which would widen the page */
+    position: relative;
   }
 `;
 
