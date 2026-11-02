@@ -20,6 +20,9 @@ export type AuditedViolation = {
 export type AuditedPage = {
   name: string;
   url: string;
+  title?: string;
+  /** The interaction scanned on top of the page, e.g. a menu opened */
+  state?: string;
   error?: string;
   violations: AuditedViolation[];
 };
@@ -72,7 +75,8 @@ function escapeHtml(s: string) {
 /** A standalone page listing one plan's violations, attached to its test. */
 export function planAuditHtml(audit: PlanAudit): string {
   const sections = audit.pages.map((page) => {
-    const heading = `<h2>${escapeHtml(page.name)} <a href="${escapeHtml(page.url)}">${escapeHtml(page.url)}</a></h2>`;
+    const name = page.state ? `${page.name} › ${page.state}` : page.name;
+    const heading = `<h2>${escapeHtml(name)} <a href="${escapeHtml(page.url)}">${escapeHtml(page.url)}</a></h2>`;
     if (page.error)
       return `${heading}<p class="error">Could not be audited: ${escapeHtml(page.error)}</p>`;
     if (!page.violations.length) return `${heading}<p>No violations.</p>`;
@@ -142,11 +146,16 @@ export function runSummaryMarkdown(audits: PlanAudit[]): string {
     const byImpact = countByImpact(audit);
     const errors = audit.pages.filter((page) => page.error).length;
     const counts = IMPACTS.map((impact) => String(byImpact.get(impact) ?? 0));
+    const pages = audit.pages.filter((page) => !page.state).length;
     lines.push(
-      `| ${audit.planId} | ${String(audit.pages.length)} | ${counts.join(' | ')} | ${String(errors)} |`
+      `| ${audit.planId} | ${String(pages)} | ${counts.join(' | ')} | ${String(errors)} |`
     );
   }
-  lines.push('', 'Counts are offending elements, summed over the audited pages.', '');
+  lines.push(
+    '',
+    'Counts are offending elements, summed over the audited pages and their open states.',
+    ''
+  );
 
   lines.push('## Rules', '');
   lines.push('| Rule | Impact | Plans | Pages | Elements | Description |');
@@ -172,7 +181,8 @@ export function runSummaryMarkdown(audits: PlanAudit[]): string {
   if (failed.length) {
     lines.push('', '## Pages that could not be audited', '');
     for (const { planId, page, error } of failed) {
-      lines.push(`- ${planId} / ${page.name} (${page.url}): ${error}`);
+      const name = page.state ? `${page.name} › ${page.state}` : page.name;
+      lines.push(`- ${planId} / ${name} (${page.url}): ${error}`);
     }
   }
   return lines.join('\n') + '\n';

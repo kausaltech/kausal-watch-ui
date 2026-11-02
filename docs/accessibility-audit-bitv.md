@@ -19,7 +19,7 @@ A finding is fixed in one of three places:
 - **theme**: `@kausal/themes`, the plan's colours and logo;
 - **content**: the plan's admins, in the CMS.
 
-The automated axe audit (`e2e-tests/tests/a11y-audit.spec.ts`) catches only F28 of these. The rest need someone to check them by hand, or to write a targeted e2e test.
+The automated audit (`e2e-tests/tests/a11y-audit.spec.ts`) caught only F28 of these when it ran axe alone. It now also opens menus, filters, tabs and toggletips, walks each kind of page with the keyboard, checks the skip link, reflow at 320px and page titles, so it would also catch F22, and parts of F9 (contrast in open select lists) and F18 (focus visibility). The rest still need someone to check them by hand.
 
 ## Findings
 
@@ -273,4 +273,11 @@ The steps go from the clearest conformance failures in shared components, which 
   Done on a copy of the audited plan and on other public plans: no findings left on the copy. Plans that need sign-in are skipped. The run also showed that the action list's collapsed "more filters" section kept its fields in the tab order (react-select keeps its input visible), so it is now `inert` while closed. One plan has an embedded map iframe without a title, which its admins fix in the content.
 
 - Add e2e checks for what axe can't see: the skip link moves focus, Enter in the topic menu navigates, and a popover opens with Enter.
+
+  Partly done: the audit now checks the skip link, walks each kind of page with Tab (hidden focus, no visible focus indicator, focus covered by other content, keyboard traps), scans open states, checks reflow at 320px and compares page titles. Enter in the topic menu and on popovers is still to do. Its first run over the public plans found:
+
+  - The action page's content grid and the action status table made the page scroll sideways at 320px; both are fixed (`ActionContent`'s `StyledContentGrid`, `ActionStatusTable`'s scroll wrapper).
+  - Still open in code: the accordion's copy-link button reaches past the right edge (`Accordion`'s `CopyLink`, `right: -1rem`), long indicator titles and footer links don't wrap at 320px, task lists on action pages overflow, the expanded "Details"/"Öffnen" button turns grey (2.6:1), react-select's empty "no options" message is too light (2.8:1) and its empty listbox has no options, the copy-link button is below the 24px target size, and many pages (home, action list, organisation, search) share the plan's title.
+  - In content: embedded iframes without a title, and colours in custom embeds.
+
 - Retest by hand with NVDA or JAWS, VoiceOver, keyboard only, 400 % zoom and a Windows contrast theme.
