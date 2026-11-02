@@ -27,7 +27,7 @@
  * A11Y_MAX_TABS (default 200) how far a keyboard walk goes.
  */
 import { AxeBuilder } from '@axe-core/playwright';
-import { type Page, expect, test } from '@playwright/test';
+import { type Locator, type Page, expect, test } from '@playwright/test';
 
 import {
   NARROW_VIEWPORT,
@@ -35,6 +35,8 @@ import {
   checkReflow,
   checkSkipLink,
   checkTitles,
+  checkViolation,
+  describeLocator,
   walkKeyboard,
 } from '../common/a11y-checks.ts';
 import {
@@ -215,6 +217,8 @@ type StateOptions = {
   prefix?: string;
   /** Close with Escape, which would also close a dialog the toggles are in */
   escape?: boolean;
+  /** Follow the first menu link opened, with Enter */
+  followMenuLink?: boolean;
 };
 
 /** Marks the toggles to open, in document order, and returns how many there are. */
@@ -242,7 +246,58 @@ async function markToggles(page: Page, { root, max }: StateOptions) {
   );
 }
 
-/** Opens each toggle in turn and scans what it reveals. */
+/** The page a URL points to: plans can link to other plans' hosts */
+function pageOf(url: string) {
+  const { origin, pathname } = new URL(url);
+  return `${origin}${pathname}`;
+}
+
+/** Whether the toggle shows that it is open */
+function isOpen(toggle: Locator) {
+  return toggle.evaluate((el) => {
+    if (el.getAttribute('aria-expanded') === 'true') return true;
+    if (el.getAttribute('aria-selected') === 'true') return true;
+    // PopoverTip announces its content in the status next to it
+    const status = el.nextElementSibling;
+    return status?.getAttribute('role') === 'status' && !!status.textContent.trim();
+  });
+}
+
+/**
+ * When focus is on a link in a menu, presses Enter and checks that the link is
+ * followed. Returns null when focus is not on such a link.
+ */
+async function followMenuLink(page: Page): Promise<AuditedViolation[] | null> {
+  const current = pageOf(page.url());
+  let target: string | null = null;
+  // Skip items that link to the current page, which would prove nothing
+  for (let tries = 0; tries < 3; tries++) {
+    const href = await page.evaluate(() => {
+      const el = document.activeElement;
+      return el?.getAttribute('role') === 'menuitem' ? el.getAttribute('href') : null;
+    });
+    if (!href) return null;
+    target = pageOf(new URL(href, page.url()).href);
+    if (target !== current) break;
+    target = null;
+    await page.keyboard.press('ArrowDown');
+  }
+  if (!target) return null;
+  const node = await describeLocator(page, page.locator(':focus'));
+  await page.keyboard.press('Enter');
+  try {
+    await expect.poll(() => pageOf(page.url()), { timeout: 10_000 }).toBe(target);
+    return [];
+  } catch {
+    const failureSummary = 'Enter on the menu item does not follow its link';
+    return [checkViolation('keyboard-operable', [{ ...node, failureSummary }])];
+  }
+}
+
+/**
+ * Opens each toggle in turn, with the keyboard if it can, and scans what it
+ * reveals.
+ */
 async function auditStates(
   page: Page,
   pageToAudit: PageToAudit,
@@ -251,14 +306,14 @@ async function auditStates(
 ): Promise<AuditedPage[]> {
   const { name, url } = pageToAudit;
   const results: AuditedPage[] = [];
-  const path = new URL(url).pathname;
   const count = await markToggles(page, options);
+  let followedMenuLink = false;
   for (let i = 0; i < count; i++) {
     const toggle = page.locator(`[data-a11y-state="${String(i)}"]`);
     let reload = false;
     try {
       if (!(await toggle.isVisible())) continue;
-      const { label, isTab } = await toggle.evaluate((el) => {
+      const { label, isTab, key } = await toggle.evaluate((el) => {
         const labelledBy = (el.getAttribute('aria-labelledby') ?? '')
           .split(' ')
           .map((id) => document.getElementById(id)?.textContent ?? '')
@@ -272,17 +327,48 @@ async function auditStates(
         return {
           label: text.trim().replace(/\s+/g, ' ').slice(0, 40),
           isTab: el.getAttribute('role') === 'tab',
+          key: el.getAttribute('role') === 'combobox' ? 'ArrowDown' : 'Enter',
         };
       });
-      await toggle.click();
+      const navigated = () => pageOf(page.url()) !== pageOf(url);
+      const node = await describeLocator(page, toggle);
+      // As a keyboard user would, then with a click if that does nothing
+      await toggle.focus();
+      await page.keyboard.press(key);
       await settle(page);
-      if (new URL(page.url()).pathname !== path) {
+      if (navigated()) {
         reload = true;
         continue;
       }
+      const byKeyboard = await isOpen(toggle);
+      const keyboardViolations: AuditedViolation[] = [];
+      if (!byKeyboard) {
+        await toggle.click();
+        await settle(page);
+        if (navigated()) {
+          reload = true;
+          continue;
+        }
+        if (await isOpen(toggle)) {
+          const failureSummary = `${key} does not open it, but a click does`;
+          keyboardViolations.push(
+            checkViolation('keyboard-operable', [{ ...node, failureSummary }])
+          );
+        }
+      }
       const { violations } = await scan(page, known);
+      violations.push(...keyboardViolations);
       const state = `${options.prefix ?? ''}${label || 'toggle'} open`;
       results.push({ name, url, state, violations });
+      if (byKeyboard && options.followMenuLink && !followedMenuLink) {
+        const menuLink = await followMenuLink(page);
+        if (menuLink) {
+          followedMenuLink = true;
+          violations.push(...menuLink);
+          reload = true;
+          continue;
+        }
+      }
       // A tab stays selected, so start over from the page as loaded
       if (isTab) {
         reload = true;
@@ -374,6 +460,7 @@ async function auditPage(
     root: dialog ? DIALOG : isHome ? 'body' : 'main',
     max: isHome ? 10 : 5,
     escape: !dialog,
+    followMenuLink: isHome,
   });
   results.push(...states);
 

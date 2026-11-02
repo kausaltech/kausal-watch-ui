@@ -3,7 +3,7 @@
  * narrow width and unique page titles. Their findings take the shape of axe
  * violations so that they show up in the same reports.
  */
-import { type Page, expect } from '@playwright/test';
+import { type Locator, type Page, expect } from '@playwright/test';
 
 import type { AuditedPage, AuditedViolation } from './a11y.ts';
 
@@ -15,6 +15,11 @@ const MAX_NODES = 10;
 const UNDERSTANDING = 'https://www.w3.org/WAI/WCAG22/Understanding';
 
 const RULES = {
+  'keyboard-operable': {
+    impact: 'serious',
+    help: 'Everything that works with a mouse must also work with the keyboard (2.1.1)',
+    helpUrl: `${UNDERSTANDING}/keyboard.html`,
+  },
   'keyboard-trap': {
     impact: 'critical',
     help: 'Keyboard focus must be able to move away from every element (2.1.2)',
@@ -62,7 +67,7 @@ const RULES = {
   },
 } as const;
 
-type CheckId = keyof typeof RULES;
+export type CheckId = keyof typeof RULES;
 type AuditedNode = AuditedViolation['nodes'][number];
 type Described = { target: string; html: string };
 type Rect = { x: number; y: number; width: number; height: number };
@@ -81,13 +86,13 @@ class Findings {
   }
 
   toViolations(): AuditedViolation[] {
-    return [...this.nodes].map(([id, nodes]) => ({
-      id,
-      ...RULES[id],
-      nodeCount: nodes.length,
-      nodes: nodes.slice(0, MAX_NODES),
-    }));
+    return [...this.nodes].map(([id, nodes]) => checkViolation(id, nodes));
   }
+}
+
+/** A finding of one of these checks, for checks made elsewhere */
+export function checkViolation(id: CheckId, nodes: AuditedNode[]): AuditedViolation {
+  return { id, ...RULES[id], nodeCount: nodes.length, nodes: nodes.slice(0, MAX_NODES) };
 }
 
 declare global {
@@ -126,6 +131,12 @@ async function installHelpers(page: Page) {
       tabs: 0,
     };
   });
+}
+
+/** Describes the element that the locator points to, as the checks do. */
+export async function describeLocator(page: Page, locator: Locator): Promise<Described> {
+  await installHelpers(page);
+  return locator.evaluate((el) => window.a11yAudit!.describe(el));
 }
 
 /** Moves the start of sequential focus navigation to the top of the page. */
