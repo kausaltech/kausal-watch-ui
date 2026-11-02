@@ -9,6 +9,8 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
+
 import { isServer } from '@/common/environment';
 import Icon from '@/components/common/Icon';
 import Tooltip from '@/components/common/Tooltip';
@@ -106,7 +108,7 @@ const QuestionTrigger = styled.button`
   color: ${(props) => props.theme.themeColors.black};
   font-weight: ${(props) => props.theme.fontWeightBold};
   line-height: ${(props) => props.theme.lineHeightMd};
-  hyphens: manual;
+  ${titleHyphenation}
   border: none;
   overflow: visible;
   background: transparent;

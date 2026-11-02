@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 import { readableColor, transparentize } from 'polished';
 import SVG from 'react-inlinesvg';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
 import { transientOptions } from '@common/themes/styles/styled';
 import { getThemeStaticURL } from '@common/themes/theme';
 
@@ -185,19 +186,14 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
   line-height: ${(props) => props.theme.lineHeightMd};
   text-align: left;
   word-break: break-word;
-  hyphens: auto;
+  ${titleHyphenation}
 
   @media print {
     min-height: 0;
   }
 
-  html:lang(fi) & {
-    hyphens: manual;
-  }
-
   html:lang(en) & {
     word-break: normal;
-    hyphens: none;
 `;
 
 const ActionOrg = styled.div`

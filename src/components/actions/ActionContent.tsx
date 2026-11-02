@@ -680,7 +680,7 @@ function ActionContent(props: ActionContentProps) {
         previousAction={action.previousAction}
         nextAction={action.nextAction}
         identifier={plan.hideActionIdentifiers ? undefined : action.identifier}
-        name={action.name}
+        name={action.hyphenatedName}
         image={actionImage}
         imageCredit={actionImage?.imageCredit}
         imageTitle={actionImage?.title}

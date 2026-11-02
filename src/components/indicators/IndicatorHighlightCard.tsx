@@ -3,6 +3,8 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
+
 import { getActionTermContext, getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorLink } from '@/common/links';
 import useNumberFormatter from '@/common/numbers';
@@ -82,7 +84,7 @@ const StyledCardTitle = styled(CardTitle)`
   font-size: ${(props) => props.theme.fontSizeMd};
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
-  hyphens: manual;
+  ${titleHyphenation}
 `;
 
 type IndicatorHighlightCardProps = {

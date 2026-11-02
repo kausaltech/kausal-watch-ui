@@ -2,6 +2,8 @@ import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
+
 import { type IndicatorDetailsQuery } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
@@ -58,16 +60,12 @@ const IndexLink = styled.span`
 `;
 
 const IndicatorHeadline = styled.h1`
-  hyphens: manual;
+  ${titleHyphenation}
   /* Long compound words would otherwise widen a narrow page */
   overflow-wrap: break-word;
   margin: ${(props) => props.theme.spaces.s100} 0 ${(props) => props.theme.spaces.s200};
   font-size: ${(props) => props.theme.fontSizeXl};
   color: ${(props) => props.theme.themeColors.black} !important;
-
-  ${(props) => props.theme.breakpoints.down('md')} {
-    hyphens: auto;
-  }
 
   ${(props) => props.theme.breakpoints.up('md')} {
     display: flex;
