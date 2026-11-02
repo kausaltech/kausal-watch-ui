@@ -9,6 +9,12 @@
  * checks reflow at 320px. On the first page of each kind it walks through the
  * page with the keyboard.
  *
+ * Search is audited with a word from the plan's first action, both on the
+ * results page and in the header search's suggestions.
+ *
+ * Besides violations, the reports list what axe could not decide (needs
+ * review) and failures of its best-practice rules, apart from the counts.
+ *
  * In plans that open indicators in a modal, the sampled indicators are audited
  * in the modal instead, and the first indicator link found is opened with the
  * keyboard to check how the modal handles focus.
@@ -52,6 +58,9 @@ import { PlanContext, getIdentifiersToTest, getPlanAvailability } from '../commo
 /** WCAG 2.2 AA, which covers EN 301 549 (WCAG 2.1 AA) and adds a few criteria. */
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
 
+/** One rule's result; axe-core itself is not a direct dependency */
+type Result = Awaited<ReturnType<AxeBuilder['analyze']>>['violations'][number];
+
 /** How many offending elements to keep per violation; the count is kept in full. */
 const MAX_NODES = 10;
 
@@ -87,10 +96,16 @@ type PageToAudit = {
   dialog?: boolean;
 };
 
-type PlanProgress = {
+/** What a plan's audit carries from page to page */
+type PlanRun = {
   /** Open an indicator link on the next page that has one */
   indicatorLinkPending: boolean;
+  /** A word from the plan's content, so that a search finds something */
+  searchTerm: string | null;
 };
+
+/** The header search's suggestions */
+const SEARCH_SUGGESTIONS = '#navbar-search-results-listbox';
 
 function getPlanIdentifiers(): string[] {
   const val = process.env.A11Y_PLAN_IDENTIFIERS;
@@ -99,6 +114,12 @@ function getPlanIdentifiers(): string[] {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+function getSearchTerm(ctx: PlanContext): string | null {
+  const text = ctx.plan.actions.at(0)?.name ?? ctx.getPlanIndicators().at(0)?.name ?? '';
+  const words = text.split(/[^\p{L}\p{N}]+/u).filter((word) => word.length >= 4);
+  return words.sort((a, b) => b.length - a.length).at(0) ?? null;
 }
 
 function getPagesToAudit(ctx: PlanContext): PageToAudit[] {
@@ -143,6 +164,9 @@ function getPagesToAudit(ctx: PlanContext): PageToAudit[] {
   for (const organization of ctx.planOrganizations.slice(0, SAMPLE_SIZE)) {
     add('organization', organization.name, `${baseURL}/organizations/${organization.id}`);
   }
+  // The results first, so that they get the keyboard walk
+  const term = getSearchTerm(ctx);
+  if (term) add('search', term, `${baseURL}/search?q=${encodeURIComponent(term)}`);
   add('search', null, `${baseURL}/search`);
   return pages;
 }
@@ -182,19 +206,23 @@ async function openPage(page: Page, { url, dialog }: PageToAudit) {
  * an open state lists only what it adds.
  */
 async function scan(page: Page, known?: Set<string>, include?: string) {
-  const axe = new AxeBuilder({ page }).withTags(WCAG_TAGS);
+  const axe = new AxeBuilder({ page }).withTags([...WCAG_TAGS, 'best-practice']);
   if (include) axe.include(include);
   const results = await axe.analyze();
   const keys = new Set<string>();
-  const violations: AuditedViolation[] = [];
-  for (const v of results.violations) {
+  const findings = {
+    violations: [] as AuditedViolation[],
+    review: [] as AuditedViolation[],
+    bestPractice: [] as AuditedViolation[],
+  };
+  const add = (kind: keyof typeof findings, v: Result) => {
     const nodes = v.nodes.filter((node) => {
-      const key = `${v.id} ${node.target.join(' ')}`;
+      const key = `${kind} ${v.id} ${node.target.join(' ')}`;
       keys.add(key);
       return !known?.has(key);
     });
-    if (!nodes.length) continue;
-    violations.push({
+    if (!nodes.length) return;
+    findings[kind].push({
       id: v.id,
       impact: v.impact ?? null,
       help: v.help,
@@ -206,8 +234,18 @@ async function scan(page: Page, known?: Set<string>, include?: string) {
         failureSummary: node.failureSummary ?? '',
       })),
     });
+  };
+  for (const v of results.violations) {
+    add(v.tags.some((tag) => WCAG_TAGS.includes(tag)) ? 'violations' : 'bestPractice', v);
   }
-  return { violations, keys };
+  for (const v of results.incomplete) {
+    // A closed combobox may point aria-controls at a listbox it renders only when open
+    const nodes = v.nodes.filter(
+      (node) => !(v.id === 'aria-valid-attr-value' && node.html.includes('aria-expanded="false"'))
+    );
+    if (nodes.length) add('review', { ...v, nodes });
+  }
+  return { ...findings, keys };
 }
 
 type StateOptions = {
@@ -356,10 +394,11 @@ async function auditStates(
           );
         }
       }
-      const { violations } = await scan(page, known);
+      const { keys: _, ...findings } = await scan(page, known);
+      const { violations } = findings;
       violations.push(...keyboardViolations);
       const state = `${options.prefix ?? ''}${label || 'toggle'} open`;
-      results.push({ name, url, state, violations });
+      results.push({ name, url, state, ...findings });
       if (byKeyboard && options.followMenuLink && !followedMenuLink) {
         const menuLink = await followMenuLink(page);
         if (menuLink) {
@@ -417,9 +456,35 @@ async function auditIndicatorLink(
       return null;
     }
     await settle(page);
-    const { violations } = await scan(page, known, DIALOG);
-    violations.push(...(await checkDialog(page, DIALOG, '[data-a11y-trigger]')));
-    return { name, url, state: 'indicator modal opened from a link', violations };
+    const { keys: _, ...findings } = await scan(page, known, DIALOG);
+    findings.violations.push(...(await checkDialog(page, DIALOG, '[data-a11y-trigger]')));
+    return { name, url, state: 'indicator modal opened from a link', ...findings };
+  } finally {
+    await openPage(page, pageToAudit);
+  }
+}
+
+/** Types into the header search and scans the suggestions it shows. */
+async function auditSearchSuggestions(
+  page: Page,
+  pageToAudit: PageToAudit,
+  known: Set<string>,
+  term: string
+): Promise<AuditedPage | null> {
+  const { name, url } = pageToAudit;
+  const form = page.locator(`header form:has([aria-controls="${SEARCH_SUGGESTIONS.slice(1)}"])`);
+  const button = form.locator('button[type="submit"]').filter({ visible: true }).first();
+  if (!(await button.count())) return null;
+  try {
+    // Opens the search and focuses its input
+    await button.click();
+    await page.keyboard.type(term, { delay: 50 });
+    await expect(page.locator(SEARCH_SUGGESTIONS)).toBeVisible({ timeout: 15_000 });
+    await settle(page);
+    const { keys: _, ...findings } = await scan(page, known);
+    return { name, url, state: `search suggestions for "${term}"`, ...findings };
+  } catch {
+    return null;
   } finally {
     await openPage(page, pageToAudit);
   }
@@ -430,21 +495,22 @@ async function auditPage(
   page: Page,
   pageToAudit: PageToAudit,
   results: AuditedPage[],
-  progress: PlanProgress
+  run: PlanRun
 ) {
   const { name, url, dialog } = pageToAudit;
   const isHome = name === 'home';
   await openPage(page, pageToAudit);
-  const { violations, keys } = await scan(page, undefined, dialog ? DIALOG : undefined);
+  const { keys, ...findings } = await scan(page, undefined, dialog ? DIALOG : undefined);
+  const { violations } = findings;
   const title = dialog ? undefined : await page.title();
-  const audited: AuditedPage = { name, url, title, violations };
+  const audited: AuditedPage = { name, url, title, ...findings };
   results.push(audited);
 
-  if (progress.indicatorLinkPending && !dialog) {
+  if (run.indicatorLinkPending && !dialog) {
     const opened = await auditIndicatorLink(page, pageToAudit, keys);
     if (opened) {
       results.push(opened);
-      progress.indicatorLinkPending = false;
+      run.indicatorLinkPending = false;
     }
   }
 
@@ -464,6 +530,11 @@ async function auditPage(
   });
   results.push(...states);
 
+  if (isHome && run.searchTerm) {
+    const suggestions = await auditSearchSuggestions(page, pageToAudit, keys, run.searchTerm);
+    if (suggestions) results.push(suggestions);
+  }
+
   const viewport = page.viewportSize();
   await page.setViewportSize(NARROW_VIEWPORT);
   try {
@@ -471,8 +542,8 @@ async function auditPage(
     violations.push(...(await checkReflow(page)));
     if (isHome) {
       // The mobile layout, with the header's toggles opened
-      const narrow = await scan(page, keys);
-      results.push({ name, url, state: '320px wide', violations: narrow.violations });
+      const { keys: _, ...narrow } = await scan(page, keys);
+      results.push({ name, url, state: '320px wide', ...narrow });
       const narrowStates = await auditStates(page, pageToAudit, keys, {
         root: 'header',
         max: 3,
@@ -493,8 +564,9 @@ const describeAudit = (planId: string) => {
     const ctx = await PlanContext.fromPlanId(planId);
     const pagesToAudit = getPagesToAudit(ctx);
     const walks = pagesToAudit.filter((p) => p.keyboard).length;
-    const progress: PlanProgress = {
+    const run: PlanRun = {
       indicatorLinkPending: ctx.plan.features.indicatorsOpenInModal,
+      searchTerm: getSearchTerm(ctx),
     };
     test.setTimeout(60_000 + pagesToAudit.length * 60_000 + walks * 60_000);
     await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -502,7 +574,7 @@ const describeAudit = (planId: string) => {
     for (const pageToAudit of pagesToAudit) {
       await test.step(pageToAudit.name, async () => {
         try {
-          await auditPage(page, pageToAudit, audit.pages, progress);
+          await auditPage(page, pageToAudit, audit.pages, run);
         } catch (error) {
           // Keep auditing the other pages; a broken page shows up in the summary.
           const message = error instanceof Error ? error.message.split('\n')[0] : String(error);

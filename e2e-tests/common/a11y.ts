@@ -25,7 +25,20 @@ export type AuditedPage = {
   state?: string;
   error?: string;
   violations: AuditedViolation[];
+  /** What axe could not decide, such as contrast over an image, to check by hand */
+  review?: AuditedViolation[];
+  /** Failures of axe's best-practice rules, which are not WCAG requirements */
+  bestPractice?: AuditedViolation[];
 };
+
+/** The lists of findings a page has, and how the reports name them. */
+export const FINDING_KINDS = [
+  { key: 'violations', title: 'Violations' },
+  { key: 'review', title: 'Needs review' },
+  { key: 'bestPractice', title: 'Best practice' },
+] as const;
+
+type FindingKind = (typeof FINDING_KINDS)[number]['key'];
 
 export type PlanAudit = {
   planId: string;
@@ -41,6 +54,17 @@ type RuleTotals = {
   pages: number;
   nodes: number;
 };
+
+function pageName(page: AuditedPage) {
+  return page.state ? `${page.name} › ${page.state}` : page.name;
+}
+
+function countNodes(audit: PlanAudit, kind: FindingKind) {
+  return audit.pages.reduce(
+    (sum, page) => sum + (page[kind] ?? []).reduce((n, v) => n + v.nodeCount, 0),
+    0
+  );
+}
 
 function impactRank(impact: string | null) {
   const rank = IMPACTS.indexOf(impact ?? '');
@@ -72,34 +96,50 @@ function escapeHtml(s: string) {
     .replace(/"/g, '&quot;');
 }
 
-/** A standalone page listing one plan's violations, attached to its test. */
+function findingsTable(findings: AuditedViolation[]) {
+  const rows = [...findings]
+    .sort((a, b) => impactRank(a.impact) - impactRank(b.impact))
+    .map((v) => {
+      const nodes = v.nodes
+        .map(
+          (n) =>
+            `<li><code>${escapeHtml(n.target)}</code><pre>${escapeHtml(n.html)}</pre>` +
+            `<p class="why">${escapeHtml(n.failureSummary)}</p></li>`
+        )
+        .join('');
+      const more =
+        v.nodeCount > v.nodes.length
+          ? `<p>…and ${String(v.nodeCount - v.nodes.length)} more</p>`
+          : '';
+      return (
+        `<tr><td class="${escapeHtml(v.impact ?? '')}">${escapeHtml(v.impact ?? '')}</td>` +
+        `<td><a href="${escapeHtml(v.helpUrl)}">${escapeHtml(v.id)}</a></td>` +
+        `<td>${escapeHtml(v.help)}<details><summary>${String(v.nodeCount)} ${v.nodeCount === 1 ? 'element' : 'elements'}</summary><ul>${nodes}</ul>${more}</details></td></tr>`
+      );
+    })
+    .join('');
+  return `<table><tr><th>Impact</th><th>Rule</th><th>Description</th></tr>${rows}</table>`;
+}
+
+/** A standalone page listing one plan's findings, attached to its test. */
 export function planAuditHtml(audit: PlanAudit): string {
   const sections = audit.pages.map((page) => {
-    const name = page.state ? `${page.name} › ${page.state}` : page.name;
-    const heading = `<h2>${escapeHtml(name)} <a href="${escapeHtml(page.url)}">${escapeHtml(page.url)}</a></h2>`;
+    const heading = `<h2>${escapeHtml(pageName(page))} <a href="${escapeHtml(page.url)}">${escapeHtml(page.url)}</a></h2>`;
     if (page.error)
       return `${heading}<p class="error">Could not be audited: ${escapeHtml(page.error)}</p>`;
-    if (!page.violations.length) return `${heading}<p>No violations.</p>`;
-    const rows = [...page.violations]
-      .sort((a, b) => impactRank(a.impact) - impactRank(b.impact))
-      .map((v) => {
-        const nodes = v.nodes
-          .map(
-            (n) => `<li><code>${escapeHtml(n.target)}</code><pre>${escapeHtml(n.html)}</pre></li>`
-          )
-          .join('');
-        const more =
-          v.nodeCount > v.nodes.length
-            ? `<p>…and ${String(v.nodeCount - v.nodes.length)} more</p>`
-            : '';
-        return (
-          `<tr><td class="${escapeHtml(v.impact ?? '')}">${escapeHtml(v.impact ?? '')}</td>` +
-          `<td><a href="${escapeHtml(v.helpUrl)}">${escapeHtml(v.id)}</a></td>` +
-          `<td>${escapeHtml(v.help)}<details><summary>${String(v.nodeCount)} ${v.nodeCount === 1 ? 'element' : 'elements'}</summary><ul>${nodes}</ul>${more}</details></td></tr>`
-        );
+    const violations = page.violations.length
+      ? findingsTable(page.violations)
+      : '<p>No violations.</p>';
+    // The other lists are folded away, so violations stay in front
+    const others = FINDING_KINDS.filter(({ key }) => key !== 'violations')
+      .map(({ key, title }) => {
+        const findings = page[key] ?? [];
+        if (!findings.length) return '';
+        const count = findings.reduce((n, v) => n + v.nodeCount, 0);
+        return `<details class="kind"><summary>${title}: ${String(count)} elements</summary>${findingsTable(findings)}</details>`;
       })
       .join('');
-    return `${heading}<table><tr><th>Impact</th><th>Rule</th><th>Description</th></tr>${rows}</table>`;
+    return `${heading}${violations}${others}`;
   });
   return `<!doctype html>
 <html><head><meta charset="utf-8"><title>${escapeHtml(audit.planId)} accessibility</title>
@@ -110,25 +150,22 @@ export function planAuditHtml(audit: PlanAudit): string {
   h2 { font-size: 16px; margin-top: 2rem; } h2 a { font-weight: normal; font-size: 13px; }
   pre { white-space: pre-wrap; word-break: break-all; margin: 2px 0 8px; font-size: 12px; }
   .critical { color: #b00020; font-weight: bold; } .serious { color: #c45500; font-weight: bold; }
-  .error { color: #b00020; }
+  .error { color: #b00020; } .why { white-space: pre-wrap; margin: 0 0 8px; color: #555; }
+  details.kind { margin-top: 8px; } details.kind > summary { font-weight: bold; }
 </style></head><body>
-<h1>${escapeHtml(audit.planId)}</h1><p>${escapeHtml(formatImpactCounts(audit))} (offending elements)</p>
+<h1>${escapeHtml(audit.planId)}</h1><p>${escapeHtml(formatImpactCounts(audit))} (offending elements);
+needs review ${String(countNodes(audit, 'review'))}; best practice ${String(countNodes(audit, 'bestPractice'))}</p>
 ${sections.join('\n')}
 </body></html>
 `;
 }
 
-/** A Markdown rollup of all audited plans. */
-export function runSummaryMarkdown(audits: PlanAudit[]): string {
+/** A Markdown table of the rules behind one kind of finding, across plans. */
+function rulesTable(audits: PlanAudit[], kind: FindingKind): string[] {
   const rules = new Map<string, RuleTotals>();
-  const lines: string[] = ['# Accessibility audit', ''];
-
-  lines.push('## Plans', '');
-  lines.push(`| Plan | Pages | ${IMPACTS.join(' | ')} | Errors |`);
-  lines.push(`| --- | --- | ${IMPACTS.map(() => '---').join(' | ')} | --- |`);
   for (const audit of audits) {
     for (const page of audit.pages) {
-      for (const v of page.violations) {
+      for (const v of page[kind] ?? []) {
         const totals = rules.get(v.id) ?? {
           impact: v.impact ?? 'unknown',
           help: v.help,
@@ -143,23 +180,12 @@ export function runSummaryMarkdown(audits: PlanAudit[]): string {
         rules.set(v.id, totals);
       }
     }
-    const byImpact = countByImpact(audit);
-    const errors = audit.pages.filter((page) => page.error).length;
-    const counts = IMPACTS.map((impact) => String(byImpact.get(impact) ?? 0));
-    const pages = audit.pages.filter((page) => !page.state).length;
-    lines.push(
-      `| ${audit.planId} | ${String(pages)} | ${counts.join(' | ')} | ${String(errors)} |`
-    );
   }
-  lines.push(
-    '',
-    'Counts are offending elements, summed over the audited pages and their open states.',
-    ''
-  );
-
-  lines.push('## Rules', '');
-  lines.push('| Rule | Impact | Plans | Pages | Elements | Description |');
-  lines.push('| --- | --- | --- | --- | --- | --- |');
+  if (!rules.size) return ['None.'];
+  const lines = [
+    '| Rule | Impact | Plans | Pages | Elements | Description |',
+    '| --- | --- | --- | --- | --- | --- |',
+  ];
   const sortedRules = [...rules].sort(
     ([, a], [, b]) =>
       impactRank(a.impact) - impactRank(b.impact) ||
@@ -172,6 +198,52 @@ export function runSummaryMarkdown(audits: PlanAudit[]): string {
         `${String(r.pages)} | ${String(r.nodes)} | ${r.help} |`
     );
   }
+  return lines;
+}
+
+/** A Markdown rollup of all audited plans. */
+export function runSummaryMarkdown(audits: PlanAudit[]): string {
+  const lines: string[] = ['# Accessibility audit', ''];
+
+  lines.push('## Plans', '');
+  lines.push(`| Plan | Pages | ${IMPACTS.join(' | ')} | Needs review | Best practice | Errors |`);
+  lines.push(`| --- | --- | ${IMPACTS.map(() => '---').join(' | ')} | --- | --- | --- |`);
+  for (const audit of audits) {
+    const byImpact = countByImpact(audit);
+    const errors = audit.pages.filter((page) => page.error).length;
+    const counts = [
+      ...IMPACTS.map((impact) => byImpact.get(impact) ?? 0),
+      countNodes(audit, 'review'),
+      countNodes(audit, 'bestPractice'),
+    ].map(String);
+    const pages = audit.pages.filter((page) => !page.state).length;
+    lines.push(
+      `| ${audit.planId} | ${String(pages)} | ${counts.join(' | ')} | ${String(errors)} |`
+    );
+  }
+  lines.push(
+    '',
+    'Counts are offending elements, summed over the audited pages and their open states.',
+    'Only violations count by impact; the other two are for a person to look at.',
+    ''
+  );
+
+  lines.push('## Violations', '', ...rulesTable(audits, 'violations'), '');
+  lines.push(
+    '## Needs review',
+    '',
+    'Axe could not decide these, for example contrast over an image. Check them by hand.',
+    '',
+    ...rulesTable(audits, 'review'),
+    ''
+  );
+  lines.push(
+    '## Best practice',
+    '',
+    "Failures of axe's best-practice rules. They are not WCAG requirements.",
+    '',
+    ...rulesTable(audits, 'bestPractice')
+  );
 
   const failed = audits.flatMap((audit) =>
     audit.pages.flatMap((page) =>
@@ -181,8 +253,7 @@ export function runSummaryMarkdown(audits: PlanAudit[]): string {
   if (failed.length) {
     lines.push('', '## Pages that could not be audited', '');
     for (const { planId, page, error } of failed) {
-      const name = page.state ? `${page.name} › ${page.state}` : page.name;
-      lines.push(`- ${planId} / ${name} (${page.url}): ${error}`);
+      lines.push(`- ${planId} / ${pageName(page)} (${page.url}): ${error}`);
     }
   }
   return lines.join('\n') + '\n';

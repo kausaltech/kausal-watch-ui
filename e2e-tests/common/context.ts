@@ -121,6 +121,7 @@ const GET_PLAN_INFO = gql`
       }
       actions(first: 30) {
         identifier
+        name
         viewUrl(clientUrl: $clientURL)
       }
       mainMenu {

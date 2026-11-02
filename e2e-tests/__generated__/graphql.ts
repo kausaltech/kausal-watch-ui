@@ -1016,7 +1016,7 @@ export type PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainBottom =
 
 export type PlaywrightGetPlanInfoQuery_plan_actionListPage = { __typename: 'ActionListPage', urlPath: string, includeRelatedPlans: boolean | null, detailsMainTop: Array<PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainTop> | null, detailsMainBottom: Array<PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainBottom> | null };
 
-export type PlaywrightGetPlanInfoQuery_plan_actions = { __typename: 'Action', identifier: string, viewUrl: string };
+export type PlaywrightGetPlanInfoQuery_plan_actions = { __typename: 'Action', identifier: string, name: string, viewUrl: string };
 
 export type PlaywrightGetPlanInfoQuery_plan_mainMenu_items_PageMenuItem_page_AccessibilityStatementPage = { __typename: 'AccessibilityStatementPage', id: string | null, title: string, urlPath: string, slug: string, showInMenus: boolean, live: boolean };
 
