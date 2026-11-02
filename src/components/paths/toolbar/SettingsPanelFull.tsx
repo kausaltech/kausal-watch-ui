@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from 'react';
 
-import { useTheme } from '@emotion/react';
+import { Global, css, useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useReactiveVar } from '@apollo/client/react';
@@ -35,6 +35,10 @@ const Spacer = styled.div`
   background-color: ${(props) => props.theme.themeColors.dark};
 `;
 
+/** Heights of the panel in its medium mode, on wide and narrow screens */
+const PANEL_MD_HEIGHT = '7.5rem';
+const PANEL_MD_HEIGHT_NARROW = '6rem';
+
 const FixedPanel = styled.aside`
   position: fixed;
   z-index: 500;
@@ -51,10 +55,10 @@ const FixedPanel = styled.aside`
   }
 
   &.panel-md {
-    height: 7.5rem;
+    height: ${PANEL_MD_HEIGHT};
 
     ${(props) => props.theme.breakpoints.down('md')} {
-      height: 6rem;
+      height: ${PANEL_MD_HEIGHT_NARROW};
     }
   }
 
@@ -172,6 +176,20 @@ const SettingsPanelFull: React.FC = () => {
   return (
     <>
       <Spacer />
+      {mode === MODE.MD && (
+        // Keeps focused elements clear of the panel when the page scrolls to them
+        <Global
+          styles={css`
+            html {
+              scroll-padding-bottom: ${PANEL_MD_HEIGHT};
+
+              ${theme.breakpoints.down('md')} {
+                scroll-padding-bottom: ${PANEL_MD_HEIGHT_NARROW};
+              }
+            }
+          `}
+        />
+      )}
       <FixedPanel className={`panel-${mode}`} aria-label={t('all-settings')}>
         {mode !== MODE.NONE && (
           <StyledSettingsButton

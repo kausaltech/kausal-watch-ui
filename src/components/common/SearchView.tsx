@@ -80,6 +80,9 @@ const HitType = styled.div`
 
 const SearchResultMeta = styled.div`
   display: flex;
+  /* The type goes under the plan chip when they don't fit side by side */
+  flex-wrap: wrap;
+  column-gap: ${(props) => props.theme.spaces.s100};
   justify-content: space-between;
   margin-bottom: ${(props) => props.theme.spaces.s150};
 `;

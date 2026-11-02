@@ -40,10 +40,6 @@ const ToggleButton = styled(Button)`
   &:hover {
     text-decoration: underline;
   }
-
-  &.open {
-    color: ${(props) => props.theme.graphColors.grey050};
-  }
 `;
 
 const IndicatorLinkWrapper = styled.span`
