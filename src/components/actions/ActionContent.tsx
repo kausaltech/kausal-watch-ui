@@ -571,7 +571,8 @@ function ActionContent(props: ActionContentProps) {
     {},
     [action, router]
   );
-  const actionListPage = extraPlanData.actionListPage!;
+  // Null in plans without an action list page, which leaves no content blocks
+  const actionListPage = extraPlanData.actionListPage;
 
   const actionState = 'live';
   // TODO: plug in action state from backend here. "draft" would display a banner
@@ -588,19 +589,19 @@ function ActionContent(props: ActionContentProps) {
 
   // Full width IndicatorCausalChainBlock can only be rendered in the bottom of the page
   // so we do not use it in streamfield layout
-  type DetailBlock = NonNullable<typeof actionListPage.detailsMainTop>[number];
+  type DetailBlock = NonNullable<NonNullable<typeof actionListPage>['detailsMainTop']>[number];
   const isIndicatorCausalChainBlock = (block: DetailBlock) =>
     block?.__typename === 'IndicatorCausalChainBlock';
-  const detailsCombined = (actionListPage['detailsMainTop'] ?? []).concat(
-    actionListPage['detailsMainBottom'] ?? []
+  const detailsCombined = (actionListPage?.detailsMainTop ?? []).concat(
+    actionListPage?.detailsMainBottom ?? []
   );
   const showIndicatorCausalChainBlock =
     action?.relatedIndicators.length > 0 && detailsCombined?.some(isIndicatorCausalChainBlock);
 
   const makeComponents = useCallback(
     (section: SectionIdentifier) => {
-      const blocks = actionListPage[section];
-      if (!blocks) return null;
+      const blocks = actionListPage?.[section];
+      if (!actionListPage || !blocks) return null;
 
       const allSections: JSX.Element[] = [];
       let previousSectionBlock: undefined | (typeof blocks)[0];
@@ -664,8 +665,8 @@ function ActionContent(props: ActionContentProps) {
 
     const allBlocks = [
       ...(actionListPage?.detailsAside ?? []),
-      ...(actionListPage.detailsMainBottom ?? []),
-      ...(actionListPage.detailsMainTop ?? []),
+      ...(actionListPage?.detailsMainBottom ?? []),
+      ...(actionListPage?.detailsMainTop ?? []),
     ];
 
     return !allBlocks.find((block) => block.__typename === 'ChangeLogMessageBlock');
