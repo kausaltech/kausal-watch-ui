@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 
+import type { Metadata, ResolvingMetadata } from 'next';
+
 import { getActionsListPage, getIncludeRelatedActions } from '@/queries/get-actions-list-page';
 import { tryRequest } from '@/utils/api.utils';
 
@@ -8,6 +10,15 @@ import { ActionListPage } from './ActionListPage';
 type Props = {
   params: Promise<{ plan: string; lang: string }>;
 };
+
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const { plan } = await props.params;
+  const { data } = await tryRequest(getIncludeRelatedActions(plan));
+  const title = data?.plan?.actionListPage?.title;
+  if (!title) return {};
+  const resolvedParent = await parent;
+  return { title: `${title} | ${resolvedParent.title?.absolute}` };
+}
 
 // TODO: Can we deprecate this page in favor of src/app/root/[domain]/[lang]/[plan]/(with-layout-elements)/[...slug]/ContentPage.tsx ?
 

@@ -6798,7 +6798,7 @@ export type ReportComparisonBlockActionContentFragment = { __typename: 'ReportCo
 
 export type ActionCardWithDependencyRoleFragment = { __typename: 'Action', id: string, identifier: string, name: string, viewUrl: string, color: string | null, scheduleContinuous: boolean, completion: number | null, dependencyRole: ActionDetailsQuery_action_allDependencyRelationships_preceding_dependencyRole | null, status: ActionListQuery_planActions_status | null, categories: Array<ActionListQuery_planActions_categories>, statusSummary: ActionListQuery_planActions_statusSummary, implementationPhase: ActionListQuery_planActions_implementationPhase | null, primaryOrg: ActionListQuery_planActions_primaryOrg | null, mergedWith: ActionListQuery_planActions_mergedWith | null, plan: ActionListQuery_planActions_plan };
 
-export type ActionListPageIncludeRelatedQuery_plan_actionListPage = { __typename: 'ActionListPage', id: string | null, includeRelatedPlans: boolean | null };
+export type ActionListPageIncludeRelatedQuery_plan_actionListPage = { __typename: 'ActionListPage', id: string | null, title: string, includeRelatedPlans: boolean | null };
 
 export type ActionListPageIncludeRelatedQuery_plan = { __typename: 'Plan', id: string, actionListPage: ActionListPageIncludeRelatedQuery_plan_actionListPage | null };
 
