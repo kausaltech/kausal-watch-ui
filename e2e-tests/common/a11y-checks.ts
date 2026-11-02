@@ -438,16 +438,29 @@ export async function checkReflow(page: Page): Promise<AuditedViolation[]> {
       }
       return false;
     };
-    const found: { target: string; html: string }[] = [];
+    const found: Element[] = [];
     for (const el of document.body.querySelectorAll('*')) {
       if (!overflows(el) || contained(el)) continue;
       if (getComputedStyle(el).position === 'fixed') continue;
       // Only the outermost
       if (el.parentElement && el.parentElement !== document.body && overflows(el.parentElement))
         continue;
-      found.push(window.a11yAudit!.describe(el));
+      found.push(el);
     }
-    return found.length ? found : [{ target: 'html', html: '<html>' }];
+    // Text, such as a long word, can spill out of a box that itself fits
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const parent = node.parentElement;
+      if (!parent || !node.textContent?.trim()) continue;
+      if (found.some((el) => el.contains(parent))) continue;
+      const range = document.createRange();
+      range.selectNodeContents(node);
+      if (range.getBoundingClientRect().right + window.scrollX <= width + 1) continue;
+      if (getComputedStyle(parent).overflowX !== 'visible' || contained(parent)) continue;
+      found.push(parent);
+    }
+    const described = found.map((el) => window.a11yAudit!.describe(el));
+    return described.length ? described : [{ target: 'html', html: '<html>' }];
   });
   for (const offender of offenders) {
     findings.add(
