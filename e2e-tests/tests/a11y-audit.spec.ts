@@ -9,6 +9,10 @@
  * checks reflow at 320px. On the first page of each kind it walks through the
  * page with the keyboard.
  *
+ * In plans that open indicators in a modal, the sampled indicators are audited
+ * in the modal instead, and the first indicator link found is opened with the
+ * keyboard to check how the modal handles focus.
+ *
  * Violations do not fail the tests. In the HTML report, each plan's test shows
  * its violation counts as an annotation and attaches a11y-summary.html with the
  * details. a11y-reporter.ts prints a cross-plan summary at the end of the run
@@ -27,6 +31,7 @@ import { type Page, expect, test } from '@playwright/test';
 
 import {
   NARROW_VIEWPORT,
+  checkDialog,
   checkReflow,
   checkSkipLink,
   checkTitles,
@@ -58,6 +63,11 @@ const TOGGLES = [
   'button:has(+ [role="status"].visually-hidden)',
 ].join(', ');
 
+const DIALOG = '[role="dialog"]';
+
+/** Visible ones only: Next's dev tools have a hidden dialog in their shadow DOM */
+const dialogLocator = (page: Page) => page.locator(DIALOG).filter({ visible: true });
+
 const PAGE_KINDS: Record<string, string> = {
   ActionListPage: 'action-list',
   CategoryTypePage: 'category-type',
@@ -71,6 +81,13 @@ type PageToAudit = {
   url: string;
   /** Walk through it with the keyboard */
   keyboard: boolean;
+  /** The URL opens a dialog, which is what to audit */
+  dialog?: boolean;
+};
+
+type PlanProgress = {
+  /** Open an indicator link on the next page that has one */
+  indicatorLinkPending: boolean;
 };
 
 function getPlanIdentifiers(): string[] {
@@ -86,10 +103,10 @@ function getPagesToAudit(ctx: PlanContext): PageToAudit[] {
   const { baseURL, plan } = ctx;
   const pages: PageToAudit[] = [];
   const kinds = new Set<string>();
-  const add = (kind: string, label: string | null, url: string) => {
+  const add = (kind: string, label: string | null, url: string, dialog?: boolean) => {
     if (pages.some((p) => p.url === url)) return;
     const name = label ? `${kind}: ${label.slice(0, 40)}` : kind;
-    pages.push({ name, url, keyboard: !kinds.has(kind) });
+    pages.push({ name, url, keyboard: !kinds.has(kind), dialog });
     kinds.add(kind);
   };
 
@@ -115,7 +132,11 @@ function getPagesToAudit(ctx: PlanContext): PageToAudit[] {
     add('action', action.identifier, action.viewUrl);
   }
   for (const indicator of ctx.getPlanIndicators().slice(0, SAMPLE_SIZE)) {
-    add('indicator', indicator.name, `${baseURL}/indicators/${indicator.id}`);
+    if (plan.features.indicatorsOpenInModal) {
+      add('indicator-modal', indicator.name, `${baseURL}/?indicator=${indicator.id}`, true);
+    } else {
+      add('indicator', indicator.name, `${baseURL}/indicators/${indicator.id}`);
+    }
   }
   for (const organization of ctx.planOrganizations.slice(0, SAMPLE_SIZE)) {
     add('organization', organization.name, `${baseURL}/organizations/${organization.id}`);
@@ -145,12 +166,23 @@ async function loadPage(page: Page, url: string) {
   await settle(page);
 }
 
+async function openPage(page: Page, { url, dialog }: PageToAudit) {
+  await loadPage(page, url);
+  if (dialog) {
+    await expect(dialogLocator(page)).toBeVisible({ timeout: 30_000 });
+    await settle(page);
+  }
+}
+
 /**
- * Runs axe on the page. With `known`, leaves out what an earlier scan of the
- * page already found, so that a scan of an open state lists only what it adds.
+ * Runs axe on the page, or on the part that `include` selects. With `known`,
+ * leaves out what an earlier scan of the page already found, so that a scan of
+ * an open state lists only what it adds.
  */
-async function scan(page: Page, known?: Set<string>) {
-  const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
+async function scan(page: Page, known?: Set<string>, include?: string) {
+  const axe = new AxeBuilder({ page }).withTags(WCAG_TAGS);
+  if (include) axe.include(include);
+  const results = await axe.analyze();
   const keys = new Set<string>();
   const violations: AuditedViolation[] = [];
   for (const v of results.violations) {
@@ -181,6 +213,8 @@ type StateOptions = {
   root: string;
   max: number;
   prefix?: string;
+  /** Close with Escape, which would also close a dialog the toggles are in */
+  escape?: boolean;
 };
 
 /** Marks the toggles to open, in document order, and returns how many there are. */
@@ -211,10 +245,11 @@ async function markToggles(page: Page, { root, max }: StateOptions) {
 /** Opens each toggle in turn and scans what it reveals. */
 async function auditStates(
   page: Page,
-  { name, url }: PageToAudit,
+  pageToAudit: PageToAudit,
   known: Set<string>,
   options: StateOptions
 ): Promise<AuditedPage[]> {
+  const { name, url } = pageToAudit;
   const results: AuditedPage[] = [];
   const path = new URL(url).pathname;
   const count = await markToggles(page, options);
@@ -253,7 +288,7 @@ async function auditStates(
         reload = true;
         continue;
       }
-      await page.keyboard.press('Escape');
+      if (options.escape !== false) await page.keyboard.press('Escape');
       await page.mouse.move(0, 0);
       if ((await toggle.count()) && (await toggle.getAttribute('aria-expanded')) === 'true') {
         await toggle.click();
@@ -263,7 +298,7 @@ async function auditStates(
       reload = true;
     } finally {
       if (reload) {
-        await loadPage(page, url);
+        await openPage(page, pageToAudit);
         await markToggles(page, options);
       }
     }
@@ -271,24 +306,74 @@ async function auditStates(
   return results;
 }
 
-/** Audits one page, pushing its results to `results` as they come in. */
-async function auditPage(page: Page, pageToAudit: PageToAudit, results: AuditedPage[]) {
+/**
+ * Opens the first indicator link on the page with the keyboard, then scans the
+ * modal and checks its focus handling. Returns null when there is no link or
+ * it does not open a modal.
+ */
+async function auditIndicatorLink(
+  page: Page,
+  pageToAudit: PageToAudit,
+  known: Set<string>
+): Promise<AuditedPage | null> {
   const { name, url } = pageToAudit;
+  const link = page.locator('main a[href*="/indicators/"]').filter({ visible: true }).first();
+  if (!(await link.count())) return null;
+  try {
+    await link.evaluate((el) => {
+      el.setAttribute('data-a11y-trigger', '');
+    });
+    await link.focus();
+    await page.keyboard.press('Enter');
+    try {
+      await expect(dialogLocator(page)).toBeVisible({ timeout: 10_000 });
+    } catch {
+      return null;
+    }
+    await settle(page);
+    const { violations } = await scan(page, known, DIALOG);
+    violations.push(...(await checkDialog(page, DIALOG, '[data-a11y-trigger]')));
+    return { name, url, state: 'indicator modal opened from a link', violations };
+  } finally {
+    await openPage(page, pageToAudit);
+  }
+}
+
+/** Audits one page, pushing its results to `results` as they come in. */
+async function auditPage(
+  page: Page,
+  pageToAudit: PageToAudit,
+  results: AuditedPage[],
+  progress: PlanProgress
+) {
+  const { name, url, dialog } = pageToAudit;
   const isHome = name === 'home';
-  await loadPage(page, url);
-  const { violations, keys } = await scan(page);
-  const audited: AuditedPage = { name, url, title: await page.title(), violations };
+  await openPage(page, pageToAudit);
+  const { violations, keys } = await scan(page, undefined, dialog ? DIALOG : undefined);
+  const title = dialog ? undefined : await page.title();
+  const audited: AuditedPage = { name, url, title, violations };
   results.push(audited);
+
+  if (progress.indicatorLinkPending && !dialog) {
+    const opened = await auditIndicatorLink(page, pageToAudit, keys);
+    if (opened) {
+      results.push(opened);
+      progress.indicatorLinkPending = false;
+    }
+  }
 
   if (pageToAudit.keyboard) {
     violations.push(...(await walkKeyboard(page)));
     if (isHome) violations.push(...(await checkSkipLink(page)));
+    // The walk ends with Escape, which closes the dialog
+    if (dialog) await openPage(page, pageToAudit);
   }
 
   // The header and footer are the same everywhere, so open their toggles only on the home page
   const states = await auditStates(page, pageToAudit, keys, {
-    root: isHome ? 'body' : 'main',
+    root: dialog ? DIALOG : isHome ? 'body' : 'main',
     max: isHome ? 10 : 5,
+    escape: !dialog,
   });
   results.push(...states);
 
@@ -321,13 +406,16 @@ const describeAudit = (planId: string) => {
     const ctx = await PlanContext.fromPlanId(planId);
     const pagesToAudit = getPagesToAudit(ctx);
     const walks = pagesToAudit.filter((p) => p.keyboard).length;
+    const progress: PlanProgress = {
+      indicatorLinkPending: ctx.plan.features.indicatorsOpenInModal,
+    };
     test.setTimeout(60_000 + pagesToAudit.length * 60_000 + walks * 60_000);
     await page.emulateMedia({ reducedMotion: 'reduce' });
     const audit: PlanAudit = { planId, auditedAt: new Date().toISOString(), pages: [] };
     for (const pageToAudit of pagesToAudit) {
       await test.step(pageToAudit.name, async () => {
         try {
-          await auditPage(page, pageToAudit, audit.pages);
+          await auditPage(page, pageToAudit, audit.pages, progress);
         } catch (error) {
           // Keep auditing the other pages; a broken page shows up in the summary.
           const message = error instanceof Error ? error.message.split('\n')[0] : String(error);

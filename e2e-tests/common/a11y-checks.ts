@@ -3,7 +3,7 @@
  * narrow width and unique page titles. Their findings take the shape of axe
  * violations so that they show up in the same reports.
  */
-import type { Page } from '@playwright/test';
+import { type Page, expect } from '@playwright/test';
 
 import type { AuditedPage, AuditedViolation } from './a11y.ts';
 
@@ -49,6 +49,16 @@ const RULES = {
     impact: 'moderate',
     help: 'Pages must have titles that tell them apart (2.4.2)',
     helpUrl: `${UNDERSTANDING}/page-titled.html`,
+  },
+  'dialog-focus': {
+    impact: 'serious',
+    help: 'A dialog must take focus when it opens and give it back when it closes (2.4.3)',
+    helpUrl: `${UNDERSTANDING}/focus-order.html`,
+  },
+  'dialog-escape': {
+    impact: 'moderate',
+    help: 'A dialog should close with Escape',
+    helpUrl: 'https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/',
   },
 } as const;
 
@@ -337,6 +347,58 @@ export async function checkSkipLink(page: Page): Promise<AuditedViolation[]> {
   }, first.href);
   if (!moved) {
     findings.add('skip-link', first, `Activating it does not move focus to ${first.href}`);
+  }
+  return findings.toViolations();
+}
+
+/**
+ * Checks focus handling of a dialog that the element matching `trigger` has
+ * just opened: focus is in the dialog, Escape closes it, and focus goes back
+ * to the trigger. Leaves the dialog closed if Escape works.
+ */
+export async function checkDialog(
+  page: Page,
+  dialog: string,
+  trigger: string
+): Promise<AuditedViolation[]> {
+  const findings = new Findings();
+  await installHelpers(page);
+  const describeFocus = () =>
+    page.evaluate(
+      ({ dialog, trigger }) => {
+        const active = document.activeElement;
+        const el = active && active !== document.body ? active : null;
+        const dialogEl = document.querySelector(dialog);
+        return {
+          // MUI focuses the dialog's container, which wraps the dialog
+          inDialog: !!el && !!dialogEl && (dialogEl.contains(el) || el.contains(dialogEl)),
+          onTrigger: !!el?.closest(trigger),
+          ...(el ? window.a11yAudit!.describe(el) : { target: 'body', html: '<body>' }),
+        };
+      },
+      { dialog, trigger }
+    );
+
+  const opened = await describeFocus();
+  if (!opened.inDialog) {
+    findings.add('dialog-focus', opened, 'Focus stays outside the dialog when it opens');
+  }
+  await page.keyboard.press('Escape');
+  try {
+    await expect(page.locator(dialog).filter({ visible: true })).toHaveCount(0, { timeout: 5000 });
+  } catch {
+    findings.add('dialog-escape', { target: dialog, html: '' }, 'Escape does not close the dialog');
+    return findings.toViolations();
+  }
+  // Give focus restoration a moment
+  await page.waitForTimeout(300);
+  const closed = await describeFocus();
+  if (!closed.onTrigger) {
+    findings.add(
+      'dialog-focus',
+      closed,
+      'Focus does not go back to the element that opened the dialog when it closes'
+    );
   }
   return findings.toViolations();
 }

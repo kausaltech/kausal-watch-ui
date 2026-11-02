@@ -92,6 +92,9 @@ const GET_PLAN_INFO = gql`
         siteTitle
         siteDescription
       }
+      features {
+        indicatorsOpenInModal
+      }
       actionListPage {
         urlPath
         includeRelatedPlans
@@ -471,9 +474,9 @@ export async function getPlanAvailability(planId: string): Promise<PlanAvailabil
     variables: { hostname },
     fetchPolicy: 'no-cache',
   });
-  const plan = res.data.plansForHostname?.find((p) => p?.identifier === planId);
+  const plan = res.data.plansForHostname?.find((p) => p.identifier === planId);
   if (!plan) return 'NOT_FOUND';
-  if (plan.domain?.availability) return plan.domain.availability as PlanAvailability;
+  if (plan.domain?.availability) return plan.domain.availability;
   return plan.__typename === 'Plan' ? 'AVAILABLE' : 'SIGN_IN_REQUIRED';
 }
 

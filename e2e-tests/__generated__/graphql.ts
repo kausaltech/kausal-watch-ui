@@ -58,6 +58,8 @@ export type PlaywrightGetPlanInfoQuery_plan_parent = { __typename: 'Plan', ident
 
 export type PlaywrightGetPlanInfoQuery_plan_generalContent = { __typename: 'SiteGeneralContent', id: string, siteTitle: string, siteDescription: string };
 
+export type PlaywrightGetPlanInfoQuery_plan_features = { __typename: 'PlanFeatures', indicatorsOpenInModal: boolean };
+
 export type PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_AccessibilityStatementComplianceStatusBlock = { __typename: 'AccessibilityStatementComplianceStatusBlock' };
 
 export type PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_AccessibilityStatementContactFormBlock = { __typename: 'AccessibilityStatementContactFormBlock' };
@@ -1148,7 +1150,7 @@ export type PlaywrightGetPlanInfoQuery_plan_mainMenu_items =
 
 export type PlaywrightGetPlanInfoQuery_plan_mainMenu = { __typename: 'MainMenu', items: Array<PlaywrightGetPlanInfoQuery_plan_mainMenu_items> };
 
-export type PlaywrightGetPlanInfoQuery_plan = { __typename: 'Plan', id: string, identifier: string, name: string, shortName: string | null, primaryLanguage: string, otherLanguages: Array<string>, parent: PlaywrightGetPlanInfoQuery_plan_parent | null, generalContent: PlaywrightGetPlanInfoQuery_plan_generalContent, actionListPage: PlaywrightGetPlanInfoQuery_plan_actionListPage | null, actions: Array<PlaywrightGetPlanInfoQuery_plan_actions>, mainMenu: PlaywrightGetPlanInfoQuery_plan_mainMenu | null };
+export type PlaywrightGetPlanInfoQuery_plan = { __typename: 'Plan', id: string, identifier: string, name: string, shortName: string | null, primaryLanguage: string, otherLanguages: Array<string>, parent: PlaywrightGetPlanInfoQuery_plan_parent | null, generalContent: PlaywrightGetPlanInfoQuery_plan_generalContent, features: PlaywrightGetPlanInfoQuery_plan_features, actionListPage: PlaywrightGetPlanInfoQuery_plan_actionListPage | null, actions: Array<PlaywrightGetPlanInfoQuery_plan_actions>, mainMenu: PlaywrightGetPlanInfoQuery_plan_mainMenu | null };
 
 export type PlaywrightGetPlanInfoQuery_planIndicators = { __typename: 'Indicator', id: string, name: string };
 
