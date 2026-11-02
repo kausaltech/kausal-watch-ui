@@ -30,6 +30,8 @@ type MobileStickyTableStylesOptions = {
 export const mobileScrollableTableWrapperStyles = (props: ThemeProps) => css`
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  /* Clips absolutely positioned content, such as visually hidden texts, which would widen the page */
+  position: relative;
 
   ${props.theme.breakpoints.down('md')} {
     max-height: calc(100vh - ${props.theme.spaces.s100});

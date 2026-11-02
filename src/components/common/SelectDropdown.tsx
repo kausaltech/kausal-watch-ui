@@ -12,6 +12,7 @@ import Select, {
   type DropdownIndicatorProps,
   type GroupBase,
   type MultiValueProps,
+  type NoticeProps,
   type OptionProps,
   type Props as ReactSelectProps,
   type Theme as SelectTheme,
@@ -170,6 +171,10 @@ function getSelectStyles<Option extends SelectDropdownOption>(
       ...provided,
       color: theme.graphColors.grey070,
     }),
+    noOptionsMessage: (provided) => ({
+      ...provided,
+      color: theme.graphColors.grey070,
+    }),
   };
   return styles;
 }
@@ -281,9 +286,17 @@ const Option = (props: OptionProps<SelectDropdownOption, boolean>) => {
   );
 };
 
+// A listbox may only contain options, so the message is a disabled one
+const NoOptionsMessage = (props: NoticeProps<SelectDropdownOption, boolean>) => (
+  <components.NoOptionsMessage
+    {...props}
+    innerProps={{ ...props.innerProps, role: 'option', 'aria-disabled': true }}
+  />
+);
+
 const getCustomComponents = (isMulti: boolean) =>
   Object.assign(
-    { ClearIndicator, DropdownIndicator, IndicatorSeparator, Option },
+    { ClearIndicator, DropdownIndicator, IndicatorSeparator, NoOptionsMessage, Option },
     isMulti ? { ValueContainer, MultiValue } : {}
   );
 
