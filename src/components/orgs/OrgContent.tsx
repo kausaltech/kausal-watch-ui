@@ -2,6 +2,7 @@
 
 import { type KeyboardEvent, useRef, useState } from 'react';
 
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -19,7 +20,12 @@ import { usePlan } from '@/context/plan';
 
 const Tab = styled.button`
   background: ${(props) => props.theme.orgPageBackgroundColor};
-  color: ${(props) => props.theme.themeColors.white};
+  color: ${(props) =>
+    readableColor(
+      props.theme.orgPageBackgroundColor,
+      props.theme.themeColors.black,
+      props.theme.themeColors.white
+    )};
   padding: ${(props) => props.theme.spaces.s100};
   border-radius: ${(props) => props.theme.btnBorderRadius} ${(props) => props.theme.btnBorderRadius}
     0 0;
@@ -161,6 +167,15 @@ type Props = {
 function OrgContent({ org, planFromOrgQuery, testId }: Props) {
   const plan = usePlan();
   const t = useTranslations();
+  const theme = useTheme();
+  // Light text on the tabs only when their background is dark
+  const darkTabBackground =
+    readableColor(
+      theme.orgPageBackgroundColor,
+      theme.themeColors.black,
+      theme.themeColors.white,
+      false
+    ) === theme.themeColors.white;
   const [selectedPlanIndex, setSelectedPlan] = useState(0);
 
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
@@ -191,7 +206,7 @@ function OrgContent({ org, planFromOrgQuery, testId }: Props) {
         p.shortName ? p.name : p.organization?.abbreviation || p.organization?.name || ''
       }
       size="md"
-      negative={!selected}
+      negative={!selected && darkTabBackground}
     />
   );
 
