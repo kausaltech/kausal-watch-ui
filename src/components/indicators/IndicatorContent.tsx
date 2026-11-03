@@ -28,6 +28,22 @@ const Section = styled.section`
   }
 `;
 
+/* Main column takes the full width when no aside block renders anything */
+const ContentRow = styled(Row)`
+  &:has(> .indicator-aside:empty) {
+    > .indicator-aside {
+      display: none;
+    }
+    > .indicator-main {
+      width: 100%;
+    }
+    /* Same text width as rich text blocks on content pages */
+    > .indicator-main .text-content {
+      max-width: 800px;
+    }
+  }
+`;
+
 const CausalNavigationSection = styled(Section)`
   background-color: ${(props) => props.theme.cardBackground.secondary};
   padding: ${(props) => props.theme.spaces.s100} 0;
@@ -122,9 +138,9 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
         legacyMode={!hasLayout}
       />
       <Container>
-        <Row>
+        <ContentRow>
           {/* Main content = detailsMainTop */}
-          <Col md="7" lg="8" className="mb-5">
+          <Col md="7" lg="8" className="indicator-main mb-5">
             {/* Admin created layout */}
             {hasLayout &&
               layout?.detailsMainTop &&
@@ -147,7 +163,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
             {!hasLayout && <RichText html={indicator.description || ''} isCollapsible={false} />}
           </Col>
           {/* Side bar = detailsAside */}
-          <Col md="5" lg="4" className="mb-5">
+          <Col md="5" lg="4" className="indicator-aside mb-5">
             {/* Admin created layout */}
             {hasLayout &&
               layout?.detailsAside &&
@@ -167,7 +183,7 @@ function IndicatorContent({ indicator, layout, testId }: Props) {
               />
             )}
           </Col>
-        </Row>
+        </ContentRow>
         <Row>
           {/* Main content = detailsMainBottom */}
           {hasLayout &&
