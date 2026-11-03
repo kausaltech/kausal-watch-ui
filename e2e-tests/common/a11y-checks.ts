@@ -379,7 +379,8 @@ export async function checkDialog(
       ({ dialog, trigger }) => {
         const active = document.activeElement;
         const el = active && active !== document.body ? active : null;
-        const dialogEl = document.querySelector(dialog);
+        // The open one: closed dialogs may stay in the DOM, hidden
+        const dialogEl = [...document.querySelectorAll(dialog)].find((d) => d.checkVisibility());
         return {
           // MUI focuses the dialog's container, which wraps the dialog
           inDialog: !!el && !!dialogEl && (dialogEl.contains(el) || el.contains(dialogEl)),
