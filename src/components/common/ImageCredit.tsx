@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 
+/** Set aria-hidden when the image has no alt text, as the image is then hidden too */
 export const ImageCredit = styled.span`
   position: absolute;
   top: 0;

@@ -150,6 +150,7 @@
     "municipality": "Gemeinde",
     "name": "Name",
     "nav-menu-close": "Menü schließen",
+    "nav-menu-label": "Menü",
     "nav-menu-open": "Navigationsmenü",
     "next": "Weiter",
     "next-indicator": "{context, select, MEASURE {Nächste Messung} other {Nächster Indikator}}",

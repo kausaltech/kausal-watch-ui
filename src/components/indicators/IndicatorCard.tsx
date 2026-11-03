@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
 import { transientOptions } from '@common/themes/styles/styled';
 
 import { SiteGeneralContentIndicatorTerm } from '@/common/__generated__/graphql';
@@ -118,7 +119,7 @@ const IndicatorNumber = styled.span`
 
 const IndicatorTitle = styled(CardTitle)`
   font-weight: ${(props) => props.theme.fontWeightBold};
-  hyphens: auto;
+  ${titleHyphenation}
 `;
 
 const formatTime = (date: string, resolution: 'year' | 'month' | 'day') => {

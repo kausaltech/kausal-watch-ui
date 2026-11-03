@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
@@ -153,16 +154,12 @@ const IndexLink = styled.span`
 `;
 
 const ActionHeadline = styled.h1`
-  hyphens: auto;
+  ${titleHyphenation}
   display: flex;
   flex-wrap: wrap;
   margin: ${(props) => props.theme.spaces.s100} 0;
   font-size: ${(props) => props.theme.fontSizeLg};
   color: ${(props) => props.theme.textColor.primary} !important;
-
-  html:lang(fi) & {
-    hyphens: manual;
-  }
 
   ${(props) => props.theme.breakpoints.up('md')} {
     font-size: ${(props) => props.theme.fontSizeXl};
@@ -423,7 +420,7 @@ function ActionHero(props: ActionHeroProps) {
               </Col>
             </Row>
           </Container>
-          {credit && <ImageCredit>{credit}</ImageCredit>}
+          {credit && <ImageCredit aria-hidden={altText ? undefined : true}>{credit}</ImageCredit>}
         </OverlayContainer>
       </ActionBgImage>
     </Hero>

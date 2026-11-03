@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 
+import type { Metadata, ResolvingMetadata } from 'next';
+
 import { getBgImageAlignment } from '@/common/images';
 import HeroFullImage from '@/components/home/HeroFullImage';
 import PledgeList from '@/components/pledge/PledgeList';
@@ -8,6 +10,18 @@ import { getPledges } from '@/queries/get-pledges';
 type Props = {
   params: Promise<{ plan: string; lang: string }>;
 };
+
+export async function generateMetadata(
+  { params }: Props,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const { plan: planId } = await params;
+  const { data } = await getPledges(planId);
+  const title = data?.planPage?.__typename === 'PledgeListPage' ? data.planPage.title : null;
+  if (!title) return {};
+  const resolvedParent = await parent;
+  return { title: `${title} | ${resolvedParent.title?.absolute}` };
+}
 
 export default async function PledgeListPage({ params }: Props) {
   const { plan: planId } = await params;

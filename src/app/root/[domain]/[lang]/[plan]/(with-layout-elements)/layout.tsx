@@ -25,7 +25,8 @@ export default async function Layout(props: Props) {
       <JsonLd domain={params.domain} />
       <div style={{ minHeight: '100vh' }}>
         <Header />
-        <main id="main" data-testid="root-layout">
+        {/* Focusable, so that the skip link moves keyboard and screen reader focus here */}
+        <main id="main" tabIndex={-1} style={{ outline: 'none' }} data-testid="root-layout">
           {children}
         </main>
       </div>

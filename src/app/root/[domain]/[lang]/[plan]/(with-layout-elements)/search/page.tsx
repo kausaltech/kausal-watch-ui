@@ -1,32 +1,23 @@
-'use client';
+import type { Metadata, ResolvingMetadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 
-import { notFound, useSearchParams } from 'next/navigation';
+import SearchPage from './SearchPage';
 
-import { useUpdateSearchParams } from '@/common/hooks/update-search-params';
-import SearchView, { type SearchState, getSearchFromQuery } from '@/components/common/SearchView';
-import { usePlan } from '@/context/plan';
+type Props = {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<{ q?: string | string[] }>;
+};
 
-function SearchPage() {
-  const plan = usePlan();
-  const searchParams = useSearchParams();
-  const handleUpdateSearchParams = useUpdateSearchParams();
-  const search = getSearchFromQuery(searchParams ? Object.fromEntries(searchParams) : {});
-
-  const handleSearchChange = (newFilters: SearchState) => {
-    const query: Record<string, string> = {};
-
-    Object.entries(newFilters).forEach(([key, val]) => {
-      if (!val) return;
-      query[key] = String(val);
-    });
-
-    handleUpdateSearchParams(query);
-  };
-
-  if (!plan.features.enableSearch) {
-    return notFound();
-  }
-
-  return <SearchView search={search} onSearchChange={handleSearchChange} testId="search-page" />;
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const [{ lang }, { q }] = await Promise.all([props.params, props.searchParams]);
+  const t = await getTranslations({ locale: lang });
+  const query = Array.isArray(q) ? q[0] : q;
+  // The query tells result pages apart
+  const title = query ? `${t('search')}: ${query}` : t('search');
+  const resolvedParent = await parent;
+  return { title: `${title} | ${resolvedParent.title?.absolute}` };
 }
-export default SearchPage;
+
+export default function Page() {
+  return <SearchPage />;
+}

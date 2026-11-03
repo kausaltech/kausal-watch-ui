@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { Fragment, useMemo } from 'react';
 
 import styled from '@emotion/styled';
 
@@ -136,30 +136,36 @@ const CategoryTypeListBlock = (props: CategoryTypeListBlockProps) => {
       </HeaderSection>
       <Container>
         {groups?.map((group) => (
-          <Row key={group?.id}>
+          <Fragment key={group?.id}>
             {group?.id !== 'all' && (
-              <Col xs={12}>
-                <GroupHeader $color={group?.color || '#eeeeee'}>{group.name}</GroupHeader>
-              </Col>
+              <Row>
+                <Col xs={12}>
+                  <GroupHeader $color={group?.color || '#eeeeee'}>{group.name}</GroupHeader>
+                </Col>
+              </Row>
             )}
-            {sortedCategories
-              ?.filter(
-                (cat) => cat?.categoryPage?.live && (group.id === 'all' || hasParent(cat, group.id))
-              )
-              .map(
-                (cat) =>
-                  cat.categoryPage?.live && (
-                    <Col tag="li" xs="12" sm="6" lg="4" key={cat.id} className="mb-5 d-flex">
-                      <CategoryCard
-                        category={cat}
-                        group={group}
-                        pathsInstance={pathsInstance}
-                        targetNodeId={targetNodeId}
-                      />
-                    </Col>
-                  )
-              )}
-          </Row>
+            {/* The cards are list items, so the row is the list */}
+            <Row tag="ul" className="list-unstyled">
+              {sortedCategories
+                ?.filter(
+                  (cat) =>
+                    cat?.categoryPage?.live && (group.id === 'all' || hasParent(cat, group.id))
+                )
+                .map(
+                  (cat) =>
+                    cat.categoryPage?.live && (
+                      <Col tag="li" xs="12" sm="6" lg="4" key={cat.id} className="mb-5 d-flex">
+                        <CategoryCard
+                          category={cat}
+                          group={group}
+                          pathsInstance={pathsInstance}
+                          targetNodeId={targetNodeId}
+                        />
+                      </Col>
+                    )
+                )}
+            </Row>
+          </Fragment>
         ))}
       </Container>
     </CategoryListSection>

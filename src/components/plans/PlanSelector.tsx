@@ -40,7 +40,7 @@ const PlanAvatar = styled.img`
   box-shadow: 0 0 3px 1px ${(props) => transparentize(0.9, props.theme.themeColors.black)};
 `;
 
-const PlanTitle = styled.div`
+const PlanTitle = styled.span`
   margin-left: 0.5rem;
   font-size: ${(props) => props.theme.fontSizeSm};
   line-height: 1;
@@ -63,7 +63,6 @@ const StyledDropdownToggle = styled(DropdownToggle, transientOptions)<StyledDrop
   color: ${(props) => props.$color};
   font: inherit;
   cursor: pointer;
-  outline: inherit;
 
   &:hover {
     background: ${(props) => props.theme.themeColors.white};

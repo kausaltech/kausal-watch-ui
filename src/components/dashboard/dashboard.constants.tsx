@@ -58,6 +58,11 @@ interface Column {
     plan: PlanContextFragment,
     attribute?: ColumnConfig['attributeType']
   ) => ReactNode;
+  /**
+   * The tooltip repeats the cell's text, so screen readers don't need it as
+   * hidden text in the cell (see ActionTableRow).
+   */
+  tooltipRepeatsCell?: boolean;
   headerClassName?: string;
   cellClassName?: string;
   renderHeader: (t: TFunction, plan: PlanContextFragment, label?: string | null) => ReactNode;
@@ -213,6 +218,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
     ),
     renderTooltipContent: (t, action) =>
       action.scheduleContinuous ? t('action-continuous') : t('action-not-continuous'),
+    tooltipRepeatsCell: true,
   },
 
   FieldColumnBlock: {
@@ -238,6 +244,7 @@ export const COLUMN_CONFIG: { [key in ColumnBlock]: Column } = {
       if (!attributeContent) return null;
       return <AttributeTooltipContent attribute={attributeContent} attributeType={attributeType} />;
     },
+    tooltipRepeatsCell: true,
   },
   PlanColumnBlock: {
     renderHeader: (t, _, label) => label || t('filter-plan'),

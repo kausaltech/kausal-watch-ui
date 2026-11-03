@@ -19,3 +19,8 @@ export function themeLabelsCategoryPagesWithType(theme: Theme): boolean {
 export function themeShowsActionColorLegend(theme: Theme): boolean {
   return theme.settings.showActionColorLegend ?? false;
 }
+
+/** List the values under the action status donuts on dashboards */
+export function themeShowsActionDonutLegends(theme: Theme): boolean {
+  return theme.settings.dashboard.showActionDonutLegends ?? false;
+}

@@ -401,7 +401,6 @@ const IndicatorCategoryCell = (props: IndicatorCategoryCellProps) => {
               size="sm"
               themeColor="badgeColorNeutral"
               color={getCategoryColor(cat)}
-              isLink={false}
             />
           ))}
       </CategoryBadges>

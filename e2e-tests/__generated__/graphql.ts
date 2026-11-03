@@ -2,6 +2,25 @@
 type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** Internal type. DO NOT USE DIRECTLY. */
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+/**
+ *
+ * What a hostname serves a particular viewer, as the public UI needs to know it.
+ *
+ * This is deliberately not the publication vocabulary above: on a preview hostname the answer
+ * has nothing to do with whether the plan has been published, so saying "published" there would
+ * be a lie. `PublicationStatus` stays as the manual per-domain override's choices.
+ *
+ * It is availability and not a status because nothing here is stored or settled: the answer is
+ * derived per request, and two viewers of the same hostname at the same moment can get
+ * different ones.
+ *
+ */
+export enum PlanDomainAvailability {
+  Available = 'AVAILABLE',
+  SignInRequired = 'SIGN_IN_REQUIRED',
+  Unavailable = 'UNAVAILABLE'
+}
+
 export type PlaywrightGetPlanBasicsQuery_plan = { __typename: 'Plan', id: string, identifier: string, primaryLanguage: string, otherLanguages: Array<string> };
 
 export type PlaywrightGetPlanBasicsQuery = { __typename: 'Query', plan: PlaywrightGetPlanBasicsQuery_plan | null };
@@ -9,6 +28,24 @@ export type PlaywrightGetPlanBasicsQuery = { __typename: 'Query', plan: Playwrig
 
 export type PlaywrightGetPlanBasicsQueryVariables = Exact<{
   plan: string | number;
+}>;
+
+export type PlaywrightGetPlanAvailabilityQuery_plansForHostname_domain = { __typename: 'PlanDomain', availability: PlanDomainAvailability | null };
+
+export type PlaywrightGetPlanAvailabilityQuery_plansForHostname_Plan = { __typename: 'Plan', identifier: string, domain: PlaywrightGetPlanAvailabilityQuery_plansForHostname_domain | null };
+
+export type PlaywrightGetPlanAvailabilityQuery_plansForHostname_RestrictedPlanNode = { __typename: 'RestrictedPlanNode', identifier: string, domain: PlaywrightGetPlanAvailabilityQuery_plansForHostname_domain | null };
+
+export type PlaywrightGetPlanAvailabilityQuery_plansForHostname =
+  | PlaywrightGetPlanAvailabilityQuery_plansForHostname_Plan
+  | PlaywrightGetPlanAvailabilityQuery_plansForHostname_RestrictedPlanNode
+;
+
+export type PlaywrightGetPlanAvailabilityQuery = { __typename: 'Query', plansForHostname: Array<PlaywrightGetPlanAvailabilityQuery_plansForHostname> | null };
+
+
+export type PlaywrightGetPlanAvailabilityQueryVariables = Exact<{
+  hostname: string | null | undefined;
 }>;
 
 export type ReportComparisonProbeFragment_reportType = { __typename: 'ReportType', name: string };
@@ -20,6 +57,8 @@ export type PlaywrightGetPlanInfoQuery_planOrganizations = { __typename: 'Organi
 export type PlaywrightGetPlanInfoQuery_plan_parent = { __typename: 'Plan', identifier: string, name: string };
 
 export type PlaywrightGetPlanInfoQuery_plan_generalContent = { __typename: 'SiteGeneralContent', id: string, siteTitle: string, siteDescription: string };
+
+export type PlaywrightGetPlanInfoQuery_plan_features = { __typename: 'PlanFeatures', indicatorsOpenInModal: boolean, enableSearch: boolean };
 
 export type PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_AccessibilityStatementComplianceStatusBlock = { __typename: 'AccessibilityStatementComplianceStatusBlock' };
 
@@ -977,7 +1016,7 @@ export type PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainBottom =
 
 export type PlaywrightGetPlanInfoQuery_plan_actionListPage = { __typename: 'ActionListPage', urlPath: string, includeRelatedPlans: boolean | null, detailsMainTop: Array<PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainTop> | null, detailsMainBottom: Array<PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainBottom> | null };
 
-export type PlaywrightGetPlanInfoQuery_plan_actions = { __typename: 'Action', identifier: string, viewUrl: string };
+export type PlaywrightGetPlanInfoQuery_plan_actions = { __typename: 'Action', identifier: string, name: string, viewUrl: string };
 
 export type PlaywrightGetPlanInfoQuery_plan_mainMenu_items_PageMenuItem_page_AccessibilityStatementPage = { __typename: 'AccessibilityStatementPage', id: string | null, title: string, urlPath: string, slug: string, showInMenus: boolean, live: boolean };
 
@@ -1111,7 +1150,7 @@ export type PlaywrightGetPlanInfoQuery_plan_mainMenu_items =
 
 export type PlaywrightGetPlanInfoQuery_plan_mainMenu = { __typename: 'MainMenu', items: Array<PlaywrightGetPlanInfoQuery_plan_mainMenu_items> };
 
-export type PlaywrightGetPlanInfoQuery_plan = { __typename: 'Plan', id: string, identifier: string, name: string, shortName: string | null, primaryLanguage: string, otherLanguages: Array<string>, parent: PlaywrightGetPlanInfoQuery_plan_parent | null, generalContent: PlaywrightGetPlanInfoQuery_plan_generalContent, actionListPage: PlaywrightGetPlanInfoQuery_plan_actionListPage | null, actions: Array<PlaywrightGetPlanInfoQuery_plan_actions>, mainMenu: PlaywrightGetPlanInfoQuery_plan_mainMenu | null };
+export type PlaywrightGetPlanInfoQuery_plan = { __typename: 'Plan', id: string, identifier: string, name: string, shortName: string | null, primaryLanguage: string, otherLanguages: Array<string>, parent: PlaywrightGetPlanInfoQuery_plan_parent | null, generalContent: PlaywrightGetPlanInfoQuery_plan_generalContent, features: PlaywrightGetPlanInfoQuery_plan_features, actionListPage: PlaywrightGetPlanInfoQuery_plan_actionListPage | null, actions: Array<PlaywrightGetPlanInfoQuery_plan_actions>, mainMenu: PlaywrightGetPlanInfoQuery_plan_mainMenu | null };
 
 export type PlaywrightGetPlanInfoQuery_planIndicators = { __typename: 'Indicator', id: string, name: string };
 

@@ -2,6 +2,8 @@ import type { Breakpoints } from '@mui/material/styles';
 
 import { css } from '@emotion/react';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
+
 export const STICKY_TABLE_NAME_COLUMN_CLASS = 'sticky-table-name-column';
 
 type ThemeProps = {
@@ -28,6 +30,8 @@ type MobileStickyTableStylesOptions = {
 export const mobileScrollableTableWrapperStyles = (props: ThemeProps) => css`
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  /* Clips absolutely positioned content, such as visually hidden texts, which would widen the page */
+  position: relative;
 
   ${props.theme.breakpoints.down('md')} {
     max-height: calc(100vh - ${props.theme.spaces.s100});
@@ -78,7 +82,7 @@ export const mobileStickyTableStyles = (
       white-space: normal;
       overflow-wrap: break-word;
       word-break: normal;
-      hyphens: auto;
+      ${titleHyphenation}
     }
 
     td:not(.${STICKY_TABLE_NAME_COLUMN_CLASS}) {
@@ -136,7 +140,7 @@ export const mobileStickyTableStyles = (
       white-space: normal;
       overflow-wrap: normal;
       word-break: normal;
-      hyphens: auto;
+      ${titleHyphenation}
 
       background-color: ${props.theme.themeColors.white};
       background-clip: padding-box;

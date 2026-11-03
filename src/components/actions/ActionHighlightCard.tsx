@@ -5,6 +5,8 @@ import styled from '@emotion/styled';
 
 import { transparentize } from 'polished';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
+
 import { getStatusColorForAction } from '@/common/ActionStatusSummary';
 import type { CardImageFragment } from '@/common/__generated__/graphql';
 import { getBgImageAlignment, getImageSrcSet } from '@/common/images';
@@ -68,12 +70,8 @@ const StyledCardTitle = styled(CardTitle)`
   font-size: ${(props) => props.theme.fontSizeMd};
   color: ${(props) => props.theme.neutralDark};
   text-align: left;
-  hyphens: auto;
+  ${titleHyphenation}
   margin-bottom: 0;
-
-  html:lang(fi) & {
-    hyphens: manual;
-  }
 `;
 
 const ImgArea = styled.div<{ $bgcolor?: string }>`

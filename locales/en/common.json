@@ -154,6 +154,7 @@
     "municipality": "Municipality",
     "name": "Name",
     "nav-menu-close": "Close menu",
+    "nav-menu-label": "Menu",
     "nav-menu-open": "Navigation menu",
     "next": "Next",
     "next-indicator": "{context, select, MEASURE {Next measure} other {Next indicator}}",

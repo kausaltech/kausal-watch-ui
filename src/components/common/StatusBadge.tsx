@@ -56,6 +56,9 @@ const StyledReason = styled.p`
   margin-bottom: 0;
   font-size: ${({ theme }) => theme.fontSizeSm};
   line-height: ${({ theme }) => theme.lineHeightMd};
+  /* Long compound words would otherwise widen a narrow page */
+  hyphens: auto;
+  overflow-wrap: break-word;
 `;
 
 interface StatusBadgeProps {

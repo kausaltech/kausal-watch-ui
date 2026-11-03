@@ -19,6 +19,7 @@ const GET_INCLUDE_RELATED_ACTIONS: TypedDocumentNode<
       id
       actionListPage {
         id
+        title
         includeRelatedPlans
       }
     }

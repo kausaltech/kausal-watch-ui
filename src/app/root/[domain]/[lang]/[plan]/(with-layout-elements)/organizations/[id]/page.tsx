@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 
+import type { Metadata, ResolvingMetadata } from 'next';
+
 import { getRequestOrigin } from '@common/utils/request.server';
 
 import type { OrganizationDetailsQuery } from '@/common/__generated__/graphql';
@@ -14,6 +16,18 @@ type Props = {
     domain: string;
   }>;
 };
+
+export async function generateMetadata(props: Props, parent: ResolvingMetadata): Promise<Metadata> {
+  const { id, plan } = await props.params;
+  const origin = await getRequestOrigin();
+  const { data } = await tryRequest<OrganizationDetailsQuery>(
+    getOrganizationDetails(plan, id, origin)
+  );
+  const name = data?.organization?.name;
+  if (!name) return {};
+  const resolvedParent = await parent;
+  return { title: `${name} | ${resolvedParent.title?.absolute}` };
+}
 
 export default async function OrganizationPage(props: Props) {
   const params = await props.params;

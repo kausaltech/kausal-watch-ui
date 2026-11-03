@@ -1,5 +1,5 @@
 import type React from 'react';
-import { type PropsWithChildren, type ReactNode } from 'react';
+import { type ComponentProps, type PropsWithChildren, type ReactNode, forwardRef } from 'react';
 
 import NextLink, { type LinkProps } from 'next/link';
 
@@ -130,6 +130,21 @@ export type ActionLinkProps = LinkPropsWithoutHref & {
   crossPlan?: boolean;
 };
 
+/** The path of an action's page, or of the action it was merged with. */
+export function useActionHref(action: ActionLinkProps['action'], planUrl?: string | null) {
+  // If this action is merged with another, replace all links with
+  // a link to the master action.
+  const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
+  return usePrependPlanAndLocale(`${planUrl ?? ''}${ACTIONS_PATH}/${targetIdentifier}`);
+}
+
+/** NextLink without prefetching, for MUI's `LinkComponent` prop. */
+export const UnprefetchedLink = forwardRef<HTMLAnchorElement, ComponentProps<typeof NextLink>>(
+  function UnprefetchedLink({ href, ...other }, ref) {
+    return <NextLink ref={ref} href={href} {...disablePrefetch(other)} />;
+  }
+);
+
 export function ActionLink({
   action,
   planUrl,
@@ -138,11 +153,7 @@ export function ActionLink({
   children,
   ...other
 }: ActionLinkProps) {
-  // If this action is merged with another, replace all links with
-  // a link to the master action.
-  const targetIdentifier = action.mergedWith ? action.mergedWith.identifier : action.identifier;
-
-  const actionLink = usePrependPlanAndLocale(`${planUrl ?? ''}${ACTIONS_PATH}/${targetIdentifier}`);
+  const actionLink = useActionHref(action, planUrl);
 
   if (crossPlan && viewUrl) {
     // nextjs NextLink doesn't properly handle links across plans in some cases,
@@ -162,7 +173,7 @@ export function ActionLink({
 }
 
 export function OrganizationLink(
-  props: { organizationId: string; children: ReactNode } & OtherLinkProps
+  props: { organizationId: string; children?: ReactNode } & OtherLinkProps
 ) {
   const { organizationId, ...other } = props;
   const href = usePrependPlanAndLocale(`/organizations/${organizationId}`);
@@ -266,6 +277,13 @@ export function StaticPageLink({
   return <NextLink href={href} {...disablePrefetch(other)} />;
 }
 
+/** The href of a navigation menu item: external URLs as they are, paths with plan and locale. */
+export function getNavigationHref(plan: PlanContextFragment, slug: string, locale: string) {
+  if (slug?.startsWith('http')) return slug;
+  const normalizedSlug = (slug ?? '').trim() === '' ? '/' : slug;
+  return prependPlanAndLocale(plan, normalizedSlug, locale);
+}
+
 type NavigationLinkProps = PropsWithChildren<OtherLinkProps & { slug: string }>;
 export function NavigationLink({ slug, children, ...other }: NavigationLinkProps) {
   const plan = usePlan();
@@ -279,11 +297,8 @@ export function NavigationLink({ slug, children, ...other }: NavigationLinkProps
     );
   }
 
-  const normalizedSlug = (slug ?? '').trim() === '' ? '/' : slug;
-  const href = prependPlanAndLocale(plan, normalizedSlug, locale);
-
   return (
-    <NextLink href={href} {...disablePrefetch(other)}>
+    <NextLink href={getNavigationHref(plan, slug, locale)} {...disablePrefetch(other)}>
       {children}
     </NextLink>
   );

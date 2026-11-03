@@ -18,16 +18,20 @@ import dayjs from '@/common/dayjs';
 import type { TFunction } from '@/common/i18n';
 import { getActionTermContext } from '@/common/i18n';
 import { getPhaseData, getStatusData } from '@/common/preprocess';
-import BarChart from '@/components/common/BarChart';
+import StatusBarChart from '@/components/common/StatusBarChart';
 import StatusDonut from '@/components/graphs/StatusDonut';
 import { usePlan } from '@/context/plan';
 
 type ActionTimeliness = PlanContextFragment['actionTimelinessClasses'][number];
 
+// A grid for the donut cards' subgrid rows
 const StatusDonutsWrapper = styled.div`
   width: auto;
   margin: 0 auto;
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(3, auto);
+  grid-auto-columns: max-content;
   overflow-x: auto;
   margin-bottom: ${(props) => props.theme.spaces.s300};
   background-image: ${(props) => `linear-gradient(to right, ${
@@ -225,11 +229,17 @@ const ActionsStatusGraphs = ({
     return (
       <>
         {progressData && (
-          <BarChart title={t('actions-status', getActionTermContext(plan))} data={progressData} />
+          <StatusBarChart
+            title={t('actions-status', getActionTermContext(plan))}
+            data={progressData}
+          />
         )}
 
         {phaseData && (
-          <BarChart title={t('actions-phases', getActionTermContext(plan))} data={phaseData} />
+          <StatusBarChart
+            title={t('actions-phases', getActionTermContext(plan))}
+            data={phaseData}
+          />
         )}
       </>
     );

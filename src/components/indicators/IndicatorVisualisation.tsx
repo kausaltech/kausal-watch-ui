@@ -1,15 +1,17 @@
 'use client';
 
-import { type ReactElement, useEffect, useState } from 'react';
+import { type ReactElement, useEffect, useRef, useState } from 'react';
 
 import Alert from '@mui/material/Alert';
 
 import { useQuery } from '@apollo/client/react';
 import { useTranslations } from 'next-intl';
 
+import type { ChartHandle } from '@common/components/Chart';
 import ContentLoader from '@common/components/ContentLoader';
 
 import type { IndicatorTimeResolution } from '@/common/__generated__/graphql';
+import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
 import GraphAsTable from '@/components/graphs/GraphAsTable';
 import IndicatorGraph from '@/components/graphs/IndicatorGraph';
 import IndicatorComparisonSelect from '@/components/indicators/IndicatorComparisonSelect';
@@ -19,7 +21,7 @@ import { GET_INDICATOR_GRAPH_DATA } from '@/queries/get-indicator-graph-data';
 
 import RichText from '../common/RichText';
 import FactorCharts from './FactorCharts';
-import IndicatorVisualizationBlock from './IndicatorVisualizationBlock';
+import IndicatorVisualizationBlock, { blockHasChart } from './IndicatorVisualizationBlock';
 import { NORMALIZE_DEFAULT, normalizeByPopulationSetter } from './indicator-data-helpers';
 import { deriveIndicatorGraphModel } from './indicator-graph-model';
 import { buildVisualizationTableData } from './visualization-table-data';
@@ -65,6 +67,7 @@ function IndicatorVisualisation({
   const t = useTranslations();
   const [compareTo, setCompareTo] = useState<string | undefined>(undefined);
   const [preferNormalizeByPopulation, setPreferNormalizeByPopulation] = useState(NORMALIZE_DEFAULT);
+  const chartRef = useRef<ChartHandle>(null);
 
   const { loading, error, data } = useQuery(GET_INDICATOR_GRAPH_DATA, {
     variables: {
@@ -147,6 +150,7 @@ function IndicatorVisualisation({
         <IndicatorVisualizationBlock
           block={configuredBlock}
           ariaDetail={showTable && blockTable ? 'summary' : 'full'}
+          chartRef={chartRef}
         />
         <VisualizationReadySignal />
       </div>
@@ -165,7 +169,8 @@ function IndicatorVisualisation({
           goalTraces={goalTraces}
           trendTrace={trendTrace}
           title={null}
-          downloadFilename={plotTitle}
+          chartName={plotTitle}
+          chartRef={chartRef}
           referenceValue={referenceValue}
           nonQuantifiedGoal={{
             trend: indicator.nonQuantifiedGoal,
@@ -175,6 +180,13 @@ function IndicatorVisualisation({
       </div>
     );
   }
+
+  const hasChart = configuredBlock
+    ? blockHasChart(configuredBlock)
+    : traces.length > 0 || goalTraces.length > 0;
+  // Under the chart, on the data table toggle's row when there is one
+  const downloadButton =
+    showGraph && hasChart ? <ChartDownloadButton chartRef={chartRef} title={plotTitle} /> : null;
 
   return (
     <div>
@@ -200,6 +212,7 @@ function IndicatorVisualisation({
         />
       )}
       {showGraph && graphComponent}
+      {!showTable && downloadButton}
       {showTable && blockTable && (
         <GraphAsTable
           specification={blockTable.specification}
@@ -208,6 +221,7 @@ function IndicatorVisualisation({
           goalTraces={blockTable.goalTraces}
           title={plotTitle}
           openByDefault={!showGraph}
+          actions={downloadButton}
         />
       )}
       {showTable && !blockTable && (
@@ -218,6 +232,7 @@ function IndicatorVisualisation({
           goalTraces={goalTraces}
           title={plotTitle}
           openByDefault={!showGraph}
+          actions={downloadButton}
         />
       )}
       {showFactorValues && indicator.datasets && (

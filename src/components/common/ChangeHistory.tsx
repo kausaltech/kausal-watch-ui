@@ -1,7 +1,9 @@
 'use client';
 
 import type React from 'react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
+
+import MuiDialog from '@mui/material/Dialog';
 
 import styled from '@emotion/styled';
 
@@ -86,16 +88,6 @@ const ViewChangesButton = styled.button`
   }
 `;
 
-const Overlay = styled.div<{ $open: boolean }>`
-  position: fixed;
-  inset: 0;
-  display: ${({ $open }) => ($open ? 'flex' : 'none')};
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  z-index: 2000;
-`;
-
 const CloseButton = styled.button`
   position: absolute;
   top: ${(props) => props.theme.spaces.s150};
@@ -113,13 +105,7 @@ const DialogHeader = styled.div`
 
 const Dialog = styled.div`
   position: relative;
-  max-width: 720px;
-  width: 100%;
-  margin: 0 ${(props) => props.theme.spaces.s200};
-  background: ${(props) => props.theme.cardBackground.primary ?? '#fff'};
-  border-radius: ${(props) => props.theme.cardBorderRadius};
   padding: ${(props) => props.theme.spaces.s300};
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 `;
 
 const ChangesTitle = styled.h2`
@@ -155,6 +141,7 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entry, fieldLabel, fieldH
   const t = useTranslations();
   const plan = usePlan();
   const [isOpen, setIsOpen] = useState(false);
+  const titleId = useId();
   if (!entry) return null;
 
   // Format in the plan's time zone so the server and client agree.
@@ -186,16 +173,29 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entry, fieldLabel, fieldH
           </ViewChangesButton>
         </Row>
       </Wrapper>
-      <Overlay
-        $open={isOpen}
-        role="dialog"
-        aria-modal="true"
-        aria-label={t('change-history.modal-title')}
-        onClick={close}
+      {/* MUI Dialog: renders only while open, moves focus in, closes on Escape and returns focus */}
+      <MuiDialog
+        open={isOpen}
+        onClose={close}
+        aria-labelledby={titleId}
+        maxWidth={false}
+        slotProps={{
+          backdrop: { sx: { backgroundColor: 'rgba(0, 0, 0, 0.4)' } },
+          paper: {
+            sx: (theme) => ({
+              width: '100%',
+              maxWidth: '720px',
+              mx: 2,
+              background: theme.cardBackground.primary ?? '#fff',
+              borderRadius: theme.cardBorderRadius,
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.2)',
+            }),
+          },
+        }}
       >
-        <Dialog onClick={(e) => e.stopPropagation()}>
+        <Dialog>
           <DialogHeader>
-            <ChangesTitle>{modalTitle}</ChangesTitle>
+            <ChangesTitle id={titleId}>{modalTitle}</ChangesTitle>
             <CloseButton
               type="button"
               onClick={close}
@@ -221,7 +221,7 @@ const ChangeHistory: React.FC<ChangeHistoryProps> = ({ entry, fieldLabel, fieldH
             </FooterMeta>
           </ModalFooterRow>
         </Dialog>
-      </Overlay>
+      </MuiDialog>
     </>
   );
 };

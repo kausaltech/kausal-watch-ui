@@ -908,37 +908,3 @@ export function getChartDownloadFilename(
     .replace(/[^\p{L}\p{N}-]+/gu, '');
   return slug || fallback;
 }
-
-/**
- * The save-as-PNG toolbox button. ToolboxComponent is registered globally
- * by the shared Chart wrapper.
- */
-export function buildSaveAsImageToolbox({
-  filename,
-  buttonTitle,
-  backgroundColor,
-}: {
-  filename: string;
-  buttonTitle: string;
-  backgroundColor: string;
-}) {
-  return {
-    show: true,
-    right: 0,
-    top: 0,
-    itemSize: 14,
-    // Explicit, since ECharts 6 changed the default icon colors to blue
-    iconStyle: { borderColor: '#666' },
-    emphasis: { iconStyle: { borderColor: '#3E98C5' } },
-    feature: {
-      saveAsImage: {
-        show: true,
-        type: 'png' as const,
-        name: filename,
-        title: buttonTitle,
-        pixelRatio: 2,
-        backgroundColor,
-      },
-    },
-  };
-}

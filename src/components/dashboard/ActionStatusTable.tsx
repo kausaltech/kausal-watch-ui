@@ -9,6 +9,7 @@ import { transientOptions } from '@common/themes/styles/styled';
 
 import { type PlanContextFragment } from '@/common/__generated__/graphql';
 import { actionStatusOrder } from '@/common/data/actions';
+import { getActionTermContext } from '@/common/i18n';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 import Table from '@/components/common/Table';
@@ -324,7 +325,12 @@ const ActionStatusTable = (props: Props) => {
         </ResetSorting>
         {enableExport && <ActionStatusExport actions={actions} />}
       </ToolBar>
-      <TableWrapper>
+      {/* Focusable, so keyboard users can scroll a table without links */}
+      <TableWrapper
+        tabIndex={0}
+        role="region"
+        aria-label={t('actions-plural', getActionTermContext(plan))}
+      >
         <DashTable aria-rowcount={sortedActions.length}>
           <thead>
             <tr>

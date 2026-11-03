@@ -9,6 +9,7 @@ import { transparentize } from 'polished';
 import { BoxArrowRight } from 'react-bootstrap-icons';
 import SVG from 'react-inlinesvg';
 
+import { titleHyphenation } from '@common/themes/styles/hyphenation';
 import { getThemeStaticURL } from '@common/themes/theme';
 
 import { Link, NavigationLink } from '@/common/links';
@@ -45,11 +46,20 @@ const StyledFooter = styled.footer`
 
   a {
     color: ${(props) => props.theme.footerColor};
+    /* Long words and URLs would otherwise widen a narrow page */
+    ${titleHyphenation}
+    overflow-wrap: anywhere;
 
     &:hover {
       color: ${(props) => props.theme.footerColor};
       text-decoration: underline;
     }
+  }
+
+  /* At least the 24px target size */
+  li > a {
+    display: inline-block;
+    min-height: 24px;
   }
 
   .footer-column {
@@ -138,6 +148,12 @@ const ServiceTitle = styled.div`
   align-items: center;
   font-size: ${(props) => props.theme.fontSizeMd};
   font-weight: ${(props) => props.theme.fontWeightBold};
+
+  /* At least the 24px target size */
+  a {
+    display: inline-block;
+    min-height: 24px;
+  }
 
   ${(props) => props.theme.breakpoints.down('md')} {
     flex-direction: column;

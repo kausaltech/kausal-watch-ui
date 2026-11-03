@@ -49,6 +49,8 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
       id
       identifier
       name
+      # With soft hyphens in Finnish, for the title
+      hyphenatedName: name(hyphenated: true)
       officialName
       leadParagraph
       workflowStatus {

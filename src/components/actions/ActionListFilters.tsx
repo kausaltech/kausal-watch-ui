@@ -154,17 +154,15 @@ const StyledBadge = styled('span', transientOptions)<{ $color?: string }>`
     margin: 0 0.5rem;
     padding: 0;
     border-radius: 0.375rem;
-    opacity: 0.5;
 
-    // As with .btn-close, only the icon changes on hover, and focus gets a ring
+    // Full strength: a faded icon has too little contrast with the badge (WCAG 1.4.11).
+    // Hover tints the background instead.
     &:hover {
-      opacity: 0.75;
-      background-color: transparent;
+      background-color: color-mix(in srgb, currentColor 20%, transparent);
     }
 
     // The theme's focus ring colour can be too faint on the badge colour
     &:focus-visible {
-      opacity: 1;
       box-shadow: none;
       outline: 2px solid currentColor;
       outline-offset: 1px;
@@ -1160,7 +1158,12 @@ function ActionListFilters(props: ActionListFiltersProps) {
                 <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
               </ToggleButton>
             ) : null}
-            <Collapse in={section.hidden ? isOpen : true} id={`${panelId}-${section.id}`}>
+            {/* inert: react-select keeps its input visible, so it stays focusable when closed */}
+            <Collapse
+              in={section.hidden ? isOpen : true}
+              inert={section.hidden && !isOpen}
+              id={`${panelId}-${section.id}`}
+            >
               <FilterSection key={section.id}>
                 {section.filters.map((filter) => (
                   <FilterField

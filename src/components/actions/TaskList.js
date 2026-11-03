@@ -58,6 +58,9 @@ const ToggleButton = styled(Button)`
 `;
 
 const TaskContent = styled.div`
+  /* Can shrink below its longest word, which would otherwise widen a narrow page */
+  min-width: 0;
+  overflow-wrap: break-word;
   margin: ${(props) => props.theme.spaces.s025} 0;
   border-left: 1px solid ${(props) => props.theme.themeColors.light};
   padding-left: ${(props) => props.theme.spaces.s100};

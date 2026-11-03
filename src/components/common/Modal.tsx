@@ -1,5 +1,6 @@
-import type React from 'react';
-import { type ReactNode, useEffect, useRef } from 'react';
+import { type ReactNode, useId } from 'react';
+
+import Dialog from '@mui/material/Dialog';
 
 import styled from '@emotion/styled';
 
@@ -7,28 +8,8 @@ import { useTranslations } from 'next-intl';
 
 import Icon from '@/components/common/Icon';
 
-const ModalOverlay = styled.div`
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  padding: 1rem;
-  box-sizing: border-box;
-`;
-
 const ModalBody = styled.div`
-  position: fixed;
-  background-color: white;
-  border-radius: 10px;
-  width: auto;
-  height: auto;
-  max-width: calc(100vw - 2rem);
-  max-height: calc(100vh - 2rem);
   padding: 30px;
-  overflow: auto;
   box-sizing: border-box;
 
   ${({ theme }) => theme.breakpoints.down('sm')} {
@@ -38,8 +19,8 @@ const ModalBody = styled.div`
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 6px;
-  right: 6px;
+  top: 5px;
+  right: 0;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -72,45 +53,42 @@ interface ModalProps {
   children: ReactNode;
 }
 
+/** MUI Dialog: moves focus in, keeps it there, returns it on close and hides the page */
 const Modal = ({ isOpen, onClose, header, helpText, children }: ModalProps) => {
-  const modalRef = useRef<HTMLDivElement>(null);
   const t = useTranslations();
+  const headerId = useId();
+  const helpTextId = useId();
 
-  const closeModalOnOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-      onClose();
-    }
-  };
-
-  useEffect(() => {
-    const closeOnEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-
-    window.addEventListener('keydown', closeOnEscape);
-    return () => {
-      window.removeEventListener('keydown', closeOnEscape);
-    };
-  }, [isOpen, onClose]);
   return (
-    <>
-      {isOpen && (
-        <ModalOverlay data-testid="modal-overlay" onClick={closeModalOnOverlayClick}>
-          <ModalBody ref={modalRef}>
-            <ModalHeader>{header}</ModalHeader>
-            {!!helpText && <ModalSubHeader>{helpText}</ModalSubHeader>}
-            <CloseButton
-              data-testid="close-button"
-              aria-label={t('close')}
-              onClick={() => onClose()}
-            >
-              <Icon.Times />
-            </CloseButton>
-            {children}
-          </ModalBody>
-        </ModalOverlay>
-      )}
-    </>
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      maxWidth={false}
+      aria-labelledby={headerId}
+      aria-describedby={helpText ? helpTextId : undefined}
+      slotProps={{
+        backdrop: { sx: { backgroundColor: 'rgba(0, 0, 0, 0.7)' } },
+        paper: {
+          sx: {
+            m: '1rem',
+            maxWidth: 'calc(100vw - 2rem)',
+            maxHeight: 'calc(100% - 2rem)',
+            borderRadius: '10px',
+            backgroundColor: 'white',
+          },
+        },
+      }}
+    >
+      <ModalBody>
+        <ModalHeader id={headerId}>{header}</ModalHeader>
+        {!!helpText && <ModalSubHeader id={helpTextId}>{helpText}</ModalSubHeader>}
+        <CloseButton data-testid="close-button" aria-label={t('close')} onClick={onClose}>
+          {/* As in the indicator modal */}
+          <Icon.Times width="32px" height="32px" />
+        </CloseButton>
+        {children}
+      </ModalBody>
+    </Dialog>
   );
 };
 
