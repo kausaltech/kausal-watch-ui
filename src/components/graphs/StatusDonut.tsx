@@ -10,13 +10,11 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Chart, type ChartHandle } from '@common/components/Chart';
 
 import { useWindowSize } from '@/common/hooks/use-window-size';
+import { themeShowsActionColorLegend } from '@/common/theme-settings';
 import { escapeHtml } from '@/common/utils';
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
 import ChartDownloadButton from '@/components/graphs/ChartDownloadButton';
-
-// The legend under the donut
-const SHOW_LEGEND = true;
 
 /* Rows: heading, donut, legend; a subgrid, so the donuts line up across cards */
 const GraphCard = styled.div`
@@ -264,6 +262,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
   const theme = useTheme();
   const t = useTranslations();
   const locale = useLocale();
+  const showLegend = themeShowsActionColorLegend(theme);
 
   const fallbackColors = useMemo(
     () => [
@@ -390,7 +389,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       color: chartColors,
       // The legend list under the card already gives the values
       aria: {
-        enabled: !SHOW_LEGEND,
+        enabled: !showLegend,
       },
       legend: {
         show: false,
@@ -524,6 +523,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
       chartData,
       currentValue,
       fontFamily,
+      showLegend,
       theme.themeColors.dark,
       theme.themeColors.white,
       total,
@@ -705,7 +705,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
         </ChartWrapper>
 
         {/* Values as text, not only colours (WCAG 1.4.11) */}
-        {SHOW_LEGEND && (
+        {showLegend && (
           <Legend>
             {chartData
               .filter((item) => item.value > 0)
