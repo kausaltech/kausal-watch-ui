@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { titleHyphenation } from '@common/themes/styles/hyphenation';
 
 import { type IndicatorDetailsQuery } from '@/common/__generated__/graphql';
+import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { IndicatorListLink } from '@/common/links';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
@@ -14,9 +15,10 @@ import { usePlan } from '@/context/plan';
 
 import IndicatorLevelChip from './IndicatorLevelChip';
 
-const Hero = styled.header`
+const Hero = styled.header<{ $contained?: boolean }>`
   position: relative;
-  background-color: ${(props) => props.theme.pageHeaderBackgroundColor};
+  background-color: ${(props) =>
+    props.$contained ? 'transparent' : props.theme.pageHeaderBackgroundColor};
   margin-bottom: ${(props) => props.theme.spaces.s400};
   a {
     color: ${(props) => props.theme.linkColor};
@@ -40,12 +42,15 @@ const HeroCardBg = styled.div`
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
-const CardContent = styled.div`
-  padding: ${(props) => props.theme.spaces.s150};
+const CardContent = styled.div<{ $flush?: boolean }>`
+  padding: ${({ theme, $flush }) => ($flush ? `${theme.spaces.s200} 0 0` : theme.spaces.s150)};
 
   ${(props) => props.theme.breakpoints.up('md')} {
-    padding: ${(props) => props.theme.spaces.s200};
+    padding: ${({ theme, $flush }) => ($flush ? `${theme.spaces.s300} 0 0` : theme.spaces.s200)};
   }
+
+  /* The grid column keeps the title margin from collapsing into the hero's */
+  ${({ $flush }) => $flush && `> h1:last-child { margin-bottom: 0; }`}
 `;
 
 const OverlayContainer = styled.div<{ $legacyMode: boolean }>`
@@ -78,11 +83,19 @@ interface IndicatorHeroProps {
   orgs: OrganizationOption[] | null;
   goals: NonNullable<NonNullable<IndicatorDetailsQuery['indicator']>['goals']>;
   legacyMode?: boolean;
+  /** Defaults to `contained` when the contained layout is on (see useContainedLayout) */
+  layout?: IndicatorHeroLayout;
 }
 
-function IndicatorHero(props: IndicatorHeroProps) {
-  const { indicator, orgs, goals, legacyMode = false } = props;
-  // const theme = useTheme();
+export type IndicatorHeroLayout = 'overlay' | 'contained';
+
+type IndicatorHeroCardProps = Omit<IndicatorHeroProps, 'layout'> & {
+  /** Lay the content out in the page flow rather than as a padded card */
+  flush?: boolean;
+};
+
+function IndicatorHeroCard(props: IndicatorHeroCardProps) {
+  const { indicator, orgs, goals, legacyMode = false, flush } = props;
   const t = useTranslations();
   const plan = usePlan();
   const indicatorTermContext = getIndicatorTermContext(plan);
@@ -111,45 +124,65 @@ function IndicatorHero(props: IndicatorHeroProps) {
   };
 
   return (
+    <CardContent $flush={flush}>
+      {orgs && orgs.length > 0 && (
+        <PrimaryOrg>
+          <OrgSelector orgs={orgs} />
+        </PrimaryOrg>
+      )}
+      <IndicatorListLink>
+        <IndexLink>{t('indicators', indicatorTermContext)}</IndexLink>
+      </IndicatorListLink>
+      <IndicatorHeadline>
+        <span>{indicator.name}</span>
+      </IndicatorHeadline>
+      {legacyMode && goals.length > 0 && (
+        <IndicatorValueSummary
+          timeResolution={indicator.timeResolution}
+          values={indicator.values}
+          unit={indicator.unit}
+          goals={goals}
+          desiredTrend={indicator.desiredTrend}
+          options={options}
+        />
+      )}
+      {legacyMode && indicator.level && <IndicatorLevelChip level={indicator.level} />}
+    </CardContent>
+  );
+}
+
+function IndicatorHero(props: IndicatorHeroProps) {
+  const containedLayout = useContainedLayout();
+  const layout: IndicatorHeroLayout = props.layout ?? (containedLayout ? 'contained' : 'overlay');
+
+  if (layout === 'contained') {
+    return (
+      <Hero $contained>
+        <Container>
+          <Row>
+            {/* Same width as the main column in IndicatorContent */}
+            <Col md={7} lg={8}>
+              <IndicatorHeroCard {...props} flush />
+            </Col>
+          </Row>
+        </Container>
+      </Hero>
+    );
+  }
+
+  return (
     <Hero>
-      <div>
-        <OverlayContainer $legacyMode={legacyMode}>
-          <Container>
-            <Row>
-              <Col lg={8}>
-                <HeroCardBg>
-                  <CardContent>
-                    {orgs && orgs.length > 0 && (
-                      <PrimaryOrg>
-                        <OrgSelector orgs={orgs} />
-                      </PrimaryOrg>
-                    )}
-                    <IndicatorListLink>
-                      <IndexLink>{t('indicators', indicatorTermContext)}</IndexLink>
-                    </IndicatorListLink>
-                    <IndicatorHeadline>
-                      <span>{indicator.name}</span>
-                    </IndicatorHeadline>
-                    {legacyMode && goals.length > 0 && (
-                      <IndicatorValueSummary
-                        timeResolution={indicator.timeResolution}
-                        values={indicator.values}
-                        unit={indicator.unit}
-                        goals={goals}
-                        desiredTrend={indicator.desiredTrend}
-                        options={options}
-                      />
-                    )}
-                    {legacyMode && indicator.level && (
-                      <IndicatorLevelChip level={indicator.level} />
-                    )}
-                  </CardContent>
-                </HeroCardBg>
-              </Col>
-            </Row>
-          </Container>
-        </OverlayContainer>
-      </div>
+      <OverlayContainer $legacyMode={props.legacyMode ?? false}>
+        <Container>
+          <Row>
+            <Col lg={8}>
+              <HeroCardBg>
+                <IndicatorHeroCard {...props} />
+              </HeroCardBg>
+            </Col>
+          </Row>
+        </Container>
+      </OverlayContainer>
     </Hero>
   );
 }
