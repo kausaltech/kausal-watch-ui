@@ -25,7 +25,9 @@
  * details. a11y-reporter.ts prints a cross-plan summary at the end of the run
  * and writes it to e2e-tests/a11y-results/.
  *
- *   A11Y_AUDIT=1 pnpm exec playwright test a11y-audit --project=chromium
+ *   A11Y_AUDIT=1 pnpm exec playwright test a11y-audit
+ *
+ * It runs in Chromium only, so that each plan has one result.
  *
  * Plans come from A11Y_PLAN_IDENTIFIERS (comma-separated), falling back to
  * TEST_PLAN_IDENTIFIERS. Plans whose site requires sign-in, or that the backend
@@ -603,6 +605,8 @@ const describeAudit = (planId: string) => {
 
 test.describe('accessibility audit', () => {
   test.skip(!process.env.A11Y_AUDIT, 'Set A11Y_AUDIT=1 to run the accessibility audit');
+  // One result per plan: the reporter writes one file per plan
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Audited in Chromium only');
   const planIds = getPlanIdentifiers();
   if (!planIds.length) {
     test('no plans', () => {
