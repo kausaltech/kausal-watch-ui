@@ -194,6 +194,9 @@ const StyledCardTitle = styled.div<{ $isSmall: boolean }>`
 
   html:lang(en) & {
     word-break: normal;
+    /* Long words still wrap where hyphenation doesn't */
+    overflow-wrap: break-word;
+  }
 `;
 
 const ActionOrg = styled.div`
