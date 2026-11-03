@@ -60,7 +60,7 @@ export const isLongUnit = (unit: string | null | undefined) =>
 export const ValueUnit = styled.span<{ $long?: boolean }>`
   display: ${(props) => (props.$long ? 'block' : 'inline-block')};
   margin: ${(props) => (props.$long ? '0' : '0 0.5em 0 0.25em')};
-  font-size: ${(props) => props.theme.fontSizeBase};
+  font-size: ${(props) => (props.$long ? props.theme.fontSizeSm : props.theme.fontSizeBase)};
   font-weight: ${(props) => props.theme.fontWeightNormal};
   color: ${(props) => props.theme.themeColors.dark};
   /* Units without spaces (e.g. long compound words) may break anywhere */
