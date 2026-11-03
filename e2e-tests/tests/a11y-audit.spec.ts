@@ -10,7 +10,8 @@
  * page with the keyboard.
  *
  * Search is audited with a word from the plan's first action, both on the
- * results page and in the header search's suggestions.
+ * results page and in the header search's suggestions, in plans that have
+ * search.
  *
  * Besides violations, the reports list what axe could not decide (needs
  * review) and failures of its best-practice rules, apart from the counts.
@@ -164,10 +165,13 @@ function getPagesToAudit(ctx: PlanContext): PageToAudit[] {
   for (const organization of ctx.planOrganizations.slice(0, SAMPLE_SIZE)) {
     add('organization', organization.name, `${baseURL}/organizations/${organization.id}`);
   }
-  // The results first, so that they get the keyboard walk
-  const term = getSearchTerm(ctx);
-  if (term) add('search', term, `${baseURL}/search?q=${encodeURIComponent(term)}`);
-  add('search', null, `${baseURL}/search`);
+  // Without search, both URLs are 404 pages
+  if (plan.features.enableSearch) {
+    // The results first, so that they get the keyboard walk
+    const term = getSearchTerm(ctx);
+    if (term) add('search', term, `${baseURL}/search?q=${encodeURIComponent(term)}`);
+    add('search', null, `${baseURL}/search`);
+  }
   return pages;
 }
 
@@ -566,7 +570,8 @@ const describeAudit = (planId: string) => {
     const walks = pagesToAudit.filter((p) => p.keyboard).length;
     const run: PlanRun = {
       indicatorLinkPending: ctx.plan.features.indicatorsOpenInModal,
-      searchTerm: getSearchTerm(ctx),
+      // The header has no search field without search
+      searchTerm: ctx.plan.features.enableSearch ? getSearchTerm(ctx) : null,
     };
     test.setTimeout(60_000 + pagesToAudit.length * 60_000 + walks * 60_000);
     await page.emulateMedia({ reducedMotion: 'reduce' });

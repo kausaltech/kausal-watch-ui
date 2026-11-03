@@ -58,7 +58,7 @@ export type PlaywrightGetPlanInfoQuery_plan_parent = { __typename: 'Plan', ident
 
 export type PlaywrightGetPlanInfoQuery_plan_generalContent = { __typename: 'SiteGeneralContent', id: string, siteTitle: string, siteDescription: string };
 
-export type PlaywrightGetPlanInfoQuery_plan_features = { __typename: 'PlanFeatures', indicatorsOpenInModal: boolean };
+export type PlaywrightGetPlanInfoQuery_plan_features = { __typename: 'PlanFeatures', indicatorsOpenInModal: boolean, enableSearch: boolean };
 
 export type PlaywrightGetPlanInfoQuery_plan_actionListPage_detailsMainTop_ActionContentSectionBlock_blocks_AccessibilityStatementComplianceStatusBlock = { __typename: 'AccessibilityStatementComplianceStatusBlock' };
 

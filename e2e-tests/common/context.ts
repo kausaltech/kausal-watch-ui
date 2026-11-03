@@ -94,6 +94,7 @@ const GET_PLAN_INFO = gql`
       }
       features {
         indicatorsOpenInModal
+        enableSearch
       }
       actionListPage {
         urlPath
