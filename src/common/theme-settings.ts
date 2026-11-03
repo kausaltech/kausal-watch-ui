@@ -15,7 +15,12 @@ export function themeLabelsCategoryPagesWithType(theme: Theme): boolean {
   return theme.settings.categories.categoryPageTypeAsLabel ?? false;
 }
 
-/** Explain the action card colors above action lists and under action status donuts */
+/** Explain the action card colors above action lists */
 export function themeShowsActionColorLegend(theme: Theme): boolean {
   return theme.settings.showActionColorLegend ?? false;
+}
+
+/** List the values under the action status donuts on dashboards */
+export function themeShowsActionDonutLegends(theme: Theme): boolean {
+  return theme.settings.dashboard.showActionDonutLegends ?? false;
 }

@@ -10,7 +10,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { Chart, type ChartHandle } from '@common/components/Chart';
 
 import { useWindowSize } from '@/common/hooks/use-window-size';
-import { themeShowsActionColorLegend } from '@/common/theme-settings';
+import { themeShowsActionDonutLegends } from '@/common/theme-settings';
 import { escapeHtml } from '@/common/utils';
 import Icon from '@/components/common/Icon';
 import Modal from '@/components/common/Modal';
@@ -262,7 +262,7 @@ const StatusDonut = ({ data, currentValue, colors, header, helpText }: StatusDon
   const theme = useTheme();
   const t = useTranslations();
   const locale = useLocale();
-  const showLegend = themeShowsActionColorLegend(theme);
+  const showLegend = themeShowsActionDonutLegends(theme);
 
   const fallbackColors = useMemo(
     () => [
