@@ -31,6 +31,8 @@
     "action-task-cancelled": "Annulée",
     "action-task-completed-on": "Terminée le",
     "action-task-due-date": "Date d’échéance",
+    "action-task-contact-persons": "{count, plural, one {Personne de contact} other {Personnes de contact}}",
+    "action-task-responsible-parties": "{context, select, DIVISION {{count, plural, one {Service responsable} other {Services responsables}}} other {{count, plural, one {Organisation responsable} other {Organisations responsables}}}}",
     "action-tasks": "{context, select, MILESTONE {Jalons} other {Tâches}}",
     "action-tasks-count": "{context, select, MILESTONE {jalons} other {tâches}}",
     "action-tasks-done": "Qu’avons-nous déjà réalisé ?",

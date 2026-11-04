@@ -159,6 +159,10 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
             id
             firstName
             lastName
+            organization {
+              id
+              name
+            }
           }
         }
       }

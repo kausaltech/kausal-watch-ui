@@ -26,6 +26,8 @@
     "action-task-cancelled": "Annulleret",
     "action-task-completed-on": "Afsluttet den",
     "action-task-due-date": "Frist",
+    "action-task-contact-persons": "{count, plural, one {Kontaktperson} other {Kontaktpersoner}}",
+    "action-task-responsible-parties": "{context, select, DIVISION {{count, plural, one {Ansvarlig afdeling} other {Ansvarlige afdelinger}}} other {{count, plural, one {Ansvarlig organisation} other {Ansvarlige organisationer}}}}",
     "action-tasks": "Projekter",
     "action-tasks-count": "projekter",
     "action-tasks-done": "Afsluttede projekter",

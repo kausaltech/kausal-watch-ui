@@ -26,6 +26,8 @@
     "action-task-cancelled": "Inställd",
     "action-task-completed-on": "Slutförd den",
     "action-task-due-date": "Sista datum",
+    "action-task-contact-persons": "{count, plural, one {Kontaktperson} other {Kontaktpersoner}}",
+    "action-task-responsible-parties": "{context, select, DIVISION {{count, plural, one {Ansvarig division} other {Ansvariga divisioner}}} other {{count, plural, one {Ansvarig organisation} other {Ansvariga organisationer}}}}",
     "action-tasks": "{context, select, MILESTONE {Milstolpar} other {Uppgifter}}",
     "action-tasks-count": "{context, select, MILESTONE {milstolpar} other {uppgifter}}",
     "action-tasks-done": "Vad har gjorts?",

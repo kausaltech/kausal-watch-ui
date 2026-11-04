@@ -21,6 +21,8 @@
     "action-task-cancelled": "Peruttu",
     "action-task-completed-on": "Valmistunut",
     "action-task-due-date": "Määräpäivä",
+    "action-task-contact-persons": "{count, plural, one {Yhteyshenkilö} other {Yhteyshenkilöt}}",
+    "action-task-responsible-parties": "{context, select, DIVISION {{count, plural, one {Vastuuyksikkö} other {Vastuuyksiköt}}} other {{count, plural, one {Vastuuorganisaatio} other {Vastuuorganisaatiot}}}}",
     "action-status-updates": "Viimeisimmät päivitykset",
     "action-last-updated": "Tietoja päivitetty",
     "action-timeline": "Aikajänne",

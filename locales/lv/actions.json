@@ -37,6 +37,8 @@
     "action-task-cancelled": "Atcelts",
     "action-task-completed-on": "Pabeigts",
     "action-task-due-date": "Termiņš",
+    "action-task-contact-persons": "{count, plural, one {Kontaktpersona} other {Kontaktpersonas}}",
+    "action-task-responsible-parties": "{context, select, DIVISION {{count, plural, one {Atbildīgā nodaļa} other {Atbildīgās nodaļas}}} other {{count, plural, one {Atbildīgā organizācija} other {Atbildīgās organizācijas}}}}",
     "action-tasks": "{context, select, MILESTONE {Stūrakmeņi} other {Uzdevumi}}",
     "action-tasks-count": "{context, select, MILESTONE {stūrakmeņi} other {uzdevumi}}",
     "actions-phases-help": "Notiekošās un pabeigtās rīcības",

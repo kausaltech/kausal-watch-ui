@@ -29,6 +29,8 @@
     "action-task-cancelled": "Cancelled",
     "action-task-completed-on": "Completed on",
     "action-task-due-date": "Due date",
+    "action-task-contact-persons": "{count, plural, one {Contact person} other {Contact persons}}",
+    "action-task-responsible-parties": "{context, select, DIVISION {{count, plural, one {Responsible division} other {Responsible divisions}}} other {{count, plural, one {Responsible organization} other {Responsible organizations}}}}",
     "action-task-late": "Late",
     "action-task-todo": "Todo",
     "action-tasks": "{context, select, MILESTONE {Milestones} other {Tasks}}",

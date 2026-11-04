@@ -43,7 +43,17 @@ const TaskMeta = styled.div`
   flex: 0 0 ${(props) => props.theme.spaces.s800};
 `;
 
+const TaskMetaLabel = styled.span`
+  display: inline-flex;
+  align-items: center;
+
+  svg {
+    flex-shrink: 0;
+  }
+`;
+
 const ToggleButton = styled(Button)`
+  font-size: ${(props) => props.theme.fontSizeSm};
   font-weight: ${({ theme }) => theme.fontWeightNormal};
   padding: 0;
   margin: 0;
@@ -193,10 +203,6 @@ const ListGroupItem = styled.li`
     border-bottom-left-radius: ${(props) => props.theme.cardBorderRadius};
     border-bottom-right-radius: ${(props) => props.theme.cardBorderRadius};
   }
-
-  &.state--cancelled .task-title {
-    text-decoration: line-through;
-  }
 `;
 
 // The date a task is sorted and grouped by
@@ -265,12 +271,12 @@ const Task = (props) => {
     <TaskWrapper>
       <TaskMeta>
         <Tooltip title={meta.label} describeChild>
-          <span>
+          <TaskMetaLabel>
             <MetaIcon color={meta.color} alt={meta.label} />
             <StyledDate className={meta.dateClassName}>
               {formatTaskDate(meta.date, locale, dateFormat)}
             </StyledDate>
-          </span>
+          </TaskMetaLabel>
         </Tooltip>
       </TaskMeta>
       <TaskContent>
@@ -280,17 +286,25 @@ const Task = (props) => {
             {responsibleParties.length > 0 && (
               <div>
                 <dt>
-                  {t('responsible-parties', { context: plan.generalContent?.organizationTerm })}:
+                  {t('action-task-responsible-parties', {
+                    context: plan.generalContent?.organizationTerm,
+                    count: responsibleParties.length,
+                  })}
+                  :
                 </dt>
                 <dd>{responsibleParties.map((rp) => rp.organization.name).join(', ')}</dd>
               </div>
             )}
             {contactPersons.length > 0 && (
               <div>
-                <dt>{t('contact-persons')}:</dt>
+                <dt>{t('action-task-contact-persons', { count: contactPersons.length })}:</dt>
                 <dd>
                   {contactPersons
-                    .map((cp) => `${cp.person.firstName} ${cp.person.lastName}`.trim())
+                    .map((cp) => {
+                      const name = `${cp.person.firstName} ${cp.person.lastName}`.trim();
+                      const org = cp.person.organization?.name;
+                      return org ? `${name} (${org})` : name;
+                    })
                     .join(', ')}
                 </dd>
               </div>
@@ -303,7 +317,6 @@ const Task = (props) => {
             <ToggleButton
               variant="link"
               onClick={toggle}
-              size="small"
               className={isOpen ? 'open' : ''}
               aria-expanded={isOpen}
               aria-controls={panelId}
@@ -331,6 +344,9 @@ const taskShape = {
       person: PropTypes.shape({
         firstName: PropTypes.string,
         lastName: PropTypes.string,
+        organization: PropTypes.shape({
+          name: PropTypes.string,
+        }),
       }).isRequired,
     })
   ),
@@ -368,7 +384,13 @@ Task.propTypes = {
 // How each section of the task list shows its tasks, keyed by the task state the backend names
 // the section after.
 const SECTIONS = {
-  not_started: { state: 'NOT_STARTED', headingKey: 'action-tasks-todo', newestFirst: false },
+  // Has no late-highlight setting of its own and follows the in-progress section's
+  not_started: {
+    state: 'NOT_STARTED',
+    headingKey: 'action-tasks-todo',
+    newestFirst: false,
+    highlightLateFrom: 'in_progress',
+  },
   in_progress: { state: 'IN_PROGRESS', headingKey: 'action-tasks-doing', newestFirst: false },
   completed: { state: 'COMPLETED', headingKey: 'action-tasks-done', newestFirst: true },
   cancelled: { state: 'CANCELLED', headingKey: 'action-tasks-cancelled', newestFirst: true },
@@ -384,14 +406,17 @@ const DEFAULT_SECTIONS = [
 // The sections to show, in order. Skips empty entries and the sections this version of the UI does
 // not know yet.
 function getSectionConfigs(sections) {
-  return (sections ?? DEFAULT_SECTIONS)
-    .filter((section) => section && SECTIONS[section.field])
-    .map((section) => ({
-      ...SECTIONS[section.field],
-      field: section.field,
-      heading: section.heading,
-      highlightLate: !!section.highlightLateTasks,
-    }));
+  const entries = (sections ?? DEFAULT_SECTIONS).filter(
+    (section) => section && SECTIONS[section.field]
+  );
+  const highlightsLate = (field) =>
+    !!entries.find((section) => section.field === field)?.highlightLateTasks;
+  return entries.map((section) => ({
+    ...SECTIONS[section.field],
+    field: section.field,
+    heading: section.heading,
+    highlightLate: highlightsLate(SECTIONS[section.field].highlightLateFrom ?? section.field),
+  }));
 }
 
 // Whether any of the tasks is in a section that is shown, so that the tasks block can leave out its

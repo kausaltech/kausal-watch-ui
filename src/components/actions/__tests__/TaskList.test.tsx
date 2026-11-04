@@ -108,13 +108,24 @@ describe('TaskList', () => {
   });
 
   it('marks in-progress tasks past their due date when the section highlights late tasks', () => {
-    sectionHeadings([{ field: 'in_progress', highlightLateTasks: true }, { field: 'not_started' }]);
-    /* Only the in-progress task due yesterday: one due today is not late yet, and the late
-       not-started task is in a section that doesn't highlight. */
+    sectionHeadings([{ field: 'in_progress', highlightLateTasks: true }]);
+    /* Only the task due yesterday: one due today is not late yet. */
     expect(screen.getAllByText('action-task-late')).toHaveLength(1);
     expect(screen.getByText('Buy the bikes').closest('li')?.textContent).toContain(
       'action-task-late'
     );
+  });
+
+  it('marks late not-started tasks when the in-progress section highlights late tasks', () => {
+    sectionHeadings([{ field: 'not_started' }, { field: 'in_progress', highlightLateTasks: true }]);
+    expect(screen.getByText('Plan the route').closest('li')?.textContent).toContain(
+      'action-task-late'
+    );
+  });
+
+  it('does not mark late not-started tasks without an in-progress section', () => {
+    sectionHeadings([{ field: 'not_started' }]);
+    expect(screen.queryByText('action-task-late')).toBeNull();
   });
 
   it('does not mark late tasks by default', () => {

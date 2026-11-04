@@ -5030,7 +5030,9 @@ export type ActionDetailsQuery_action_tasks_responsibleParties_organization = { 
 
 export type ActionDetailsQuery_action_tasks_responsibleParties = { __typename: 'ActionTaskResponsibleParty', id: string, organization: ActionDetailsQuery_action_tasks_responsibleParties_organization };
 
-export type ActionDetailsQuery_action_tasks_contactPersons_person = { __typename: 'Person', id: string, firstName: string, lastName: string };
+export type ActionDetailsQuery_action_tasks_contactPersons_person_organization = { __typename: 'Organization', id: string, name: string };
+
+export type ActionDetailsQuery_action_tasks_contactPersons_person = { __typename: 'Person', id: string, firstName: string, lastName: string, organization: ActionDetailsQuery_action_tasks_contactPersons_person_organization };
 
 export type ActionDetailsQuery_action_tasks_contactPersons = { __typename: 'ActionTaskContactPerson', id: string, person: ActionDetailsQuery_action_tasks_contactPersons_person };
 
