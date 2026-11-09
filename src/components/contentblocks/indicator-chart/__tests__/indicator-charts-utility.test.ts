@@ -4,6 +4,7 @@ import {
   buildGoalSeries,
   buildPieAriaDescription,
   buildUndatedTotal,
+  buildYAxisConfig,
   collectAllDates,
   hasDatedValues,
   interpolateGaps,
@@ -324,5 +325,15 @@ describe('interpolateGaps', () => {
       ['2009', 50],
       ['2010', null],
     ]);
+  });
+});
+
+describe('buildYAxisConfig', () => {
+  it('passes only the value to the formatter, not the tick index', () => {
+    const formatValue = jest.fn((value: number) => String(value));
+    const { formatter } = buildYAxisConfig('t', formatValue).axisLabel;
+    // ECharts calls axis label formatters with (value, index)
+    (formatter as (value: number, index: number) => string)(330000, 1);
+    expect(formatValue).toHaveBeenCalledWith(330000);
   });
 });
