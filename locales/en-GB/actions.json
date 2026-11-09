@@ -1,1 +1,3 @@
-{}
+{
+    "action-task-responsible-parties": "{context, select, DIVISION {{count, plural, one {Responsible division} other {Responsible divisions}}} other {{count, plural, one {Responsible organisation} other {Responsible organisations}}}}"
+}
