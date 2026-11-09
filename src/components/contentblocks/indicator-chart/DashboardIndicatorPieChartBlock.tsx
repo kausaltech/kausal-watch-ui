@@ -281,10 +281,10 @@ const DashboardIndicatorPieChartBlock = ({
         // When the legend is hidden the label is a category's only
         // identification, so always attempt one.
         minShowLabelAngle: labelSegments ? 0 : 8,
+        // Separator between segments (WCAG 1.4.11)
         itemStyle: {
-          borderRadius: 0,
-          borderColor: theme.themeColors.white,
-          borderWidth: 0,
+          borderColor: chartBackground,
+          borderWidth: 1,
         },
 
         label: {

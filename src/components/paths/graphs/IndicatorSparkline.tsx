@@ -42,12 +42,6 @@ const IndicatorSparklineContainer = styled.div`
   background-color: ${(props) => props.theme.themeColors.white};
   padding: ${({ theme }) => `${theme.spaces.s050} ${theme.spaces.s050} ${theme.spaces.s100}`};
   margin-bottom: ${(props) => props.theme.spaces.s100};
-
-  /* Fix for Windows Edge spacing issue with thousand separators in y-axis labels */
-  .echarts-axis-label {
-    letter-spacing: 0 !important;
-    font-variant-numeric: tabular-nums;
-  }
 `;
 
 const SparkLineHeader = styled.div`

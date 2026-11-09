@@ -532,7 +532,8 @@ export function buildYAxisConfig(
     },
     axisLabel: {
       color,
-      formatter: formatValue,
+      // ECharts passes the tick index as a second argument
+      formatter: (value: number) => formatValue(value),
     },
   };
 
