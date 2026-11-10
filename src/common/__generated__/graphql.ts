@@ -314,6 +314,22 @@ export enum WorkflowState {
   Published = 'PUBLISHED'
 }
 
+export type AdaptationLinkedActionQuery_action_statusSummary = { __typename: 'ActionStatusSummary', identifier: ActionStatusSummaryIdentifier, label: string };
+
+export type AdaptationLinkedActionQuery_action_primaryOrg = { __typename: 'Organization', id: string, name: string };
+
+export type AdaptationLinkedActionQuery_action_mergedWith = { __typename: 'Action', id: string, identifier: string };
+
+export type AdaptationLinkedActionQuery_action = { __typename: 'Action', id: string, identifier: string, name: string, statusSummary: AdaptationLinkedActionQuery_action_statusSummary, primaryOrg: AdaptationLinkedActionQuery_action_primaryOrg | null, mergedWith: AdaptationLinkedActionQuery_action_mergedWith | null };
+
+export type AdaptationLinkedActionQuery = { __typename: 'Query', action: AdaptationLinkedActionQuery_action | null };
+
+
+export type AdaptationLinkedActionQueryVariables = Exact<{
+  plan: string | number;
+  identifier: string | number;
+}>;
+
 export type HeroImageFragment_full = { __typename: 'ImageRendition', id: string, width: number, height: number, src: string };
 
 export type HeroImageFragment_fullMedium = { __typename: 'ImageRendition', id: string, width: number, height: number, src: string };
