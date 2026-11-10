@@ -15,6 +15,11 @@ export function themeLabelsCategoryPagesWithType(theme: Theme): boolean {
   return theme.settings.categories.categoryPageTypeAsLabel ?? false;
 }
 
+/** Text after an action identifier: a dot unless the theme hides it */
+export function actionIdentifierDot(theme: Theme): string {
+  return theme.settings.hideActionIdentifierDot ? '' : '.';
+}
+
 /** Explain the action card colors above action lists */
 export function themeShowsActionColorLegend(theme: Theme): boolean {
   return theme.settings.showActionColorLegend ?? false;

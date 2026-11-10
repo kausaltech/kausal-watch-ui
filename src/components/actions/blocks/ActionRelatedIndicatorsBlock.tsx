@@ -1,3 +1,4 @@
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -6,6 +7,7 @@ import { readableColor, shade } from 'polished';
 import type { ActionDetailsQuery } from '@/common/__generated__/graphql';
 import { getIndicatorTermContext } from '@/common/i18n';
 import { ActionLink, IndicatorLink } from '@/common/links';
+import { actionIdentifierDot } from '@/common/theme-settings';
 import { SectionHeader } from '@/components/actions/ActionContent';
 import BaseBadge from '@/components/common/Badge';
 import { Card as BaseCard, CardBody, CardFooter } from '@/components/common/CardParts';
@@ -78,6 +80,7 @@ function ActionIndicator(props: ActionIndicatorProps) {
   const { relatedIndicator, actionId } = props;
   const { indicator } = relatedIndicator;
   const plan = usePlan();
+  const theme = useTheme();
   const actions = indicator.actions.filter((action) => action.id !== actionId);
 
   return (
@@ -100,7 +103,8 @@ function ActionIndicator(props: ActionIndicatorProps) {
               <IndicatorActionListItem key={`${action.identifier}-${i}`}>
                 <ActionLink action={action} className="me-2">
                   <Badge>
-                    {!plan.hideActionIdentifiers && `${action.identifier}. `}
+                    {!plan.hideActionIdentifiers &&
+                      `${action.identifier}${actionIdentifierDot(theme)} `}
                     {action.name}
                   </Badge>
                 </ActionLink>

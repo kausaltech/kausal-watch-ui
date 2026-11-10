@@ -13,6 +13,7 @@ import { useContainedLayout } from '@/common/hooks/use-contained-layout';
 import { getActionTermContext } from '@/common/i18n';
 import { type HeroImageRenditions, getImageSrcSet } from '@/common/images';
 import { ActionLink, ActionListLink, OrganizationLink } from '@/common/links';
+import { actionIdentifierDot } from '@/common/theme-settings';
 import Breadcrumbs from '@/components/common/Breadcrumbs';
 import ContainedHeaderImage from '@/components/common/ContainedHeaderImage';
 import Icon from '@/components/common/Icon';
@@ -175,7 +176,7 @@ const ActionNumber = styled.span`
   white-space: nowrap;
 
   &:after {
-    content: '.';
+    content: '${({ theme }) => actionIdentifierDot(theme)}';
   }
 `;
 

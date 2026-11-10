@@ -4,6 +4,7 @@ import { useState, useSyncExternalStore } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
@@ -13,6 +14,7 @@ import { transientOptions } from '@common/themes/styles/styled';
 
 import type { PledgeQuery } from '@/common/__generated__/graphql';
 import { usePrependPlanAndLocale } from '@/common/links';
+import { actionIdentifierDot } from '@/common/theme-settings';
 import { excludeNullish } from '@/common/utils';
 import Accordion from '@/components/common/Accordion';
 import ActionAttribute from '@/components/common/ActionAttribute';
@@ -281,6 +283,7 @@ function PledgeBodyBlock({ block }: { block: BodyBlock }) {
 }
 
 function PledgeDetail({ pledge, planIdentifier }: Props) {
+  const theme = useTheme();
   const [showConfirmDrawer, setShowConfirmDrawer] = useState(false);
   const [isUpdatingCommitment, setIsUpdatingCommitment] = useState(false);
   const isClient = useSyncExternalStore(
@@ -411,7 +414,10 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
                     {action.plan.shortName || action.plan.name}
                   </StyledActionPlanName>
                 )}
-                <StyledActionIdentifier>{action.identifier}.</StyledActionIdentifier> {action.name}
+                <StyledActionIdentifier>
+                  {`${action.identifier}${actionIdentifierDot(theme)}`}
+                </StyledActionIdentifier>{' '}
+                {action.name}
                 <StyledViewActionLink href={action.viewUrl} target="_blank">
                   {t('pledge-view-action')}
                   <Icon name="arrow-up-right-from-square" width="14px" height="14px" />
