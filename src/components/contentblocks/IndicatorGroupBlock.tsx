@@ -19,6 +19,8 @@ import { SectionHeader } from './ActionListBlock';
 const IndicatorGraphSection = styled.div`
   background-color: ${(props) => props.theme.neutralLight};
   padding: ${(props) => props.theme.spaces.s300} 0;
+  /* --footer-clearance is set when the block ends the page */
+  padding-bottom: max(${(props) => props.theme.spaces.s300}, var(--footer-clearance, 0px));
   color: ${(props) =>
     readableColor(
       props.theme.neutralLight,

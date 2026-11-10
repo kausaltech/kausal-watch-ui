@@ -69,7 +69,7 @@ export default function CategoryPageContent({
     <ContentArea $backgroundColor={undefined}>
       <MainContent>
         {hasMainContentTemplate
-          ? page.layout?.layoutMainBottom?.map((block, i) => (
+          ? page.layout?.layoutMainBottom?.map((block, i, templateBlocks) => (
               <CategoryPageStreamField
                 key={i}
                 page={page}
@@ -77,6 +77,7 @@ export default function CategoryPageContent({
                 wrapAttributeBlock
                 // Only the first template block follows the page header directly
                 precedingBlockHasBackground={i === 0 ? precedingBlockHasBackground : undefined}
+                endsPage={i === templateBlocks.length - 1}
               />
             ))
           : page.body && (
@@ -84,6 +85,7 @@ export default function CategoryPageContent({
                 page={page}
                 blocks={page.body}
                 precedingBlockHasBackground={precedingBlockHasBackground}
+                endsPage
               />
             )}
       </MainContent>

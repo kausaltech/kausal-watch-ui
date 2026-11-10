@@ -781,7 +781,17 @@ interface StreamFieldProps {
    * undefined when there is no page header above it.
    */
   precedingBlockHasBackground?: boolean;
+  /** Last content on the page, so it reserves room for the footer decoration */
+  endsPage?: boolean;
 }
+
+/* Last block pads itself clear of the footer decoration, keeping its background under it */
+const StreamFieldContainer = styled.div`
+  &[data-reserves-footer-space] > :last-child {
+    --block-padding-bottom: var(--block-padding-bottom-at-footer);
+    --footer-clearance: var(--footer-decoration-clearance);
+  }
+`;
 
 function getSiblingBlockTypes(blocks: StreamFieldProps['blocks'], i: number) {
   const prevBlock = blocks[i - 1];
@@ -794,13 +804,23 @@ function getSiblingBlockTypes(blocks: StreamFieldProps['blocks'], i: number) {
 }
 
 export default function StreamField(props: StreamFieldProps) {
-  const { page, blocks, hasSidebar = false, columnProps, precedingBlockHasBackground } = props;
+  const {
+    page,
+    blocks,
+    hasSidebar = false,
+    columnProps,
+    precedingBlockHasBackground,
+    endsPage = false,
+  } = props;
   const t = useTranslations();
   const theme = useTheme();
   const containedLayout = useContainedLayout();
 
   return (
-    <div className={`custom-${page.slug}`}>
+    <StreamFieldContainer
+      className={`custom-${page.slug}`}
+      data-reserves-footer-space={endsPage || undefined}
+    >
       {blocks.map((block, index) => {
         const hasBackground = blockHasBackground(block, theme, containedLayout);
         const prevHasBackground =
@@ -846,7 +866,7 @@ export default function StreamField(props: StreamFieldProps) {
           </ErrorBoundary>
         );
       })}
-    </div>
+    </StreamFieldContainer>
   );
 }
 
