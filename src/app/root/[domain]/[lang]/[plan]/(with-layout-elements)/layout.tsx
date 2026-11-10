@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { getAdaptationGeoid } from '@/adaptation/config';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
 import PathsSettingsPanel from '@/components/paths/toolbar/PathsSettingsPanel';
@@ -24,7 +25,7 @@ export default async function Layout(props: Props) {
     <>
       <JsonLd domain={params.domain} />
       <div style={{ minHeight: '100vh' }}>
-        <Header />
+        <Header showAdaptation={getAdaptationGeoid(params.plan) != null} />
         {/* Focusable, so that the skip link moves keyboard and screen reader focus here */}
         <main id="main" tabIndex={-1} style={{ outline: 'none' }} data-testid="root-layout">
           {children}

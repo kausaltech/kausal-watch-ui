@@ -7,10 +7,11 @@ import { usePathname } from 'next/navigation';
 import { useTheme } from '@emotion/react';
 
 import { useSession } from 'next-auth/react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 import { getDeploymentType } from '@common/env';
 
+import { ADAPTATION_PATH } from '@/adaptation/config';
 import type { PlanContextFragment } from '@/common/__generated__/graphql';
 import { getActiveBranch } from '@/common/links';
 import GoogleAnalytics from '@/components/GoogleAnalytics';
@@ -20,6 +21,7 @@ import GlobalNav from '@/components/common/GlobalNav';
 import SkipToContent from '@/components/common/SkipToContent';
 import { usePlan } from '@/context/plan';
 import { getMetaTitles } from '@/utils/metadata';
+import { stripSlashes } from '@/utils/urls';
 
 import TopToolBar from './common/TopToolBar';
 import { useCustomComponent } from './paths/custom';
@@ -93,9 +95,15 @@ function createLocalizeMenuItem(currentLocale: string, primaryLocale: string) {
   };
 }
 
-function Header() {
+type HeaderProps = {
+  /** Adds the risks section to the menu. It has no page in the backend to make a menu item of. */
+  showAdaptation?: boolean;
+};
+
+function Header({ showAdaptation = false }: HeaderProps) {
   const pathname = usePathname();
   const locale = useLocale();
+  const t = useTranslations();
   const plan = usePlan();
   const theme = useTheme();
   const activeBranch = getActiveBranch(pathname, locale);
@@ -122,8 +130,18 @@ function Header() {
       const staticPages = getMenuStructure(pageMenuItems, pageMenuItems[rootItemIndex].parent!.id);
       if (staticPages) links = links.concat(staticPages);
     }
+    if (showAdaptation) {
+      links.push({
+        id: 'adaptation',
+        name: t('adaptation-nav-label'),
+        slug: stripSlashes(ADAPTATION_PATH),
+        urlPath: locale === plan.primaryLanguage ? ADAPTATION_PATH : `/${locale}${ADAPTATION_PATH}`,
+        active: false,
+        children: null,
+      });
+    }
     return links;
-  }, [locale, plan.mainMenu, plan.primaryLanguage]);
+  }, [locale, plan.mainMenu, plan.primaryLanguage, showAdaptation, t]);
 
   setActivePages(navLinks, pathname, activeBranch);
 
