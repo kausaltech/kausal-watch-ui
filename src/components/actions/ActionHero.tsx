@@ -297,7 +297,8 @@ function ActionHeroCard(props: ActionHeroCardProps) {
   const title = (
     <>
       <ActionCategories categories={categories} />
-      <ActionHeadline>
+      {/* Stable class for theme custom styles */}
+      <ActionHeadline className="action-headline">
         {identifier && <ActionNumber>{identifier}</ActionNumber>}
         <ActionName>{name}</ActionName>
       </ActionHeadline>

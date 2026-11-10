@@ -27,7 +27,6 @@ const StyledActionGroup = styled.div<{ $isSmall: boolean }>`
 const StyledGroupTitle = styled.h5`
   margin: 0;
   font-size: ${({ theme }) => theme.fontSizeSm};
-  text-transform: uppercase;
   color: ${({ theme }) => theme.textColor.tertiary};
   font-weight: ${({ theme }) => theme.fontWeightBold};
 `;
