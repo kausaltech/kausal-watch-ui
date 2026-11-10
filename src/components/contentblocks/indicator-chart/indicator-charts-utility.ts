@@ -40,6 +40,12 @@ export interface GraphsTheme {
   drawGoalLine?: boolean;
   /** Tenant-configured chart background; the canvas is white when unset. */
   customBackground?: string;
+  /** Bar charts leave out years without data */
+  hideEmptyYears?: boolean;
+  dashboard?: {
+    /** Dashboard bar charts leave out goals */
+    hideBarChartGoals?: boolean;
+  };
 }
 
 /** Whether lines should be drawn smoothed, from the theme's `lineShape`
@@ -593,13 +599,15 @@ function fillMissingPeriods(
 
 /**
  * Collects and sorts all unique dates from multiple raw series arrays,
- * filling gap periods so the axis is a continuous timeline.
+ * filling gap periods so the axis is a continuous timeline unless
+ * `fillGaps` is false.
  * Returns both the sorted normalized dates and the display-formatted categories.
  */
 export function collectAllDates(
   sources: Array<[string, number][]>,
   timeResolution: string | null | undefined,
-  additionalDates?: (string | number)[]
+  additionalDates?: (string | number)[],
+  { fillGaps = true }: { fillGaps?: boolean } = {}
 ): { allDates: string[]; xCategories: string[] } {
   const normalizedDateSet = new Set<string>();
 
@@ -612,7 +620,7 @@ export function collectAllDates(
   additionalDates?.forEach((date) => normalizedDateSet.add(normalizeDate(date, resolution)));
 
   const sortedDates = Array.from(normalizedDateSet).sort(compareDates);
-  const allDates = fillMissingPeriods(sortedDates, timeResolution);
+  const allDates = fillGaps ? fillMissingPeriods(sortedDates, timeResolution) : sortedDates;
   const xCategories = allDates.map((d) => formatDateLabel(d, resolution));
 
   return { allDates, xCategories };

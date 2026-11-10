@@ -302,6 +302,21 @@ describe('collectAllDates', () => {
     );
     expect(xCategories).toEqual(['2020', '2021', '2022', '2023', '2024', '2025']);
   });
+
+  it('keeps only the given dates when gap filling is off', () => {
+    const { xCategories } = collectAllDates(
+      [
+        [
+          ['2020', 1],
+          ['2022', 3],
+        ],
+      ],
+      'YEAR',
+      ['2025'],
+      { fillGaps: false }
+    );
+    expect(xCategories).toEqual(['2020', '2022', '2025']);
+  });
 });
 
 describe('interpolateGaps', () => {

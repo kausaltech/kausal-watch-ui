@@ -56,7 +56,12 @@ const IndicatorVisualizationBlock = ({ block, ariaDetail, chartRef }: Props) => 
     case 'IndicatorDefaultBarChart': {
       const { __typename, ...rest } = block;
       return (
-        <DashboardIndicatorBarChartBlock {...rest} ariaDetail={ariaDetail} chartRef={chartRef} />
+        <DashboardIndicatorBarChartBlock
+          {...rest}
+          ariaDetail={ariaDetail}
+          chartRef={chartRef}
+          onDashboard={__typename === 'DashboardIndicatorBarChartBlock'}
+        />
       );
     }
     case 'DashboardIndicatorLineChartBlock':
