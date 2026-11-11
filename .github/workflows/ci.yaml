@@ -64,8 +64,9 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ hashFiles('pnpm-lock.yaml') }}
           restore-keys: ${{ runner.os }}-playwright-
 
+      # No --with-deps: the runner image already has the Chromium libraries.
       - name: Install Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install chromium
 
       - run: pnpm test:storybook
 
