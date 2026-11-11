@@ -73,7 +73,7 @@ interface Props {
   wrapAttributeBlock?: boolean;
   /** Whether the block above this one has a background, for the body's block spacing */
   precedingBlockHasBackground?: boolean;
-  /** Last content on the page; the body reserves room for the footer decoration */
+  /** May end the page; the body reserves room for the footer decoration if it renders last */
   endsPage?: boolean;
 }
 

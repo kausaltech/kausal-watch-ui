@@ -69,7 +69,7 @@ export default function CategoryPageContent({
     <ContentArea $backgroundColor={undefined}>
       <MainContent>
         {hasMainContentTemplate
-          ? page.layout?.layoutMainBottom?.map((block, i, templateBlocks) => (
+          ? page.layout?.layoutMainBottom?.map((block, i) => (
               <CategoryPageStreamField
                 key={i}
                 page={page}
@@ -77,7 +77,8 @@ export default function CategoryPageContent({
                 wrapAttributeBlock
                 // Only the first template block follows the page header directly
                 precedingBlockHasBackground={i === 0 ? precedingBlockHasBackground : undefined}
-                endsPage={i === templateBlocks.length - 1}
+                // Later template blocks may render nothing; the stream field checks in CSS
+                endsPage
               />
             ))
           : page.body && (

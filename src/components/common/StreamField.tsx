@@ -782,14 +782,15 @@ interface StreamFieldProps {
    * undefined when there is no page header above it.
    */
   precedingBlockHasBackground?: boolean;
-  /** Last content on the page, so it reserves room for the footer decoration */
+  /** May end the page; reserves room for the footer decoration if it renders last */
   endsPage?: boolean;
 }
 
 /* Last block pads itself clear of the footer decoration, keeping its background under it */
 const StreamFieldContainer = styled.div`
   /* Blocks that render nothing leave an empty wrapper */
-  &[data-reserves-footer-space] > :nth-last-child(1 of :not(:empty)) {
+  &[data-reserves-footer-space]:nth-last-child(1 of :not(:empty))
+    > :nth-last-child(1 of :not(:empty)) {
     --block-padding-bottom: var(--block-padding-bottom-at-footer);
     --footer-clearance: var(--footer-decoration-clearance);
   }
