@@ -25,6 +25,8 @@ const StyledContainer = styled(Container, transientOptions)<{
 
   position: relative;
   padding-top: var(--image-top-padding);
+  /* --footer-clearance is set when the hero ends the page */
+  padding-bottom: var(--footer-clearance, 0px);
 
   &::before {
     content: '';
