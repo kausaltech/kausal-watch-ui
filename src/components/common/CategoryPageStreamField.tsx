@@ -73,6 +73,8 @@ interface Props {
   wrapAttributeBlock?: boolean;
   /** Whether the block above this one has a background, for the body's block spacing */
   precedingBlockHasBackground?: boolean;
+  /** May end the page; the body reserves room for the footer decoration if it renders last */
+  endsPage?: boolean;
 }
 
 const findAttributeByType = (attributeTypeIdentifier: string, page: CategoryPage) =>
@@ -96,6 +98,7 @@ export default function CategoryPageStreamField({
   columnProps: customColumnProps,
   wrapAttributeBlock = false,
   precedingBlockHasBackground,
+  endsPage = false,
 }: Props) {
   const plan = usePlan();
   const paths = usePaths();
@@ -203,6 +206,7 @@ export default function CategoryPageStreamField({
           blocks={page.body}
           columnProps={columnProps}
           precedingBlockHasBackground={precedingBlockHasBackground}
+          endsPage={endsPage}
         />
       );
     }

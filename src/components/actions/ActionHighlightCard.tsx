@@ -12,6 +12,7 @@ import type { CardImageFragment } from '@/common/__generated__/graphql';
 import { getBgImageAlignment, getImageSrcSet } from '@/common/images';
 import { ActionLink } from '@/common/links';
 import { cleanActionStatus } from '@/common/preprocess';
+import { actionIdentifierDot } from '@/common/theme-settings';
 import ActionStatus from '@/components/actions/ActionStatus';
 import Badge from '@/components/common/Badge';
 import { Card, CardBody, CardTitle } from '@/components/common/CardParts';
@@ -108,7 +109,7 @@ const ActionNumber = styled.div`
     ${(props) => props.theme.cardBorderRadius} 0;
 
   &:after {
-    content: '.';
+    content: '${({ theme }) => actionIdentifierDot(theme)}';
   }
 `;
 

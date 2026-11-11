@@ -77,6 +77,8 @@ export default function CategoryPageContent({
                 wrapAttributeBlock
                 // Only the first template block follows the page header directly
                 precedingBlockHasBackground={i === 0 ? precedingBlockHasBackground : undefined}
+                // Later template blocks may render nothing; the stream field checks in CSS
+                endsPage
               />
             ))
           : page.body && (
@@ -84,6 +86,7 @@ export default function CategoryPageContent({
                 page={page}
                 blocks={page.body}
                 precedingBlockHasBackground={precedingBlockHasBackground}
+                endsPage
               />
             )}
       </MainContent>

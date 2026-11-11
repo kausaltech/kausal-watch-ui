@@ -13,6 +13,7 @@ import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
 import type { TFunction } from '@/common/i18n';
+import { actionIdentifierDot } from '@/common/theme-settings';
 import {
   DropdownItem,
   DropdownMenu,
@@ -222,7 +223,7 @@ class CytoGraph extends React.Component<CytoGraphProps, CytoGraphState> {
     nodes.forEach((node) => {
       const label =
         node.type === 'action'
-          ? wordWrap(`${node.identifier}. ${node.name}`, 40)
+          ? wordWrap(`${node.identifier}${actionIdentifierDot(theme)} ${node.name}`, 40)
           : wordWrap(node.name, 40);
 
       const out: cytoscape.ElementDefinition = {

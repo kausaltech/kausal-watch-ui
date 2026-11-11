@@ -54,7 +54,24 @@ const config: StorybookConfig = {
           { find: '@common', replacement: path.resolve(projectRoot, 'kausal_common/src') },
           { find: '@', replacement: path.resolve(projectRoot, 'src') },
           { find: 'public', replacement: path.resolve(projectRoot, 'public') },
+          // Webpack-style package prefix in main.scss
+          { find: /^~bootstrap\//, replacement: 'bootstrap/' },
         ],
+      },
+      css: {
+        preprocessorOptions: {
+          // Same as sassOptions in next.config.ts
+          scss: {
+            quietDeps: true,
+            silenceDeprecations: [
+              'import',
+              'legacy-js-api',
+              'color-functions',
+              'global-builtin',
+              'color-4-api',
+            ],
+          },
+        },
       },
       optimizeDeps: {
         esbuildOptions: {

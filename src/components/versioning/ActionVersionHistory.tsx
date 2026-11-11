@@ -2,12 +2,14 @@ import { useId, useState } from 'react';
 
 import Collapse from '@mui/material/Collapse';
 
+import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 
 import { useTranslations } from 'next-intl';
 
 import { deploymentType } from '@/common/environment';
 import { ActionLink } from '@/common/links';
+import { actionIdentifierDot } from '@/common/theme-settings';
 import Button from '@/components/common/Button';
 import Icon from '@/components/common/Icon';
 
@@ -65,6 +67,7 @@ type ActionVersions = (ActionContentAction | ActionContentAction['supersededActi
 
 const ActionVersionHistory = ({ action }: Props) => {
   const t = useTranslations();
+  const theme = useTheme();
   const [isOpen, setIsOpen] = useState(action.supersededBy ? true : false);
   const panelId = useId();
   const toggle = () => setIsOpen(!isOpen);
@@ -116,7 +119,8 @@ const ActionVersionHistory = ({ action }: Props) => {
                 viewUrl={'viewUrl' in v ? v.viewUrl : undefined}
               >
                 <VersionHistoryListItemName>
-                  {v.plan?.hideActionIdentifiers !== true && `${v.identifier}. `}
+                  {v.plan?.hideActionIdentifiers !== true &&
+                    `${v.identifier}${actionIdentifierDot(theme)} `}
                   {v.name}
                 </VersionHistoryListItemName>
               </ActionLink>

@@ -1,5 +1,8 @@
 import type { Preview } from '@storybook/nextjs-vite';
 
+// Bootstrap build, imported by the app's [lang] layout
+import '@common/themes/styles/main.scss';
+
 import { STORYBOOK_LOCALES, getLocaleLabel } from './locales';
 import { withKausalThemes } from './withKausalThemes.decorator';
 

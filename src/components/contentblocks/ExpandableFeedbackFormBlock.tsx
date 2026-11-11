@@ -15,6 +15,7 @@ import { usePlan } from '@/context/plan';
 const FeedbackFormSection = styled.div<{ $size: 'sm' | 'md' }>`
   padding: ${(props) => (props.$size === 'sm' ? props.theme.spaces.s050 : props.theme.spaces.s100)};
   background-color: ${(props) => props.theme.graphColors.blue010};
+  border-radius: ${(props) => props.theme.cardBorderRadius};
   margin-bottom: ${(props) => props.theme.spaces.s400};
 
   @media print {

@@ -23,6 +23,7 @@ import type {
 import { getActionTermContext } from '@/common/i18n';
 import { ActionLink } from '@/common/links';
 import { cleanActionStatus } from '@/common/preprocess';
+import { actionIdentifierDot } from '@/common/theme-settings';
 import PlanChip from '@/components/plans/PlanChip';
 import { usePlan } from '@/context/plan';
 import { ACTION_CARD_FRAGMENT } from '@/fragments/action-card.fragment';
@@ -142,7 +143,7 @@ const ActionNumber = styled.div`
   background: ${(props) => props.theme.themeColors.white};
 
   &:after {
-    content: '.';
+    content: '${({ theme }) => actionIdentifierDot(theme)}';
   }
 `;
 
@@ -430,7 +431,9 @@ function ActionCard({
       )}
 
       <StyledCardTitle className="card-title" $isSmall={variant === 'text-only'}>
-        {identifierPosition === 'WITH_NAME' && <strong>{action.identifier}. </strong>}
+        {identifierPosition === 'WITH_NAME' && (
+          <strong>{`${action.identifier}${actionIdentifierDot(theme)} `}</strong>
+        )}
         {actionName}
       </StyledCardTitle>
       {plan.secondaryActionClassification && (

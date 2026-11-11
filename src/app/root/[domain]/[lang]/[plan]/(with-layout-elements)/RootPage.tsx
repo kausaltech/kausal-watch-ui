@@ -28,6 +28,7 @@ function HomePage({ categories, page, testId }: HomePageProps) {
           <StreamField
             page={page as Parameters<typeof StreamField>[0]['page']}
             blocks={page.body}
+            endsPage
           />
         )}
       </div>

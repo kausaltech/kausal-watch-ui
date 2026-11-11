@@ -45,6 +45,8 @@ type Props = Omit<
   ariaDetail?: AriaDetail;
   /** For exporting the chart, e.g. as a PNG */
   chartRef?: Ref<ChartHandle>;
+  /** Rendered as a dashboard card, where the theme may hide goals */
+  onDashboard?: boolean;
 };
 
 const DashboardIndicatorBarChartBlock = ({
@@ -54,6 +56,7 @@ const DashboardIndicatorBarChartBlock = ({
   barType,
   ariaDetail,
   chartRef,
+  onDashboard = false,
 }: Props) => {
   const theme = useTheme();
   const t = useTranslations();
@@ -135,24 +138,28 @@ const DashboardIndicatorBarChartBlock = ({
     // Quantified goals are drawn as markers like the line block and the
     // generic graph do, so switching the default kind to bar keeps the
     // targets. Category-only charts have no time axis to place them on.
-    const goalSeries = buildGoalSeries(
-      indicator,
-      unit,
-      graphsTheme.goalLineColors ?? [],
-      goalLabel,
-      timeResolution,
-      formatValue,
-      goalSymbol(graphsTheme.goalSymbol),
-      graphsTheme.drawGoalLine,
-      theme.graphColors.grey070
-    );
+    const hideGoals = onDashboard && (graphsTheme.dashboard?.hideBarChartGoals ?? false);
+    const goalSeries = hideGoals
+      ? []
+      : buildGoalSeries(
+          indicator,
+          unit,
+          graphsTheme.goalLineColors ?? [],
+          goalLabel,
+          timeResolution,
+          formatValue,
+          goalSymbol(graphsTheme.goalSymbol),
+          graphsTheme.drawGoalLine,
+          theme.graphColors.grey070
+        );
     // Goals lie beyond the last observation; the axis must reach them
     const goalDates = goalSeries.flatMap((series) => series.data.map(([key]) => key));
 
     xCategories = collectAllDates(
       dimSeries.map((d) => d.raw),
       timeResolution,
-      goalDates
+      goalDates,
+      { fillGaps: !graphsTheme.hideEmptyYears }
     ).xCategories;
 
     // An explicit block barType wins over the indicator's own

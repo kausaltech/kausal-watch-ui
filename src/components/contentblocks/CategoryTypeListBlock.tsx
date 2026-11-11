@@ -56,7 +56,8 @@ const GroupHeader = styled.h4<{ $color: string }>`
 `;
 
 const CategoryListSection = styled.div`
-  padding-bottom: 6rem;
+  /* --footer-clearance is set when the block ends the page */
+  padding-bottom: max(6rem, var(--footer-clearance, 0px));
   a.card-wrapper {
     display: flex;
     width: 100%;

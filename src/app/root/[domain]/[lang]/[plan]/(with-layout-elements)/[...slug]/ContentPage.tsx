@@ -226,6 +226,7 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
               hasSidebar={siblings.length > 1}
               // The contained content page header has no background
               precedingBlockHasBackground={hasPageHeader ? !containedLayout : undefined}
+              endsPage
             />
           )}
         </div>

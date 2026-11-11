@@ -23,7 +23,8 @@ function getStackedBreakpoint({ theme, $fitImage }: { theme: Theme; $fitImage: b
 
 const SideBySideInner = styled(Container, transientOptions)<{ $fitImage: boolean }>`
   padding-top: ${(props) => props.theme.spaces.s300};
-  padding-bottom: ${(props) => props.theme.spaces.s300};
+  /* --footer-clearance is set when the hero ends the page */
+  padding-bottom: max(${(props) => props.theme.spaces.s300}, var(--footer-clearance, 0px));
 
   ${(props) => props.theme.breakpoints.down('sm')} {
     padding-top: ${(props) => props.theme.spaces.s100};

@@ -12,6 +12,8 @@ const PlanListSection = styled.div`
   background-color: ${(props) =>
     props.theme.section.relatedPlans?.background || props.theme.themeColors.dark};
   padding: ${(props) => props.theme.spaces.s300} 0;
+  /* --footer-clearance is set when the block ends the page */
+  padding-bottom: max(${(props) => props.theme.spaces.s300}, var(--footer-clearance, 0px));
 
   h2,
   h2 a {

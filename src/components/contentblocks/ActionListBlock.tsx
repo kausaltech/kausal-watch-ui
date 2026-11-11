@@ -68,6 +68,11 @@ const ParentGroupHeading = styled.h3`
   color: ${({ theme }) => theme.headingsColor};
 `;
 
+/* Groups without parent headings, followed directly by cards */
+const TopGroupHeading = styled(ParentGroupHeading)`
+  margin-bottom: ${({ theme }) => theme.spaces.s150};
+`;
+
 const GroupHeading = styled.h4`
   margin: ${({ theme }) => `${theme.spaces.s150} 0 ${theme.spaces.s150}`};
   font-size: ${({ theme }) => theme.fontSizeBase};
@@ -253,10 +258,13 @@ const ActionListBlock = (props: ActionListBlockProps) => {
       : groups.twoLevels!.length
     : 0;
 
+  // Groups are h3 when there are no parent headings
+  const GroupHeadingForMode = groups?.mode === 'oneLevel' ? TopGroupHeading : GroupHeading;
+
   // Actions whose categories don't resolve to any group are listed last under "Other"
   const ungroupedSection = groups && groups.ungrouped.length > 0 && (
     <section aria-labelledby="group-other">
-      <GroupHeading id="group-other">{t('other')}</GroupHeading>
+      <GroupHeadingForMode id="group-other">{t('other')}</GroupHeadingForMode>
       <ActionCardList
         actions={groups.ungrouped}
         groupBy={innerGroupBy}
@@ -305,7 +313,7 @@ const ActionListBlock = (props: ActionListBlockProps) => {
           <>
             {groups.oneLevel!.map(({ group, actions }) => (
               <section key={group.id} aria-labelledby={`group-${group.id}`}>
-                <GroupHeading id={`group-${group.id}`}>{group.name ?? '—'}</GroupHeading>
+                <TopGroupHeading id={`group-${group.id}`}>{group.name ?? '—'}</TopGroupHeading>
                 <ActionCardList
                   actions={actions}
                   groupBy={innerGroupBy}
