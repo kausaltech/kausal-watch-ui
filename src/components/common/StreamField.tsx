@@ -272,12 +272,12 @@ const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
     return 'var(--block-gap)';
   }};
   margin-bottom: ${({ $isLast, $nextIsUnwrapped, $isUnpadded, $hasBackground }) => {
-    // Set on the last block of a page-ending stream field
-    if (!$isUnpadded) return $isLast && !$hasBackground ? 'var(--footer-clearance, 0px)' : '0';
+    // --footer-clearance is set only on the last rendered block of a page-ending stream field
+    if (!$isUnpadded) return $hasBackground ? '0' : 'var(--footer-clearance, 0px)';
     // Coloured blocks end with their own bottom padding, which themes may cover with a
     // footer decoration, so leave the same room after an unpadded block ending the page
     if ($isLast) return 'calc(var(--block-gap) + var(--block-padding-bottom))';
-    return $nextIsUnwrapped ? 'var(--block-gap)' : '0';
+    return $nextIsUnwrapped ? 'var(--block-gap)' : 'var(--footer-clearance, 0px)';
   }};
 `;
 
@@ -788,7 +788,8 @@ interface StreamFieldProps {
 
 /* Last block pads itself clear of the footer decoration, keeping its background under it */
 const StreamFieldContainer = styled.div`
-  &[data-reserves-footer-space] > :last-child {
+  /* Blocks that render nothing leave an empty wrapper */
+  &[data-reserves-footer-space] > :nth-last-child(1 of :not(:empty)) {
     --block-padding-bottom: var(--block-padding-bottom-at-footer);
     --footer-clearance: var(--footer-decoration-clearance);
   }
