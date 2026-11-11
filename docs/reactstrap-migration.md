@@ -1,6 +1,12 @@
 # Retiring reactstrap in favour of MUI
 
-Status: steps 0–8 done on `feat/bye-reactstrap`; the themes package follow-up is open. This doc covers what we did, the order of the work, and how we know it's finished.
+Status:
+
+- **reactstrap (steps 0–8):** done, merged to `main` and deployed.
+- **Themes package follow-up:** open.
+- **Bootstrap's CSS and class names:** planned separately. See [Removing Bootstrap](#removing-bootstrap).
+
+This doc covers what we did, the order of the work, and how we know it's finished.
 
 ## Background
 
@@ -17,7 +23,7 @@ In scope:
 - Removing the `reactstrap` package and every import of it, and `@popperjs/core` if nothing else uses it.
 - Replacing the theme breakpoint tokens (`theme.breakpointSm/Md/Lg/Xl`) with MUI's `theme.breakpoints`, using MUI's default values except `md`.
 
-Out of scope (deferred):
+Out of scope (planned separately, see [Removing Bootstrap](#removing-bootstrap)):
 
 - Removing Bootstrap's CSS, its grid and utility classes (`mb-5`, `d-flex`, `visually-hidden`, `btn`, …). Until then, leftover Bootstrap classes switch at the theme's breakpoints, through `$grid-breakpoints` (the old `$breakpoint-*` SCSS variables are already gone).
 
@@ -122,7 +128,7 @@ Each PR:
 
 ### 1. Move to MUI breakpoints
 
-Status: done on `feat/bye-reactstrap`.
+Status: done.
 
 The theme tokens are gone from watch-ui and `kausal_common/src/themes/ThemedGlobalStyles.tsx`:
 
@@ -147,7 +153,7 @@ Results against the `main` baseline, after `md` went back to 768px:
 
 ### 2. Simple one-to-one swaps
 
-Status: done on `feat/bye-reactstrap`. 25 files changed, and files importing reactstrap went from 124 to 112.
+Status: done. 25 files changed, and files importing reactstrap went from 124 to 112.
 
 - **`Spinner` → `CircularProgress`:** `color="inherit"`, because Bootstrap spinners took the text colour. `1rem` for `size="sm"`, `2rem` otherwise.
 - **`Progress` → `LinearProgress`** with `variant="determinate"`.
@@ -200,7 +206,7 @@ Results against the step 1 screenshots: 60 of 72 unchanged. The 12 that changed 
 
 ### 4. Cards and tables
 
-Status: done on `feat/bye-reactstrap`. 17 call sites plus two new shared modules; files importing reactstrap went from 100 to 89.
+Status: done. 17 call sites plus two new shared modules; files importing reactstrap went from 100 to 89.
 
 - **Cards → `@/components/common/CardParts`:**
   - `Card` is MUI's `Card`, laid out like Bootstrap's card: a flex column that doesn't clip its content, with Bootstrap's border, radius and white background.
@@ -214,7 +220,7 @@ Status: done on `feat/bye-reactstrap`. 17 call sites plus two new shared modules
 
 ### 5. Forms
 
-Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 89 to 80.
+Status: done. Files importing reactstrap went from 89 to 80.
 
 **`@/components/common/FormControls`** puts reactstrap's form API (`FormGroup check|switch`, `Label check`, `Input type=…`, `FormFeedback tooltip`, `InputGroup`, `Form`) on MUI with Bootstrap's look. The six wrappers (`TextInput`, `SelectInput`, `CheckboxInput`, `DropDown`, `SelectDropdown`, `Switch`) and the non-paths direct users only changed their import.
 
@@ -238,7 +244,7 @@ Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 89 t
 
 ### 6. Dropdowns and navigation
 
-Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 80 to 70, and no dropdown, nav or collapse parts are left.
+Status: done. Files importing reactstrap went from 80 to 70, and no dropdown, nav or collapse parts are left.
 
 - **`@/components/common/Dropdowns`:** reactstrap's `UncontrolledDropdown`, `UncontrolledButtonDropdown`, `DropdownToggle`, `DropdownMenu` and `DropdownItem`, with reactstrap's markup and keyboard handling.
   - **MUI parts:** `ClickAwayListener` closes the menu on an outside click. `Popper` positions menus outside a navbar, rendering into `document.body` with `container="body"`.
@@ -260,7 +266,7 @@ Status: done on `feat/bye-reactstrap`. Files importing reactstrap went from 80 t
 
 ### 7. Layout grid
 
-Status: done on `feat/bye-reactstrap`. All 70 remaining files changed only their import, and no code imports reactstrap any more.
+Status: done. All 70 remaining files changed only their import, and no code imports reactstrap any more.
 
 - **No codemod.** Column sizes are often computed (`md={{ size: single ? 8 : 6, offset: … }}`) or spread in from props (`{...columnProps}`), which a codemod can't rewrite reliably.
 - **`@/components/common/layout/LayoutGrid`** has reactstrap's `Container`, `Row` and `Col` API (plus the `ColProps` and `ColumnProps` types) on MUI. It translates reactstrap's breakpoint props into MUI `Grid`'s `size` and `offset` at runtime:
@@ -277,7 +283,7 @@ Status: done on `feat/bye-reactstrap`. All 70 remaining files changed only their
 
 ### 8. Cleanup
 
-Status: done on `feat/bye-reactstrap`.
+Status: done.
 
 - **Dependencies:** `reactstrap` is removed from `package.json` and the lockfile, and `pnpm dedupe` has been run.
   - `@popperjs/core` stays: `react-popper` (used by `NavbarSearch`) needs it as a peer, and MUI and `react-bootstrap-typeahead` depend on it too.
@@ -302,6 +308,12 @@ Neither app uses the tokens any more; paths-ui was migrated on its own `feat/bye
 
 1. Remove `breakpointSm/Md/Lg/Xl` from the themes package and publish a new version.
 2. Bump `@kausal/themes` in both apps and run `pnpm dedupe`. The kausal_common submodule has its own lockfile importer, so this step is needed. Typecheck then catches anything missed.
+
+## Removing Bootstrap
+
+Bootstrap's CSS is still loaded, and the shared components above keep Bootstrap's class names as styling hooks. Removing the stylesheet, the class names, the `--bs-*` variables and the `bootstrap` and `sass` packages is planned separately, because it also covers paths-ui and `kausal_common`.
+
+The plan is number 13 in the `kausal-specifications` repo (kausaltech/kausal-specifications#13): `projects/watch/bootstrap-removal.plan.md`, with the inventory and the rejected alternatives in `bootstrap-removal.research.md` beside it. Commits that implement it end with the trailer `Plan: kausaltech/kausal-specifications#13`.
 
 ## Risks
 

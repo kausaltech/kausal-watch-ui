@@ -22,7 +22,7 @@ Detailed docs live in docs/. Read the relevant one before making changes in that
 
 - docs/types.md - Conventions for type annotations
 - docs/indicator-graph-unification.md - Feasibility and plan for rendering the default indicator graph and the chart blocks with one component
-- docs/reactstrap-migration.md - Plan for replacing reactstrap with MUI and moving to MUI breakpoints
+- docs/reactstrap-migration.md - How reactstrap was replaced with MUI and MUI breakpoints, and a pointer to the Bootstrap removal plan
 - docs/paths-apollo-client.md - Plan for fetching Paths model data through a separate Apollo client
 - docs/paths-cleanup.md - Plan for fixing bugs, wasted requests and dead code in the Paths integration, and what could move to kausal_common
 - docs/accessibility-audit-bitv.md - Translated findings of the manual BITV accessibility audit, their causes in the code and the order to fix them
