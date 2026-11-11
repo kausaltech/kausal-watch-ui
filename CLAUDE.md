@@ -183,6 +183,10 @@ git submodule update --init --recursive
 - **GraphQL files:** kebab-case (`get-plan.ts`)
 - **Generated code:** Never edit files in `__generated__/` directories
 
+## Commits and Pull Requests
+
+Do not mention customer names in commit messages or PR descriptions. This repo is public; describe the affected plan or tenant in generic terms instead (e.g. "a customer's plan", "one tenant").
+
 ## Common Tasks
 
 ### Adding a new component
