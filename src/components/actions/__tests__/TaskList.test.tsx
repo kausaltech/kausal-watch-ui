@@ -178,6 +178,128 @@ describe('TaskList', () => {
     expect(iconTitles('Plan the route')).toEqual(['action-task-due-date']);
   });
 
+  describe('continuous tasks', () => {
+    const continuous = {
+      id: '6',
+      name: 'Run the summer lunches',
+      state: 'IN_PROGRESS',
+      isContinuous: true,
+    };
+
+    function renderSection(sectionTasks: object[], field = 'in_progress') {
+      render(
+        <ThemeProvider theme={theme}>
+          <TaskList tasks={sectionTasks} sections={[{ field, highlightLateTasks: true }]} />
+        </ThemeProvider>
+      );
+    }
+
+    const taskNames = () =>
+      [...document.querySelectorAll('.task-title')].map((title) => title.textContent);
+
+    /* The icon's title, and the visible text next to the icon (outside the SVG) */
+    function taskMeta(name: string) {
+      const icon = screen.getByText(name).closest('li')?.querySelector('svg');
+      return {
+        iconTitle: icon?.querySelector('title')?.textContent,
+        text: icon?.nextElementSibling?.textContent,
+      };
+    }
+
+    const groupToggles = () =>
+      screen
+        .getAllByRole('button')
+        .map((button) => button.textContent)
+        .filter((text) => text?.endsWith(')'));
+
+    const datedTasks = (state: string) =>
+      Array.from({ length: 12 }, (_, i) => ({
+        id: `d${i}`,
+        name: `Task ${i}`,
+        state,
+        dueAt: `${2025 + (i % 2)}-06-01`,
+        completedAt: state === 'COMPLETED' ? `${2025 + (i % 2)}-06-01` : undefined,
+      }));
+
+    it('shows the continuous label instead of a date and is never late', () => {
+      renderSection([continuous]);
+      expect(taskMeta('Run the summer lunches')).toEqual({
+        iconTitle: 'action-continuous',
+        text: 'action-continuous',
+      });
+      expect(screen.queryByText('action-task-late')).toBeNull();
+    });
+
+    it('shows both the date and the label when a continuous task has a due date', () => {
+      renderSection([{ ...continuous, dueAt: '2000-06-15' }]);
+      const meta = taskMeta('Run the summer lunches');
+      /* A due date that has passed still makes it late */
+      expect(meta.iconTitle).toBe('action-task-late');
+      expect(meta.text).toMatch(/2000/);
+      expect(meta.text).toMatch(/action-continuous$/);
+    });
+
+    it('shows the label for a cancelled task without a due date', () => {
+      renderSection([{ ...continuous, state: 'CANCELLED' }], 'cancelled');
+      expect(taskMeta('Run the summer lunches')).toEqual({
+        iconTitle: 'action-task-cancelled',
+        text: 'action-continuous',
+      });
+    });
+
+    it('shows only the completion date for a completed continuous task', () => {
+      renderSection(
+        [{ ...continuous, state: 'COMPLETED', completedAt: '2000-06-15' }],
+        'completed'
+      );
+      const meta = taskMeta('Run the summer lunches');
+      expect(meta.iconTitle).toBe('action-task-completed-on');
+      expect(meta.text).toMatch(/2000/);
+      expect(meta.text).not.toContain('action-continuous');
+    });
+
+    it('lists tasks without a due date first, by name', () => {
+      renderSection([
+        { id: '1', name: 'Buy the bikes', state: 'IN_PROGRESS', dueAt: yesterday },
+        { ...continuous, id: '7', name: 'Water the trees' },
+        continuous,
+      ]);
+      expect(taskNames()).toEqual(['Run the summer lunches', 'Water the trees', 'Buy the bikes']);
+    });
+
+    it('lists tasks without a due date first in a newest-first section too', () => {
+      const cancelled = { ...continuous, state: 'CANCELLED' };
+      renderSection(
+        [
+          { id: '1', name: 'Old task', state: 'CANCELLED', dueAt: '2024-01-01' },
+          { ...cancelled, id: '7', name: 'Water the trees' },
+          { id: '2', name: 'New task', state: 'CANCELLED', dueAt: '2025-01-01' },
+          cancelled,
+        ],
+        'cancelled'
+      );
+      expect(taskNames()).toEqual([
+        'Run the summer lunches',
+        'Water the trees',
+        'New task',
+        'Old task',
+      ]);
+    });
+
+    it('puts tasks without a due date in their own group before the years', () => {
+      renderSection([...datedTasks('IN_PROGRESS'), continuous]);
+      expect(groupToggles()).toEqual(['action-continuous (1)', '2025 (6)', '2026 (6)']);
+    });
+
+    it('puts the group of tasks without a due date first in a newest-first section', () => {
+      renderSection(
+        [...datedTasks('CANCELLED'), { ...continuous, state: 'CANCELLED' }],
+        'cancelled'
+      );
+      expect(groupToggles()).toEqual(['action-continuous (1)', '2026 (6)', '2025 (6)']);
+    });
+  });
+
   /* The GraphQL type allows null entries in a stream field. */
   it('skips empty section entries', () => {
     expect(sectionHeadings([null, { field: 'not_started' }])).toEqual(['action-tasks-todo']);
