@@ -63,11 +63,12 @@ export const AccessibilityPage = () => {
               lg={{ size: 8, offset: 2 }}
               md={{ size: 10, offset: 1 }}
             >
+              <p>{t('intro', { owner: plan.generalContent.ownerName ?? '' })}</p>
               <p>
-                {plan.generalContent.ownerName} {t('commitment')} {t('legislation')}
-              </p>
-              <p>
-                {t('applies-to')} {plan.generalContent.siteTitle} {t('website')}.
+                {t.rich('applies-to-site', {
+                  url: plan.viewUrl ?? '',
+                  link: (chunks) => <a href={plan.viewUrl ?? ''}>{chunks}</a>,
+                })}
               </p>
             </Col>
           </Row>
@@ -92,10 +93,9 @@ export const AccessibilityPage = () => {
               <p>
                 <strong>{t('enforcement-body')}</strong>
               </p>
-              <a href={t('enforcement-body-url')}>{t('enforcement-body-url')}</a>
-              <br />
-              <a href={`mailto:${t('enforcement-body-email')}`}>{t('enforcement-body-email')}</a>
-              <p>{t('enforcement-body-tel')}</p>
+              <p>
+                <a href={t('enforcement-body-url')}>{t('enforcement-body-url')}</a>
+              </p>
             </Col>
           </Row>
         </Container>

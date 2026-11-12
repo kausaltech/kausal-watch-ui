@@ -19,19 +19,11 @@ type AccessibilityStatement = {
 
 const statements = accessibilityStatementData as Record<string, AccessibilityStatement>;
 
-function getComplianceStatusText(
-  t: ReturnType<typeof useTranslations>,
-  complianceStatus: ComplianceStatus
-) {
-  switch (complianceStatus) {
-    case 'partial':
-      return t('partial-compliant');
-    case 'full':
-      return t('full-compliant');
-    case 'not':
-      return t('not-compliant');
-  }
-}
+const COMPLIANCE_STATUS_KEYS = {
+  partial: 'compliance-partial',
+  full: 'compliance-full',
+  not: 'compliance-none',
+} as const;
 
 type AccessibilityStatementComplianceStatusBlockProps = {
   id?: string;
@@ -49,7 +41,6 @@ const AccessibilityStatementComplianceStatusBlock = ({
   const statement = statements[locale];
   const accessibilityProblems = statement.nonAccessibleContent.nonCompliant;
   const complianceStatus = statement.complianceStatus;
-  const complianceStatusText = getComplianceStatusText(t, complianceStatus);
 
   return (
     <Container id={id} className="my-2 text-content">
@@ -57,12 +48,12 @@ const AccessibilityStatementComplianceStatusBlock = ({
         <Col xl={{ size: 6, offset: 3 }} lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
           <h2>{t('compliance-status')}</h2>
           <p>
-            {complianceStatusText} <a href={t('wcag-url')}>{t('target-level')}</a>
+            {t.rich(COMPLIANCE_STATUS_KEYS[complianceStatus], {
+              link: (chunks) => <a href={t('wcag-url')}>{chunks}</a>,
+            })}
           </p>
           {accessibilityProblems.length > 0 && (
             <>
-              {' '}
-              {t('due-to')}
               <h2>{t('non-accessible-content')}</h2>
               <h3>{t('non-compliance-aa')}</h3>
               <p>{t('non-compliance-below')}:</p>

@@ -29,9 +29,10 @@ const AccessibilityStatementContactInformationBlock = ({ id = '', content }: Pro
           <h2>{t('a11y-feedback-contact')}</h2>
           <p>{customParagraph || t('responsible-for-maintenance', { responsibleBody })}</p>
           <p>
-            {t('a11y-feedback-text')}{' '}
-            <a href={`mailto:${accessibilityContactEmail}`}>{accessibilityContactEmail}</a>{' '}
-            {t('response-time')}
+            {t.rich('feedback-by-email', {
+              email: accessibilityContactEmail,
+              link: (chunks) => <a href={`mailto:${accessibilityContactEmail}`}>{chunks}</a>,
+            })}
           </p>
         </Col>
       </Row>

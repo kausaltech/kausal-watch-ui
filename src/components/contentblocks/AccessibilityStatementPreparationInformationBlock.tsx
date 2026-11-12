@@ -21,11 +21,15 @@ const AccessibilityStatementPreparationInformationBlock = ({
         <Col xl={{ size: 6, offset: 3 }} lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
           <h2>{t('preparation')}</h2>
           <p>
-            {t('prepared-on')} {dayjs(accessibilityStatementData.en.preparedOn).format('L')}.
+            {t('prepared-on-date', {
+              date: dayjs(accessibilityStatementData.en.preparedOn).format('L'),
+            })}
           </p>
           <p>{t('prepared-how')}</p>
           <p>
-            {t('reviewed-on')} {dayjs(accessibilityStatementData.en.reviewedOn).format('L')}.
+            {t('reviewed-on-date', {
+              date: dayjs(accessibilityStatementData.en.reviewedOn).format('L'),
+            })}
           </p>
         </Col>
       </Row>
