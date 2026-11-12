@@ -349,6 +349,7 @@ const actionFragment = gql`
       id
       state
       dueAt
+      isContinuous
     }
     mergedWith {
       id

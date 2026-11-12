@@ -141,6 +141,7 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
         id
         name
         dueAt
+        isContinuous
         dateFormat
         completedAt
         details

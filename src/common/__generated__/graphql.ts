@@ -800,7 +800,7 @@ export type ActionFragment_primaryOrg_logo = { __typename: 'Image', id: string, 
 
 export type ActionFragment_primaryOrg = { __typename: 'Organization', id: string, abbreviation: string | null, name: string, logo: ActionFragment_primaryOrg_logo | null };
 
-export type ActionFragment_tasks = { __typename: 'ActionTask', id: string, state: ActionTaskState, dueAt: string };
+export type ActionFragment_tasks = { __typename: 'ActionTask', id: string, state: ActionTaskState, dueAt: string | null, isContinuous: boolean };
 
 export type ActionFragment_mergedWith_plan = { __typename: 'Plan', id: string, shortName: string | null, viewUrl: string | null };
 
@@ -5036,7 +5036,7 @@ export type ActionDetailsQuery_action_tasks_contactPersons_person = { __typename
 
 export type ActionDetailsQuery_action_tasks_contactPersons = { __typename: 'ActionTaskContactPerson', id: string, person: ActionDetailsQuery_action_tasks_contactPersons_person };
 
-export type ActionDetailsQuery_action_tasks = { __typename: 'ActionTask', id: string, name: string, dueAt: string, dateFormat: ActionTaskDateFormat | null, completedAt: string | null, details: string | null, state: ActionTaskState, responsibleParties: Array<ActionDetailsQuery_action_tasks_responsibleParties>, contactPersons: Array<ActionDetailsQuery_action_tasks_contactPersons> };
+export type ActionDetailsQuery_action_tasks = { __typename: 'ActionTask', id: string, name: string, dueAt: string | null, isContinuous: boolean, dateFormat: ActionTaskDateFormat | null, completedAt: string | null, details: string | null, state: ActionTaskState, responsibleParties: Array<ActionDetailsQuery_action_tasks_responsibleParties>, contactPersons: Array<ActionDetailsQuery_action_tasks_contactPersons> };
 
 export type ActionDetailsQuery_action_status = { __typename: 'ActionStatus', id: string, identifier: string, name: string, color: string };
 
@@ -8224,7 +8224,7 @@ export type OrganizationDetailsQuery_organization_plansWithActionResponsibilitie
 
 export type OrganizationDetailsQuery_organization_plansWithActionResponsibilities_actions_primaryOrg = { __typename: 'Organization', id: string, abbreviation: string | null, name: string, logo: OrganizationDetailsQuery_organization_plansWithActionResponsibilities_actions_primaryOrg_logo | null };
 
-export type OrganizationDetailsQuery_organization_plansWithActionResponsibilities_actions_tasks = { __typename: 'ActionTask', id: string, state: ActionTaskState, dueAt: string };
+export type OrganizationDetailsQuery_organization_plansWithActionResponsibilities_actions_tasks = { __typename: 'ActionTask', id: string, state: ActionTaskState, dueAt: string | null, isContinuous: boolean };
 
 export type OrganizationDetailsQuery_organization_plansWithActionResponsibilities_actions_mergedWith_plan = { __typename: 'Plan', id: string, shortName: string | null, versionName: string, viewUrl: string | null };
 

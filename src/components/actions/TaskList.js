@@ -35,6 +35,11 @@ const StyledDate = styled.span`
   }
 `;
 
+// Sits under the date of a continuous task that also has one
+const ContinuousNote = styled.span`
+  display: block;
+`;
+
 const TaskWrapper = styled.div`
   display: flex;
 `;
@@ -205,9 +210,9 @@ const ListGroupItem = styled.li`
   }
 `;
 
-// The date a task is sorted and grouped by
+// The date a task is sorted and grouped by. Null for a continuous task without a due date.
 function getTaskDate(task) {
-  return task.completedAt ?? task.dueAt;
+  return task.completedAt ?? task.dueAt ?? null;
 }
 
 // Due and completion dates are plain dates (YYYY-MM-DD), which parse as UTC
@@ -234,6 +239,9 @@ const Task = (props) => {
   const responsibleParties = task.responsibleParties ?? [];
   const contactPersons = task.contactPersons ?? [];
 
+  // Shown under the due date of a continuous task, or in its place when the task has none
+  const continuousLabel = task.isContinuous ? t('action-continuous') : null;
+
   let meta;
   if (task.state === 'COMPLETED') {
     meta = {
@@ -257,6 +265,13 @@ const Task = (props) => {
       label: t('action-task-late'),
       date: task.dueAt,
     };
+  } else if (!task.dueAt) {
+    meta = {
+      icon: Icon.Sync,
+      color: theme.graphColors.blue070,
+      label: t('action-continuous'),
+      date: null,
+    };
   } else {
     meta = {
       icon: Icon.Calendar,
@@ -266,6 +281,9 @@ const Task = (props) => {
     };
   }
   const MetaIcon = meta.icon;
+  const formattedDate = formatTaskDate(meta.date, locale, dateFormat);
+  // Completed tasks show only when they were completed
+  const note = task.state === 'COMPLETED' ? null : continuousLabel;
 
   return (
     <TaskWrapper>
@@ -274,7 +292,8 @@ const Task = (props) => {
           <TaskMetaLabel>
             <MetaIcon color={meta.color} alt={meta.label} />
             <StyledDate className={meta.dateClassName}>
-              {formatTaskDate(meta.date, locale, dateFormat)}
+              {formattedDate}
+              {formattedDate && note ? <ContinuousNote>{note}</ContinuousNote> : note}
             </StyledDate>
           </TaskMetaLabel>
         </Tooltip>
@@ -352,8 +371,10 @@ const taskShape = {
   ),
   dateFormat: PropTypes.string,
   details: PropTypes.string,
-  dueAt: PropTypes.string.isRequired,
+  // Null only for a continuous task
+  dueAt: PropTypes.string,
   id: PropTypes.string.isRequired,
+  isContinuous: PropTypes.bool,
   name: PropTypes.string.isRequired,
   responsibleParties: PropTypes.arrayOf(
     PropTypes.shape({
@@ -445,7 +466,7 @@ function subscribeToDate(onChange) {
 }
 
 function TaskYearGroup(props) {
-  const { year, count, defaultOpen, children } = props;
+  const { label, count, defaultOpen, children } = props;
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const panelId = useId();
 
@@ -458,7 +479,7 @@ function TaskYearGroup(props) {
         aria-controls={panelId}
       >
         <Icon name={isOpen ? 'angle-down' : 'angle-right'} />
-        {year} ({count})
+        {label} ({count})
       </TaskGroupToggle>
       <Collapse in={isOpen} id={panelId}>
         <ListGroup>{children}</ListGroup>
@@ -471,14 +492,16 @@ TaskYearGroup.propTypes = {
   children: PropTypes.node.isRequired,
   count: PropTypes.number.isRequired,
   defaultOpen: PropTypes.bool.isRequired,
-  year: PropTypes.number.isRequired,
+  label: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 };
 
-// Group the tasks by the year of their date, keeping their order
+// Group the tasks by the year of their date, keeping their order. Tasks without a date get a group
+// of their own, with a null year.
 function groupTasksByYear(tasks) {
   const groups = [];
   for (const task of tasks) {
-    const year = new Date(getTaskDate(task)).getUTCFullYear();
+    const date = getTaskDate(task);
+    const year = date ? new Date(date).getUTCFullYear() : null;
     const group = groups.at(-1);
     if (group?.year === year) group.tasks.push(task);
     else groups.push({ year, tasks: [task] });
@@ -493,17 +516,27 @@ function TaskList(props) {
   const locale = useLocale();
   const { collapseLongListsBy } = TASK_LIST_SETTINGS;
 
-  // Sort by date, breaking ties alphabetically whichever way the dates run
+  // Sort by date, breaking ties alphabetically whichever way the dates run. Tasks without a date
+  // (continuous ones) come first, as ongoing work.
   const compareTasks = (a, b, newestFirst) => {
-    const byDate = dayjs(getTaskDate(a)).diff(dayjs(getTaskDate(b)));
-    return (newestFirst ? -byDate : byDate) || a.name.localeCompare(b.name, locale);
+    const dateA = getTaskDate(a);
+    const dateB = getTaskDate(b);
+    let byDate;
+    if (!dateA || !dateB) byDate = (dateA ? 1 : 0) - (dateB ? 1 : 0);
+    else {
+      const diff = dayjs(dateA).diff(dayjs(dateB));
+      byDate = newestFirst ? -diff : diff;
+    }
+    return byDate || a.name.localeCompare(b.name, locale);
   };
 
   // A task is late once the day it was due has passed. "Today" is the viewer's date, which only the
   // browser knows: the server's date can differ, so the server and the hydration render mark no task
   // as late.
   const today = useSyncExternalStore(subscribeToDate, getToday, getServerToday);
-  const isLate = (task) => today !== null && dayjs(task.dueAt).isBefore(today, 'day');
+  // A task without a due date is never late
+  const isLate = (task) =>
+    today !== null && !!task.dueAt && dayjs(task.dueAt).isBefore(today, 'day');
 
   const renderTasks = (sectionTasks, highlightLate) =>
     sectionTasks.map((item) => (
@@ -526,8 +559,8 @@ function TaskList(props) {
               <div className="mb-5">
                 {groupTasksByYear(sectionTasks).map((group, index) => (
                   <TaskYearGroup
-                    key={group.year}
-                    year={group.year}
+                    key={group.year ?? 'continuous'}
+                    label={group.year ?? t('action-continuous')}
                     count={group.tasks.length}
                     defaultOpen={index === 0}
                   >

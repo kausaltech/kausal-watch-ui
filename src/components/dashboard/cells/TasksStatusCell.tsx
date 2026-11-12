@@ -24,11 +24,11 @@ export const getTaskCounts = (
   const nowDate = new Date();
 
   tasks.forEach((task) => {
-    const taskDue = new Date(task.dueAt);
     switch (task.state) {
       case ActionTaskState.NotStarted:
       case ActionTaskState.InProgress:
-        if (taskDue < nowDate) lateTasks += 1;
+        // A continuous task without a due date is never late
+        if (task.dueAt && new Date(task.dueAt) < nowDate) lateTasks += 1;
         else ontimeTasks += 1;
         break;
       case ActionTaskState.Completed:

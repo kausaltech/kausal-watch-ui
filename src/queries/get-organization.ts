@@ -193,6 +193,7 @@ const GET_ORG_DETAILS: TypedDocumentNode<
         id
         state
         dueAt
+        isContinuous
       }
       mergedWith {
         id
