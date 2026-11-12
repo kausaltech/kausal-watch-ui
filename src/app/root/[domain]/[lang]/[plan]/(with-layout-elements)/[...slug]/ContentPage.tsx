@@ -111,6 +111,8 @@ function PageHeaderBlock({ color, page }: PageHeaderBlockProps) {
         />
       );
     }
+    case 'AccessibilityStatementPage':
+      return <ContentPageHeaderBlock title={page.title} />;
     case 'StaticPage': {
       const { headerImage } = page as {
         headerImage: HeroImageFragment | null;
@@ -151,7 +153,8 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
     streamFieldBlockTypesThatHavePageHeader.includes(page.body[0]?.blockType);
 
   const hasPageHeader =
-    typenameMatches(page, 'CategoryPage', 'StaticPage') && !pageHeaderinStreamField;
+    typenameMatches(page, 'CategoryPage', 'StaticPage', 'AccessibilityStatementPage') &&
+    !pageHeaderinStreamField;
 
   const categoryColor = isCategoryPage && (page.category?.color || page.category?.parent?.color);
   const pageSectionColor = categoryColor || theme.themeColors.light;
@@ -181,7 +184,8 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
 
   return (
     <article data-testid={testId}>
-      {typenameMatches(page, 'CategoryPage', 'StaticPage') && !pageHeaderinStreamField ? (
+      {typenameMatches(page, 'CategoryPage', 'StaticPage', 'AccessibilityStatementPage') &&
+      !pageHeaderinStreamField ? (
         <PageHeaderBlock page={page} color={isCategoryPage ? categoryColor : undefined} />
       ) : null}
 
@@ -203,7 +207,16 @@ export default function ContentPage({ page, testId }: { page: GeneralPlanPage; t
           {isPageWithLeadContent && 'leadContent' in page && page.leadContent && (
             <Container className="my-5">
               <Row>
-                <Col lg={{ size: 8, offset: 2 }} md={{ size: 10, offset: 1 }}>
+                <Col
+                  // Match the statement blocks' column
+                  xl={
+                    typenameMatches(page, 'AccessibilityStatementPage')
+                      ? { size: 6, offset: 3 }
+                      : undefined
+                  }
+                  lg={{ size: 8, offset: 2 }}
+                  md={{ size: 10, offset: 1 }}
+                >
                   <RichText html={page.leadContent} />
                 </Col>
               </Row>

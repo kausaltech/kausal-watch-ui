@@ -7607,7 +7607,7 @@ export type ContentPageQuery_planPage_StaticPage_parent =
   | ContentPageQuery_planPage_StaticPage_parent_StaticPage
 ;
 
-export type ContentPageQuery_planPage_AccessibilityStatementPage = { __typename: 'AccessibilityStatementPage', id: string | null, slug: string, title: string, lastPublishedAt: string | null, body: Array<ContentPageQuery_planPage_body> | null };
+export type ContentPageQuery_planPage_AccessibilityStatementPage = { __typename: 'AccessibilityStatementPage', leadContent: string | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null, body: Array<ContentPageQuery_planPage_body> | null };
 
 export type ContentPageQuery_planPage_ActionListPage = { __typename: 'ActionListPage', leadContent: string | null, defaultView: ActionListPageView, headingHierarchyDepth: number, includeRelatedPlans: boolean | null, id: string | null, slug: string, title: string, lastPublishedAt: string | null, primaryFilters: Array<ActionListPageFiltersFragment_primaryFilters> | null, mainFilters: Array<ActionListPageFiltersFragment_mainFilters> | null, advancedFilters: Array<ActionListPageFiltersFragment_advancedFilters> | null };
 

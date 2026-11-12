@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { useTranslations } from 'next-intl';
 import { readableColor } from 'polished';
 
+import RichText from '@/components/common/RichText';
 import { Col, Container, Row } from '@/components/common/layout/LayoutGrid';
 import AccessibilityStatementComplianceStatusBlock from '@/components/contentblocks/AccessibilityStatementComplianceStatusBlock';
 import AccessibilityStatementContactInformationBlock from '@/components/contentblocks/AccessibilityStatementContactInformationBlock';
@@ -38,7 +39,15 @@ const ContentHeader = styled.header`
   }
 `;
 
-export const AccessibilityPage = () => {
+const StatementContent = styled.div`
+  margin-bottom: var(--block-padding-bottom);
+`;
+
+type Props = {
+  leadContent?: string | null;
+};
+
+export const AccessibilityPage = ({ leadContent }: Props) => {
   const t = useTranslations();
   const plan = usePlan();
 
@@ -55,7 +64,7 @@ export const AccessibilityPage = () => {
           </Row>
         </Container>
       </HeaderBg>
-      <div className="text-content my-2" data-testid="accessibility-page">
+      <StatementContent className="text-content mt-2" data-testid="accessibility-page">
         <Container>
           <Row>
             <Col
@@ -63,6 +72,7 @@ export const AccessibilityPage = () => {
               lg={{ size: 8, offset: 2 }}
               md={{ size: 10, offset: 1 }}
             >
+              {leadContent && <RichText html={leadContent} />}
               <p>{t('intro', { owner: plan.generalContent.ownerName ?? '' })}</p>
               <p>
                 {t.rich('applies-to-site', {
@@ -99,7 +109,7 @@ export const AccessibilityPage = () => {
             </Col>
           </Row>
         </Container>
-      </div>
+      </StatementContent>
     </>
   );
 };
