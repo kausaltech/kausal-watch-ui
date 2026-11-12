@@ -39,5 +39,8 @@ export default async function ContentPage(props: Props) {
     return <Content page={data.planPage} testId="accessibility-page" />;
   }
 
-  return <AccessibilityPage />;
+  const leadContent =
+    data?.planPage?.__typename === 'AccessibilityStatementPage' ? data.planPage.leadContent : null;
+
+  return <AccessibilityPage leadContent={leadContent} />;
 }

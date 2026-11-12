@@ -194,6 +194,7 @@ const GET_CONTENT_PAGE: TypedDocumentNode<ContentPageQuery, ContentPageQueryVari
         }
       }
       ... on AccessibilityStatementPage {
+        leadContent
         body {
           ...StreamField
         }

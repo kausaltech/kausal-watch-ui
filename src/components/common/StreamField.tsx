@@ -238,12 +238,19 @@ function blockStartsUnpadded(block: StreamFieldFragment, theme: Theme) {
   return block.__typename === 'RichTextBlock' && !richTextHasBackground(theme);
 }
 
+/** Accessibility statement blocks read as sections of one document */
+function blockIsStatementSection(block: StreamFieldFragment | undefined) {
+  return !!block?.__typename.startsWith('AccessibilityStatement');
+}
+
 interface BlockWrapperProps {
   $hasBackground: boolean;
   $prevHasBackground: boolean;
   $isUnpadded: boolean;
   $prevIsUnpadded: boolean;
   $startsUnpadded: boolean;
+  /** Continues the previous block without a block gap */
+  $joinsPrev: boolean;
   $isFirst: boolean;
   /** First block, with no page header above the stream field */
   $isFirstWithoutHeader: boolean;
@@ -260,10 +267,12 @@ const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
     $isUnpadded,
     $prevIsUnpadded,
     $startsUnpadded,
+    $joinsPrev,
     $isFirstWithoutHeader,
   }) => {
     if ($isFirstWithoutHeader) return $startsUnpadded ? 'var(--block-gap)' : '0';
     if ($isFirst) return $isUnpadded && $prevHasBackground ? 'var(--block-gap)' : '0';
+    if ($joinsPrev) return '0';
     if ($hasBackground && $prevHasBackground) return 'var(--block-gap-coloured)';
     if ($hasBackground || $prevHasBackground) {
       // Coloured blocks pad themselves, but an unpadded block next to one needs a gap
@@ -272,8 +281,8 @@ const StyledBlockWrapper = styled('div', transientOptions)<BlockWrapperProps>`
     return 'var(--block-gap)';
   }};
   margin-bottom: ${({ $isLast, $nextIsUnwrapped, $isUnpadded, $hasBackground }) => {
-    // --footer-clearance is set only on the last rendered block of a page-ending stream field
-    if (!$isUnpadded) return $hasBackground ? '0' : 'var(--footer-clearance, 0px)';
+    // --page-end-margin is set only on the last rendered block of a page-ending stream field
+    if (!$isUnpadded) return $hasBackground ? '0' : 'var(--page-end-margin, 0px)';
     // Coloured blocks end with their own bottom padding, which themes may cover with a
     // footer decoration, so leave the same room after an unpadded block ending the page
     if ($isLast) return 'calc(var(--block-gap) + var(--block-padding-bottom))';
@@ -793,6 +802,7 @@ const StreamFieldContainer = styled.div`
     > :nth-last-child(1 of :not(:empty)) {
     --block-padding-bottom: var(--block-padding-bottom-at-footer);
     --footer-clearance: var(--footer-decoration-clearance);
+    --page-end-margin: var(--block-padding-bottom-at-footer);
   }
 `;
 
@@ -851,6 +861,9 @@ export default function StreamField(props: StreamFieldProps) {
                 $isUnpadded={isUnpadded}
                 $prevIsUnpadded={prevIsUnpadded}
                 $startsUnpadded={blockStartsUnpadded(block, theme)}
+                $joinsPrev={
+                  blockIsStatementSection(block) && blockIsStatementSection(blocks[index - 1])
+                }
                 $isFirst={index === 0}
                 $isFirstWithoutHeader={index === 0 && precedingBlockHasBackground === undefined}
                 $isLast={index === blocks.length - 1}
