@@ -48,6 +48,7 @@ import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
 import { ErrorBoundary } from './ErrorBoundary';
+import { keepBlocksWithContent } from './streamField.utils';
 
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
@@ -582,10 +583,12 @@ function StreamFieldBlock(props: StreamFieldBlockProps) {
     }
     case 'IndicatorShowcaseBlock': {
       const { indicator, title, body, significantDigits, indicatorIsNormalized } = block;
+      // StreamField leaves out blocks without an indicator; this narrows the type
+      if (!indicator) return null;
       return (
         <IndicatorShowcaseBlock
           id={id}
-          indicator={indicator as React.ComponentProps<typeof IndicatorShowcaseBlock>['indicator']}
+          indicator={indicator}
           title={title}
           body={body}
           significantDigits={significantDigits}
@@ -819,7 +822,7 @@ function getSiblingBlockTypes(blocks: StreamFieldProps['blocks'], i: number) {
 export default function StreamField(props: StreamFieldProps) {
   const {
     page,
-    blocks,
+    blocks: allBlocks,
     hasSidebar = false,
     columnProps,
     precedingBlockHasBackground,
@@ -828,6 +831,9 @@ export default function StreamField(props: StreamFieldProps) {
   const t = useTranslations();
   const theme = useTheme();
   const containedLayout = useContainedLayout();
+  // A block that would render nothing would still leave a wrapper that the
+  // spacing of its neighbours counts as a block
+  const { blocks, sectionNumbers } = keepBlocksWithContent(allBlocks);
 
   return (
     <StreamFieldContainer
@@ -846,7 +852,7 @@ export default function StreamField(props: StreamFieldProps) {
 
         return (
           <ErrorBoundary
-            key={`${block.blockType}-${block.field}-${index}`}
+            key={`${block.blockType}-${block.field}-${sectionNumbers[index]}`}
             fallback={<ErrorMessage message={t('error-loading-data')} details={block.__typename} />}
             errorExtras={{
               type: 'StreamFieldBlock',
@@ -870,7 +876,7 @@ export default function StreamField(props: StreamFieldProps) {
                 $nextIsUnwrapped={blocks[index + 1]?.blockType === 'DashboardRowBlock'}
               >
                 <StreamFieldBlock
-                  id={`section-${index + 1}`}
+                  id={`section-${sectionNumbers[index]}`}
                   block={block}
                   page={page}
                   hasSidebar={hasSidebar}
