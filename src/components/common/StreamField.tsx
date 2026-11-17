@@ -48,7 +48,12 @@ import { STREAM_FIELD_FRAGMENT } from '@/fragments/stream-field.fragment';
 import CategoryTypeListBlock from '../contentblocks/CategoryTypeListBlock';
 import ChangeHistory from './ChangeHistory';
 import { ErrorBoundary } from './ErrorBoundary';
-import { keepBlocksWithContent } from './streamField.utils';
+import {
+  buildBrokenReferenceReport,
+  findBrokenReferences,
+  keepBlocksWithContent,
+  markBrokenBlockReported,
+} from './streamField.utils';
 
 const CategoryTreeBlock = dynamic(() => import('@/components/contentblocks/CategoryTreeBlock'), {
   ssr: false,
@@ -819,6 +824,22 @@ function getSiblingBlockTypes(blocks: StreamFieldProps['blocks'], i: number) {
   };
 }
 
+/**
+ * Reports blocks with broken references to Sentry, each once per tab session,
+ * so the content can be fixed. The page leaves these blocks out, so nobody sees them.
+ */
+function useReportBrokenReferences(page: StreamFieldBlockPage, blocks: StreamFieldFragment[]) {
+  const plan = usePlan();
+
+  useEffect(() => {
+    for (const brokenBlock of findBrokenReferences(blocks)) {
+      const { message, captureContext } = buildBrokenReferenceReport(brokenBlock, page, plan.id);
+      if (markBrokenBlockReported(`${plan.id}/${message}`)) continue;
+      Sentry.captureMessage(message, captureContext);
+    }
+  }, [plan.id, page, blocks]);
+}
+
 export default function StreamField(props: StreamFieldProps) {
   const {
     page,
@@ -834,6 +855,7 @@ export default function StreamField(props: StreamFieldProps) {
   // A block that would render nothing would still leave a wrapper that the
   // spacing of its neighbours counts as a block
   const { blocks, sectionNumbers } = keepBlocksWithContent(allBlocks);
+  useReportBrokenReferences(page, allBlocks);
 
   return (
     <StreamFieldContainer
