@@ -21,6 +21,11 @@ jest.mock('../../components/pledge/use-pledge-accounts-enabled', () => ({
   usePledgeAccountsEnabled: () => false,
 }));
 
+const mockFeedbackEnabled = jest.fn(() => true);
+jest.mock('../../components/pledge/use-pledge-feedback-enabled', () => ({
+  usePledgeFeedbackEnabled: () => mockFeedbackEnabled(),
+}));
+
 jest.mock('../../components/pledge/use-pledge-form-fields', () => ({
   usePledgeFormFields: () => [],
 }));
@@ -34,7 +39,10 @@ jest.mock('../../components/pledge/ShareButton', () => ({
 }));
 
 jest.mock('../../components/common/Breadcrumbs', () => () => null);
-jest.mock('../../components/pledge/PledgeFeedback', () => () => null);
+jest.mock('../../components/pledge/PledgeFeedback', () => {
+  const MockPledgeFeedback = () => <div>Pledge feedback</div>;
+  return MockPledgeFeedback;
+});
 jest.mock('../../components/pledge/ConfirmPledge', () => () => null);
 
 function createAction(
@@ -86,5 +94,21 @@ describe('PledgeDetail related actions', () => {
 
     expect(screen.getByText('Child plan')).toBeInTheDocument();
     expect(screen.queryByText('Umbrella plan')).not.toBeInTheDocument();
+  });
+});
+
+describe('PledgeDetail feedback', () => {
+  it('asks for feedback when the plan has feedback turned on', () => {
+    mockFeedbackEnabled.mockReturnValue(true);
+    render(<PledgeDetail pledge={pledge} planIdentifier="umbrella" />);
+
+    expect(screen.getByText('Pledge feedback')).toBeInTheDocument();
+  });
+
+  it('does not ask for feedback when the plan has feedback turned off', () => {
+    mockFeedbackEnabled.mockReturnValue(false);
+    render(<PledgeDetail pledge={pledge} planIdentifier="umbrella" />);
+
+    expect(screen.queryByText('Pledge feedback')).not.toBeInTheDocument();
   });
 });
