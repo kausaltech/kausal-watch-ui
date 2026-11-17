@@ -221,6 +221,7 @@ const GET_PLAN_CONTEXT: TypedDocumentNode<PlanContextQuery, PlanContextQueryVari
       placeholder
       required
     }
+    pledgeFeedbackEnabled
     pledgeTermsUrl
     pledgePrivacyUrl
     pledgeAccountTitle

@@ -31,6 +31,7 @@ import PledgeImpactComparison from './PledgeImpactComparison';
 import { ShareButton } from './ShareButton';
 import { usePledgeAccountsEnabled } from './use-pledge-accounts-enabled';
 import { usePledgeNavUser } from './use-pledge-auth';
+import { usePledgeFeedbackEnabled } from './use-pledge-feedback-enabled';
 import { usePledgeFormFields } from './use-pledge-form-fields';
 import { usePublicUser } from './use-public-user';
 
@@ -294,6 +295,7 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
   const t = useTranslations();
   const formFields = usePledgeFormFields();
   const accountsEnabled = usePledgeAccountsEnabled();
+  const feedbackEnabled = usePledgeFeedbackEnabled();
   const pledgeListLink = usePrependPlanAndLocale(PLEDGE_PATH);
   const { isAuthenticated } = usePledgeNavUser();
   const {
@@ -427,12 +429,14 @@ function PledgeDetail({ pledge, planIdentifier }: Props) {
           </StyledRelatedActionsSection>
         )}
 
-        <PledgeFeedback
-          pledgeId={pledge.id}
-          planIdentifier={planIdentifier}
-          pledgeSlug={pledge.slug}
-          pledgeTitle={pledge.name}
-        />
+        {feedbackEnabled && (
+          <PledgeFeedback
+            pledgeId={pledge.id}
+            planIdentifier={planIdentifier}
+            pledgeSlug={pledge.slug}
+            pledgeTitle={pledge.name}
+          />
+        )}
       </StyledPageContentContainer>
 
       <ConfirmPledge
