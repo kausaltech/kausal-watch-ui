@@ -612,6 +612,7 @@ const GET_ACTION_DETAILS: TypedDocumentNode<ActionDetailsQuery, ActionDetailsQue
       startDate
       endDate
       valuesForAction(actionIdentifier: $id) {
+        formattedValue
         field {
           __typename
           ... on StreamFieldInterface {
