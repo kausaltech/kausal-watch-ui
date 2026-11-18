@@ -182,6 +182,16 @@ git submodule update --init --recursive
 - **Utilities:** camelCase (`middleware.utils.ts`)
 - **GraphQL files:** kebab-case (`get-plan.ts`)
 - **Generated code:** Never edit files in `__generated__/` directories
+- **Invalid data:** Never silently discard invalid input. When code tolerates invalid data by skipping all or part of it (e.g., dropping an invalid list item while still processing the rest of the list), report it to Sentry so we become aware of the problem. Use a fixed message so the events group into one issue, and pass the offending data as extra context:
+  ```ts
+  for (const item of items) {
+    if (!isValid(item)) {
+      Sentry.captureMessage('Skipping invalid item', { level: 'warning', extra: { item } });
+      continue;
+    }
+    process(item);
+  }
+  ```
 
 ## Commits and Pull Requests
 
